@@ -579,9 +579,11 @@ const PROJECTS = [
    }},
   {id:'p2',title:'Centre intergénérationnel — YAPADAGE',cat:'ARCHI INTÉRIEUR · ÉCOLE',
    tags:['developpement-durable','collectivites','ux'],
-   thumb:'images/yapadage-mouvement.jpg',
+   thumb:'images/yapadage-vue-a1.png',
    color:'#ddeede',stroke:'#3b5c32',
-   images:['images/yapadage-mouvement.jpg','images/yapadage-repetition.jpg','images/yapadage-vide-et-plein.jpg'],mapX:500,mapY:400,
+   images:['images/yapadage-vue-a1.png'],
+   cardImages:['images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
+   mapX:500,mapY:400,
    desc:"Conception d'un centre intégrant espaces enfants, adultes et séniors dans un même bâtiment. La circulation est pensée pour favoriser les rencontres spontanées entre générations.",
    i18n:{
      en:{title:'Intergenerational center — YAPADAGE',cat:'INTERIOR ARCHITECTURE · SCHOOL',desc:"Design of a center bringing together spaces for children, adults and seniors within the same building. Circulation is designed to encourage spontaneous encounters between generations."},
@@ -934,11 +936,12 @@ function thumbHTML(proj,w=80,h=58){
 
 /* ══════ CARROUSEL sur aperçu ══════ */
 function buildCarousel(proj){
-  // Slides : thumb (ou svg) + photos galerie si présentes
+  // Slides : thumb (ou svg) + cardImages si défini, sinon photos galerie[1+]
   const slides = [];
   if(proj.thumb) slides.push({type:'img',src:proj.thumb});
   else slides.push({type:'svg',color:proj.color,stroke:proj.stroke});
-  (proj.images||[]).slice(1).forEach(src=>slides.push({type:'img',src}));
+  const extra = proj.cardImages || (proj.images||[]).slice(1);
+  extra.forEach(src=>slides.push({type:'img',src}));
 
   if(slides.length<=1){
     // Pas de carrousel, juste l'image
@@ -1283,15 +1286,21 @@ const YAPADAGE_BOARD_I18N = {
   fr:{insp:'LES INSPIRATIONS',princ:'LES GRANDS PRINCIPES',mat:'LES MATÉRIAUX UTILISÉS',espaces:'LES ESPACES',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
       capNetworking:'Networking Space - Kiev',capGerry:"Court-métrage - Gerry's Game",
-      capMouvement:'Mouvement',capRepetition:'Répétition',capVide:'Vide et plein'},
+      capMouvement:'Mouvement',capRepetition:'Répétition',capVide:'Vide et plein',
+      capAtelier:'Atelier — Rendu 3D',capFenetre:'Bibliothèque — Rendu 3D',
+      capPlanRdc:'Plan RDC',capPlanEtage:'Plan étage'},
   en:{insp:'INSPIRATIONS',princ:'KEY PRINCIPLES',mat:'MATERIALS USED',espaces:'SPACES',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
       capNetworking:'Networking Space - Kiev',capGerry:"Short film - Gerry's Game",
-      capMouvement:'Movement',capRepetition:'Repetition',capVide:'Void and solid'},
+      capMouvement:'Movement',capRepetition:'Repetition',capVide:'Void and solid',
+      capAtelier:'Workshop — 3D render',capFenetre:'Library — 3D render',
+      capPlanRdc:'Ground floor plan',capPlanEtage:'First floor plan'},
   es:{insp:'LAS INSPIRACIONES',princ:'LOS GRANDES PRINCIPIOS',mat:'LOS MATERIALES UTILIZADOS',espaces:'LOS ESPACIOS',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
       capNetworking:'Networking Space - Kiev',capGerry:"Cortometraje - Gerry's Game",
-      capMouvement:'Movimiento',capRepetition:'Repetición',capVide:'Vacío y lleno'},
+      capMouvement:'Movimiento',capRepetition:'Repetición',capVide:'Vacío y lleno',
+      capAtelier:'Taller — Render 3D',capFenetre:'Biblioteca — Render 3D',
+      capPlanRdc:'Planta baja',capPlanEtage:'Primera planta'},
 };
 function buildYapadageBoard(proj){
   const L=YAPADAGE_BOARD_I18N[currentLang]||YAPADAGE_BOARD_I18N.fr;
@@ -1318,16 +1327,25 @@ function buildYapadageBoard(proj){
   const repetitionC = pbPolar(CX,CY,ANG_PRINC,   R2);
   const videC       = pbPolar(CX,CY,ANG_PRINC+20,R2);
 
+  /* 4 images des espaces, rayonnant autour de la branche espaces */
+  const atelierC   = pbPolar(CX,CY,ANG_ESPACES-30,R2);
+  const fenetreC   = pbPolar(CX,CY,ANG_ESPACES-10,R2);
+  const planRdcC   = pbPolar(CX,CY,ANG_ESPACES+10,R2);
+  const planEtageC = pbPolar(CX,CY,ANG_ESPACES+30,R2);
+
   const hubP=pbTopLeft(hubC,260,190), inspP=pbTopLeft(inspC,210,50),
         princP=pbTopLeft(princC,210,50), matP=pbTopLeft(matC,210,50),
         espacesP=pbTopLeft(espacesC,210,50),
         fosP=pbTopLeft(fosC,190,222), playgroundP=pbTopLeft(playgroundC,190,222),
         networkingP=pbTopLeft(networkingC,190,222), gerryP=pbTopLeft(gerryC,190,222),
         mouvementP=pbTopLeft(mouvementC,190,222), repetitionP=pbTopLeft(repetitionC,190,222),
-        videP=pbTopLeft(videC,190,222);
+        videP=pbTopLeft(videC,190,222),
+        atelierP=pbTopLeft(atelierC,190,222), fenetreP=pbTopLeft(fenetreC,190,222),
+        planRdcP=pbTopLeft(planRdcC,190,222), planEtageP=pbTopLeft(planEtageC,190,222);
 
   const C_INSP=TAG_COLORS['developpement-durable'];
   const C_PRINC=TAG_COLORS['collectivites'];
+  const C_ESP=TAG_COLORS['ux'];
 
   const nodes=[
     {id:'hub',    type:'text',label:t('board_hub_label'),text:excerpt,x:hubP.x,y:hubP.y,w:260},
@@ -1342,12 +1360,16 @@ function buildYapadageBoard(proj){
     {id:'mouvement',  type:'image',src:'images/yapadage-mouvement.jpg',               caption:L.capMouvement,  x:mouvementP.x,  y:mouvementP.y,  w:190},
     {id:'repetition', type:'image',src:'images/yapadage-repetition.jpg',              caption:L.capRepetition, x:repetitionP.x, y:repetitionP.y, w:190},
     {id:'vide',       type:'image',src:'images/yapadage-vide-et-plein.jpg',           caption:L.capVide,       x:videP.x,       y:videP.y,       w:190},
+    {id:'atelier',   type:'image',src:'images/yapadage-atelier.png',   caption:L.capAtelier,   x:atelierP.x,   y:atelierP.y,   w:190},
+    {id:'fenetre',   type:'image',src:'images/yapadage-fenetre.png',   caption:L.capFenetre,   x:fenetreP.x,   y:fenetreP.y,   w:190},
+    {id:'planRdc',   type:'image',src:'images/yapadage-plan-rdc.png',  caption:L.capPlanRdc,   x:planRdcP.x,   y:planRdcP.y,   w:190},
+    {id:'planEtage', type:'image',src:'images/yapadage-plan-etage.png',caption:L.capPlanEtage, x:planEtageP.x, y:planEtageP.y, w:190},
   ];
   const links=[
     {from:'hub',to:'insp',       color:TAG_COLORS['developpement-durable']},
     {from:'hub',to:'princ',      color:TAG_COLORS['collectivites']},
     {from:'hub',to:'mat',        color:TAG_COLORS['ux']},
-    {from:'hub',to:'espaces',    color:TAG_COLORS['developpement-durable']},
+    {from:'hub',to:'espaces',    color:C_ESP},
     {from:'insp',to:'fos',       color:C_INSP},
     {from:'insp',to:'playground',color:C_INSP},
     {from:'insp',to:'networking',color:C_INSP},
@@ -1355,6 +1377,10 @@ function buildYapadageBoard(proj){
     {from:'princ',to:'mouvement', color:C_PRINC},
     {from:'princ',to:'repetition',color:C_PRINC},
     {from:'princ',to:'vide',      color:C_PRINC},
+    {from:'espaces',to:'atelier',   color:C_ESP},
+    {from:'espaces',to:'fenetre',   color:C_ESP},
+    {from:'espaces',to:'planRdc',   color:C_ESP},
+    {from:'espaces',to:'planEtage', color:C_ESP},
   ];
   return {nodes,links};
 }
