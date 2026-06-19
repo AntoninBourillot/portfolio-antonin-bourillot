@@ -152,6 +152,13 @@ img{display:block;max-width:100%;}
 .proj-hero-arrow:hover{background:var(--paper);}
 .proj-hero-arrow.prev{left:16px;}
 .proj-hero-arrow.next{right:16px;}
+.proj-hero-quote{
+  position:absolute;bottom:38px;left:50%;transform:translateX(-50%);
+  color:var(--paper);font-family:'Lora',serif;font-style:italic;
+  font-size:clamp(11px,.85vw,14px);letter-spacing:.03em;
+  white-space:nowrap;pointer-events:none;z-index:5;
+  text-shadow:0 1px 10px rgba(0,0,0,.5);
+}
 .proj-hero-dots{
   position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
   display:flex;gap:6px;pointer-events:none;
@@ -212,7 +219,7 @@ img{display:block;max-width:100%;}
 .pbnode{position:absolute;cursor:grab;z-index:1;}
 .pbnode.dragging{cursor:grabbing;z-index:50;}
 .pb-image{width:190px;border-radius:2px;overflow:hidden;border:.5px solid var(--paper3);background:var(--paper);box-shadow:0 8px 24px rgba(0,0,0,.12);transition:box-shadow .2s,transform .28s cubic-bezier(.22,.68,0,1.4);transform-origin:center;}
-.pb-image:hover{box-shadow:0 12px 32px rgba(0,0,0,.22);transform:scale(1.07);}
+.pb-image:hover{box-shadow:0 16px 40px rgba(0,0,0,.28);transform:scale(2);z-index:50;}
 .pb-image .pb-image-ph{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--paper2);}
 .pb-image img{width:100%;height:auto;object-fit:contain;display:block;}
 .pb-image-caption{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--ink2);padding:7px 9px;text-align:center;border-top:.5px solid var(--paper3);}
@@ -424,6 +431,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     <button class="proj-hero-arrow prev" id="projHeroPrev" aria-label="Précédent">&#8592;</button>
     <button class="proj-hero-arrow next" id="projHeroNext" aria-label="Suivant">&#8594;</button>
     <div class="proj-hero-dots" id="projHeroDots"></div>
+    <div class="proj-hero-quote" id="projHeroQuote"></div>
     <button class="proj-video-sticker" id="projVideoSticker" aria-label="Voir la vidéo du projet">
       <span class="pvs-play">&#9658;</span><span class="pvs-text" data-i18n-html="video_sticker">VOIR LA<br>VIDÉO</span>
     </button>
@@ -583,6 +591,7 @@ const PROJECTS = [
    color:'#ddeede',stroke:'#3b5c32',
    images:['images/yapadage-vue-a1.png'],
    cardImages:['images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
+   quote:'"Constater l\'isolation des générations entre elles m\'a fait prendre conscience de l\'importance de concevoir des lieux de reconnexion"',
    mapX:500,mapY:400,
    desc:"Conception d'un centre intégrant espaces enfants, adultes et séniors dans un même bâtiment. La circulation est pensée pour favoriser les rencontres spontanées entre générations.",
    i18n:{
@@ -1079,6 +1088,10 @@ function renderProjectView(id){
   const prize=pf(proj,'prize');
   if(prize) metaExtra+=`<div><p class="meta-label">${t('meta_prix')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${prize}</p></div>`;
   document.getElementById('projMetaExtra').innerHTML=metaExtra;
+
+  const quoteEl=document.getElementById('projHeroQuote');
+  quoteEl.textContent=proj.quote||'';
+  quoteEl.style.display=proj.quote?'block':'none';
 
   const vidBtn=document.getElementById('projVideoSticker');
   if(proj.video){
