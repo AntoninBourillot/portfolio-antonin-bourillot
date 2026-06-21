@@ -175,6 +175,21 @@ img{display:block;max-width:100%;}
 .proj-hero-dot{width:6px;height:6px;border-radius:50%;background:rgba(245,243,236,.5);}
 .proj-hero-dot.active{background:var(--paper);}
 
+/* ── LAYOUT PORTRAIT-RIGHT (images verticales à droite) ── */
+.proj-layout-portrait .proj-hero{display:none!important;}
+.proj-layout-portrait .proj-content{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
+.proj-layout-portrait .proj-body{grid-column:1;grid-row:1;}
+.proj-layout-portrait .proj-meta{grid-column:1;grid-row:2;border-left:none;border-top:var(--r);}
+.proj-portrait-slider{display:none;grid-column:2;grid-row:1/3;border-left:var(--r);padding:var(--py) var(--px);flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--paper2);}
+.proj-layout-portrait .proj-portrait-slider{display:flex;}
+.proj-portrait-wrap{width:100%;max-width:320px;max-height:calc(100vh - 180px);aspect-ratio:9/16;position:relative;overflow:hidden;border-radius:2px;background:var(--ink);}
+.proj-portrait-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity .35s;}
+.proj-portrait-img.active{opacity:1;}
+.proj-portrait-nav{display:flex;align-items:center;gap:20px;}
+.proj-portrait-nav button{background:none;border:.5px solid var(--ink3);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s;}
+.proj-portrait-nav button:hover{background:var(--ink);color:var(--paper);}
+.proj-portrait-counter{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--ink3);}
+
 /* Sticker vidéo cliquable */
 .proj-video-sticker{
   position:absolute;top:18px;right:18px;z-index:15;
@@ -473,6 +488,14 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <div><p class="meta-label" data-i18n="meta_tags">TAGS</p><div class="proj-tags-wrap" id="projTags"></div></div>
       <div id="projMetaExtra"></div>
     </div>
+    <div class="proj-portrait-slider" id="projPortraitSlider">
+      <div class="proj-portrait-wrap" id="projPortraitWrap"></div>
+      <div class="proj-portrait-nav">
+        <button id="projPortraitPrev">&#8592;</button>
+        <span class="proj-portrait-counter" id="projPortraitCounter"></span>
+        <button id="projPortraitNext">&#8594;</button>
+      </div>
+    </div>
   </div>
   <!-- Carte du projet -->
   <div class="proj-board-section">
@@ -631,6 +654,7 @@ const PROJECTS = [
      en:{title:'Woodworking design - Staircase',cat:'WOODWORKING · PERSONAL',desc:"From idea to material, this is one of the projects closest to my heart. Built entirely from reclaimed pallet wood, it taught me how important feasibility is in woodworking. The design phase can sometimes make you forget the reality of fabrication: it's hard to anticipate the time and complexity involved in turning a design intention into something real."},
      es:{title:'Diseño de carpintería - Escalera',cat:'CARPINTERÍA · PERSONAL',desc:"De la idea a la materia, este es uno de los proyectos que más me importan. Realizado enteramente con madera de palés recuperada, me hizo tomar conciencia de la importancia de la viabilidad en carpintería. La fase de diseño puede a veces hacer olvidar la realidad de la fabricación: es difícil anticipar el tiempo y la complejidad que implica concretar una intención de diseño."},
    },
+   layout:'portrait-right',
    board:buildEscalierBoard},
   {id:'p6',title:'Carnets espaces collectifs',cat:'CROQUIS',
    tags:['croquis','collectivites'],
@@ -1115,6 +1139,29 @@ function getSuggestions(proj,n=3){return PROJECTS.filter(p=>p.id!==proj.id).map(
 
 function renderProjectView(id){
   const proj=PROJECTS.find(p=>p.id===id);if(!proj)return;
+
+  /* Layout portrait-right : images verticales à droite, texte à gauche */
+  const viewEl=document.getElementById('view-project');
+  viewEl.classList.toggle('proj-layout-portrait', proj.layout==='portrait-right');
+  if(proj.layout==='portrait-right'){
+    const imgs=proj.images||[];
+    const wrap=document.getElementById('projPortraitWrap');
+    wrap.innerHTML=imgs.map((src,i)=>
+      `<img src="${src}" class="proj-portrait-img${i===0?' active':''}" alt="${pf(proj,'title')} ${i+1}" loading="${i===0?'eager':'lazy'}">`
+    ).join('');
+    let pidx=0;
+    const counter=document.getElementById('projPortraitCounter');
+    counter.textContent=`1 / ${imgs.length}`;
+    const movePPortrait=dir=>{
+      wrap.querySelectorAll('.proj-portrait-img')[pidx].classList.remove('active');
+      pidx=(pidx+dir+imgs.length)%imgs.length;
+      wrap.querySelectorAll('.proj-portrait-img')[pidx].classList.add('active');
+      counter.textContent=`${pidx+1} / ${imgs.length}`;
+    };
+    document.getElementById('projPortraitPrev').onclick=()=>movePPortrait(-1);
+    document.getElementById('projPortraitNext').onclick=()=>movePPortrait(1);
+  }
+
   initProjHero(proj);
 
   document.getElementById('projCat').textContent=pf(proj,'cat');
