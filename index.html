@@ -59,7 +59,7 @@ img{display:block;max-width:100%;}
 .lang-opt.active{color:var(--moss);}
 
 /* HERO */
-.hero{display:grid;grid-template-columns:55fr 45fr;min-height:calc(100vh - var(--nav-h));border-bottom:var(--r);}
+.hero{display:grid;grid-template-columns:55fr 45fr;min-height:min(65vh,580px);border-bottom:var(--r);}
 .hero-right{overflow:hidden;}
 .hero-left{display:flex;flex-direction:column;justify-content:center;padding:var(--py) clamp(28px,3.5vw,64px) var(--py) var(--px);border-right:var(--r);gap:clamp(14px,2.2vh,30px);}
 .eyebrow{font-family:'DM Mono',monospace;font-size:clamp(9px,.65vw,11px);letter-spacing:.16em;color:var(--ink3);}
@@ -80,6 +80,8 @@ img{display:block;max-width:100%;}
 .hero-cta:hover{background:#294823;}
 .hero-right{display:flex;align-items:center;justify-content:center;background:var(--paper2);overflow:hidden;}
 .hero-right svg{width:min(72%,420px);height:auto;}
+.hero-photo-wrap{aspect-ratio:1/1;width:min(80%,380px);overflow:hidden;}
+.hero-photo-wrap img{width:100%;height:100%;object-fit:cover;}
 
 /* SECTIONS */
 .section{padding:var(--py) var(--px);}
@@ -429,18 +431,9 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <button class="hero-cta" onclick="navigate('map')" data-i18n="hero_cta">Explorer la carte des projets</button>
     </div>
     <div class="hero-right">
-      <svg viewBox="0 0 320 270" fill="none">
-        <rect x="20" y="105" width="94" height="135" stroke="#b0ae9e" stroke-width=".7"/>
-        <polygon points="20,105 67,54 114,105" stroke="#b0ae9e" stroke-width=".7" fill="none"/>
-        <rect x="43" y="175" width="20" height="30" stroke="#b0ae9e" stroke-width=".6" fill="none"/>
-        <rect x="155" y="74" width="128" height="164" stroke="#3b5c32" stroke-width=".85"/>
-        <polygon points="155,74 219,22 283,74" stroke="#3b5c32" stroke-width=".85" fill="none"/>
-        <rect x="178" y="163" width="24" height="38" stroke="#3b5c32" stroke-width=".65" fill="none"/>
-        <rect x="216" y="144" width="36" height="24" stroke="#3b5c32" stroke-width=".6" fill="none"/>
-        <line x1="8" y1="242" x2="308" y2="242" stroke="#d3d1c7" stroke-width=".85"/>
-        <text x="67" y="264" font-family="'DM Mono',monospace" font-size="7" fill="#9a9c90" text-anchor="middle" data-i18n="svg_existant">existant</text>
-        <text x="219" y="264" font-family="'DM Mono',monospace" font-size="7" fill="#3b5c32" text-anchor="middle" data-i18n="svg_extension">extension</text>
-      </svg>
+      <div class="hero-photo-wrap">
+        <img src="images/photo-principale.png" alt="Antonin Bourillot — architecte d'intérieur">
+      </div>
     </div>
   </section>
   <div class="section">
