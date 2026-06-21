@@ -65,7 +65,14 @@ img{display:block;max-width:100%;}
 .hero-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(32px,5vw,78px);line-height:1.05;}
 .hero-title em{font-style:normal;color:var(--moss);}
 .hero-desc{font-family:'Lora',serif;font-weight:300;font-size:clamp(13px,1.05vw,16px);line-height:1.85;color:var(--ink2);max-width:min(460px,90%);}
-.hero-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.hero-filter{display:flex;flex-direction:column;gap:10px;}
+.hero-filter-btn{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:clamp(9px,.75vw,11px);letter-spacing:.1em;color:var(--ink2);background:none;border:.5px solid var(--paper3);padding:8px 14px;border-radius:2px;cursor:pointer;transition:color .2s,border-color .2s;width:fit-content;}
+.hero-filter-btn:hover{border-color:var(--stone);color:var(--ink);}
+.hero-filter-btn[aria-expanded="true"]{border-color:var(--moss);color:var(--moss);}
+.hero-filter-btn[aria-expanded="true"] svg{transform:rotate(180deg);}
+.hero-filter-btn svg{transition:transform .2s;}
+.hero-tags{display:none;gap:8px;flex-wrap:wrap;}
+.hero-tags.open{display:flex;}
 .tag{font-family:'DM Mono',monospace;font-size:clamp(9px,.65vw,11px);letter-spacing:.08em;padding:5px 14px;border-radius:2px;border:.5px solid;cursor:pointer;transition:background .2s,color .2s;}
 /* Les couleurs de tags (t-xx) sont définies plus bas et partagées entre .tag (accueil) et .ptag (fiches) */
 .hero-cta{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:clamp(9px,.7vw,11px);letter-spacing:.12em;color:var(--paper);background:var(--moss);border:none;padding:clamp(10px,1.3vh,16px) clamp(18px,2vw,28px);border-radius:2px;cursor:pointer;transition:background .2s;width:fit-content;}
@@ -385,7 +392,13 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <p class="eyebrow" data-i18n="hero_eyebrow">Architecture · Intérieur · Collectivités</p>
       <h1 class="hero-title" data-i18n-html="hero_title">Espaces pour<br><em>le collectif,</em><br>construits<br>pour durer.</h1>
       <p class="hero-desc" data-i18n="hero_desc">Je conçois des espaces qui visent à s'ancrer dans le territoire et à servir les collectivités, avec une attention portée aux usages réels et aux matériaux locaux.</p>
-      <div class="hero-tags" id="heroTags"></div>
+      <div class="hero-filter">
+        <button class="hero-filter-btn" id="heroTagsToggle" onclick="toggleHeroTags()" aria-expanded="false">
+          <span data-i18n="hero_filter_label">Filtrer par thématique</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="hero-tags" id="heroTags" aria-hidden="true"></div>
+      </div>
       <button class="hero-cta" onclick="navigate('map')" data-i18n="hero_cta">Explorer la carte des projets</button>
     </div>
     <div class="hero-right">
@@ -732,6 +745,7 @@ const I18N = {
     hero_eyebrow:'Architecture · Intérieur · Collectivités',
     hero_title:'Espaces pour<br><em>le collectif,</em><br>construits<br>pour durer.',
     hero_desc:"Je conçois des espaces qui visent à s'ancrer dans le territoire et à servir les collectivités, avec une attention portée aux usages réels et aux matériaux locaux.",
+    hero_filter_label:'Filtrer par thématique',
     hero_cta:'Explorer la carte des projets',
     svg_existant:'existant',svg_extension:'extension',
     home_sec_title:'Projets sélectionnés',
@@ -771,6 +785,7 @@ const I18N = {
     hero_eyebrow:'Architecture · Interior · Public spaces',
     hero_title:'Spaces for<br><em>the collective,</em><br>built<br>to last.',
     hero_desc:"I design spaces meant to root themselves in their territory and serve public communities, with close attention to real-world uses and local materials.",
+    hero_filter_label:'Filter by theme',
     hero_cta:'Explore the projects map',
     svg_existant:'existing',svg_extension:'extension',
     home_sec_title:'Selected projects',
@@ -810,6 +825,7 @@ const I18N = {
     hero_eyebrow:'Arquitectura · Interiorismo · Colectividades',
     hero_title:'Espacios para<br><em>lo colectivo,</em><br>construidos<br>para durar.',
     hero_desc:"Diseño espacios que buscan arraigarse en el territorio y servir a las colectividades, prestando especial atención a los usos reales y a los materiales locales.",
+    hero_filter_label:'Filtrar por temática',
     hero_cta:'Explorar el mapa de proyectos',
     svg_existant:'existente',svg_extension:'extensión',
     home_sec_title:'Proyectos seleccionados',
@@ -934,6 +950,13 @@ function makeTagBadges(tags){
 }
 /* Affiche tous les tags existants sur la page d'accueil — se met à jour automatiquement
    à chaque nouveau tag ajouté dans TAG_META, sans rien à coder en plus. */
+function toggleHeroTags(){
+  const tags=document.getElementById('heroTags');
+  const btn=document.getElementById('heroTagsToggle');
+  const isOpen=tags.classList.toggle('open');
+  btn.setAttribute('aria-expanded',isOpen?'true':'false');
+  tags.setAttribute('aria-hidden',isOpen?'false':'true');
+}
 function renderHeroTags(){
   document.getElementById('heroTags').innerHTML=Object.keys(TAG_META).map(tg=>{
     const m=TAG_META[tg];
