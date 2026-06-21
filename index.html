@@ -911,6 +911,7 @@ function renderView(view,param){
   if(view==='tag'&&param)     renderTagView(param);
   if(view==='project'&&param) renderProjectView(param);
   if(view==='about') requestAnimationFrame(()=>{setAgPadding();updateCenteredFrame();});
+  if(view==='map')   requestAnimationFrame(centerMapView);
 }
 function navigate(view,param){history.pushState(null,'','#'+encodeState(view,param));renderView(view,param);}
 function goBack(){if(history.length>1)history.back();else navigate('home');}
@@ -969,19 +970,21 @@ function buildCarousel(proj){
 
   return`<div class="pcwrap" id="${id}_wrap">
     <div class="pcslides" id="${id}_slides" onclick="navigate('project','${proj.id}')" style="cursor:pointer;">${slidesHTML}</div>
-    <button class="pc-arrow prev" onclick="event.stopPropagation();slideCarousel('${id}',${slides.length},-1)" aria-label="Précédent">&#8592;</button>
-    <button class="pc-arrow next" onclick="event.stopPropagation();slideCarousel('${id}',${slides.length},1)" aria-label="Suivant">&#8594;</button>
+    <button class="pc-arrow prev" onclick="event.stopPropagation();slideCarousel(this,${slides.length},-1)" aria-label="Précédent">&#8592;</button>
+    <button class="pc-arrow next" onclick="event.stopPropagation();slideCarousel(this,${slides.length},1)" aria-label="Suivant">&#8594;</button>
     <div class="pc-dots">${dotsHTML}</div>
   </div>`;
 }
 
 const carouselState={};
-function slideCarousel(id,total,dir){
-  if(!carouselState[id]) carouselState[id]=0;
-  carouselState[id]=(carouselState[id]+dir+total)%total;
-  const idx=carouselState[id];
-  document.getElementById(id+'_slides').style.transform=`translateX(-${idx*100}%)`;
-  document.querySelectorAll(`[id^="${id}_dot"]`).forEach((d,i)=>d.classList.toggle('active',i===idx));
+function slideCarousel(btn,total,dir){
+  const wrap=btn.closest('.pcwrap');
+  const key=wrap.id;
+  if(!carouselState[key]) carouselState[key]=0;
+  carouselState[key]=(carouselState[key]+dir+total)%total;
+  const idx=carouselState[key];
+  wrap.querySelector('.pcslides').style.transform=`translateX(-${idx*100}%)`;
+  wrap.querySelectorAll('.pc-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
 }
 
 /* ══════ GRILLES ══════ */
