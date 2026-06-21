@@ -1444,12 +1444,18 @@ function buildYapadageBoard(proj){
 const ISHI_BOARD_I18N = {
   fr:{vis:'LES VISUELS',insp:'LES INSPIRATIONS',princ:'LES GRANDS PRINCIPES',
       capFacade:'Façade',capAxo:'Axonométrie',capInterieur:'Intérieur',capPlan:'Plan',
+      capCairn:'Cairn',
+      cairnText:"L'équilibre des pierres naît d'une participation des promeneurs, il représente un symbole de geste communautaire et de signe de ralliement",
       equilibre:'Équilibre',reflexion:'Réflexion',partage:'Partage'},
   en:{vis:'VISUALS',insp:'INSPIRATIONS',princ:'KEY PRINCIPLES',
       capFacade:'Façade',capAxo:'Axonometric',capInterieur:'Interior',capPlan:'Floor plan',
+      capCairn:'Cairn',
+      cairnText:'The balance of the stones stems from the participation of passers-by, representing a symbol of community gesture and a rallying sign',
       equilibre:'Balance',reflexion:'Reflection',partage:'Sharing'},
   es:{vis:'LOS VISUALES',insp:'LAS INSPIRACIONES',princ:'LOS GRANDES PRINCIPIOS',
       capFacade:'Fachada',capAxo:'Axonométrico',capInterieur:'Interior',capPlan:'Plano',
+      capCairn:'Cairn',
+      cairnText:'El equilibrio de las piedras nace de la participación de los paseantes, representa un símbolo de gesto comunitario y de signo de unión',
       equilibre:'Equilibrio',reflexion:'Reflexión',partage:'Compartir'},
 };
 function buildIshiBoard(proj){
@@ -1472,22 +1478,28 @@ function buildIshiBoard(proj){
   const interieurC= pbPolar(CX,CY,ANG_VIS+10,R2);
   const planC     = pbPolar(CX,CY,ANG_VIS+30,R2);
 
+  /* Inspiration : cairn + bloc texte à côté */
+  const cairnC     = pbPolar(CX,CY,ANG_INSP,R2);
+  const cairnTextC = {x:cairnC.x+230, y:cairnC.y};
+
   /* Grands principes : 3 enfants ±20° */
   const equilibreC = pbPolar(CX,CY,ANG_PRINC-20,R2);
   const reflexionC = pbPolar(CX,CY,ANG_PRINC,   R2);
   const partageC   = pbPolar(CX,CY,ANG_PRINC+20,R2);
 
-  const hubP       = pbTopLeft(hubC,260,190);
-  const visP       = pbTopLeft(visC,210,50);
-  const inspP      = pbTopLeft(inspC,210,50);
-  const princP     = pbTopLeft(princC,220,50);
-  const facadeP    = pbTopLeft(facadeC,190,222);
-  const axoP       = pbTopLeft(axoC,190,222);
-  const interieurP = pbTopLeft(interieurC,190,222);
-  const planP      = pbTopLeft(planC,190,222);
-  const equilibreP = pbTopLeft(equilibreC,160,40);
-  const reflexionP = pbTopLeft(reflexionC,160,40);
-  const partageP   = pbTopLeft(partageC,160,40);
+  const hubP        = pbTopLeft(hubC,260,190);
+  const visP        = pbTopLeft(visC,210,50);
+  const inspP       = pbTopLeft(inspC,210,50);
+  const princP      = pbTopLeft(princC,220,50);
+  const facadeP     = pbTopLeft(facadeC,190,222);
+  const axoP        = pbTopLeft(axoC,190,222);
+  const interieurP  = pbTopLeft(interieurC,190,222);
+  const planP       = pbTopLeft(planC,190,222);
+  const cairnP      = pbTopLeft(cairnC,190,222);
+  const cairnTextP  = pbTopLeft(cairnTextC,260,120);
+  const equilibreP  = pbTopLeft(equilibreC,160,40);
+  const reflexionP  = pbTopLeft(reflexionC,160,40);
+  const partageP    = pbTopLeft(partageC,160,40);
 
   const nodes=[
     {id:'hub',       type:'text', label:t('board_hub_label'),text:excerpt,x:hubP.x,y:hubP.y,w:260},
@@ -1498,6 +1510,8 @@ function buildIshiBoard(proj){
     {id:'axo',       type:'image',src:'images/cafe-ishi-axo.png',       caption:L.capAxo,      x:axoP.x,      y:axoP.y,      w:190},
     {id:'interieur', type:'image',src:'images/cafe-ishi-interieur.png', caption:L.capInterieur,x:interieurP.x,y:interieurP.y,w:190},
     {id:'plan',      type:'image',src:'images/cafe-ishi-plan.png',      caption:L.capPlan,     x:planP.x,     y:planP.y,     w:190},
+    {id:'cairn',     type:'image',src:'images/cafe-ishi-cairn.jpg',     caption:L.capCairn,    x:cairnP.x,    y:cairnP.y,    w:190},
+    {id:'cairnText', type:'text', text:L.cairnText,x:cairnTextP.x,y:cairnTextP.y,w:260},
     {id:'equilibre', type:'tag',  label:L.equilibre,color:C_PRINC,x:equilibreP.x,y:equilibreP.y},
     {id:'reflexion', type:'tag',  label:L.reflexion, color:C_PRINC,x:reflexionP.x,y:reflexionP.y},
     {id:'partage',   type:'tag',  label:L.partage,   color:C_PRINC,x:partageP.x,  y:partageP.y},
@@ -1510,6 +1524,8 @@ function buildIshiBoard(proj){
     {from:'vis',to:'axo',       color:C_VIS},
     {from:'vis',to:'interieur', color:C_VIS},
     {from:'vis',to:'plan',      color:C_VIS},
+    {from:'insp',to:'cairn',    color:C_INSP},
+    {from:'cairn',to:'cairnText',color:C_INSP},
     {from:'princ',to:'equilibre',color:C_PRINC},
     {from:'princ',to:'reflexion',color:C_PRINC},
     {from:'princ',to:'partage',  color:C_PRINC},
