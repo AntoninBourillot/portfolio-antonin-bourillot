@@ -189,6 +189,8 @@ img{display:block;max-width:100%;}
 .proj-portrait-nav button{background:none;border:.5px solid var(--ink3);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s;}
 .proj-portrait-nav button:hover{background:var(--ink);color:var(--paper);}
 .proj-portrait-counter{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--ink3);}
+.proj-status-note{display:none;margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--moss);text-transform:uppercase;}
+.proj-status-note.visible{display:block;}
 
 /* Sticker vidéo cliquable */
 .proj-video-sticker{
@@ -483,6 +485,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <p class="proj-cat"   id="projCat"></p>
       <h1 class="proj-title" id="projTitle"></h1>
       <p class="proj-desc"   id="projDesc"></p>
+      <p class="proj-status-note" id="projStatusNote"></p>
     </div>
     <div class="proj-meta">
       <div><p class="meta-label" data-i18n="meta_tags">TAGS</p><div class="proj-tags-wrap" id="projTags"></div></div>
@@ -498,7 +501,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     </div>
   </div>
   <!-- Carte du projet -->
-  <div class="proj-board-section">
+  <div class="proj-board-section" id="projBoardSection">
     <div class="proj-board-head">
       <h2 class="proj-board-title" data-i18n="board_title">Carte du projet</h2>
       <p class="proj-board-hint" data-i18n="board_hint">GLISSER LE FOND POUR NAVIGUER · GLISSER UN ÉLÉMENT POUR LE DÉPLACER · MOLETTE POUR ZOOMER</p>
@@ -655,7 +658,7 @@ const PROJECTS = [
      es:{title:'Diseño de carpintería - Escalera',cat:'CARPINTERÍA · PERSONAL',desc:"De la idea a la materia, este es uno de los proyectos que más me importan. Realizado enteramente con madera de palés recuperada, me hizo tomar conciencia de la importancia de la viabilidad en carpintería. La fase de diseño puede a veces hacer olvidar la realidad de la fabricación: es difícil anticipar el tiempo y la complejidad que implica concretar una intención de diseño."},
    },
    layout:'portrait-right',
-   board:buildEscalierBoard},
+   noBoard:true},
   {id:'p6',title:'Carnets espaces collectifs',cat:'CROQUIS',
    tags:['croquis','collectivites'],
    thumb:null,
@@ -668,9 +671,10 @@ const PROJECTS = [
    }},
   {id:'p8',title:'Assistance à la maîtrise d\'œuvre — CHUZELLES',cat:'ARCHI · COLLECTIVITÉ',
    tags:['collectivites','moe'],
-   thumb:null,
+   thumb:'images/chuzelles-visuel-provisoire.jpg',
    color:'#d8dce8',stroke:'#3a4a6a',
    images:[],mapX:360,mapY:480,
+   onGoing:true,
    desc:"Une mission de maîtrise d'œuvre en collectivité consistant à piloter un projet sur un laps de temps réduit, respecter les marchés publics, coordonner les acteurs et intégrer les contraintes administratives et réglementaires de l'architecture publique.",
    i18n:{
      en:{title:'Project management assistance — CHUZELLES',cat:'ARCHITECTURE · PUBLIC SECTOR',desc:"A project management role for a public authority, involving running a project within a short timeframe, complying with public procurement rules, coordinating stakeholders, and integrating the administrative and regulatory constraints of public architecture."},
@@ -784,7 +788,7 @@ const I18N = {
     svg_existant:'existant',svg_extension:'extension',
     home_sec_title:'Projets sélectionnés',
     back:'← Retour',
-    meta_tags:'TAGS',meta_categorie:'CATÉGORIE',meta_prix:'PRIX',
+    meta_tags:'TAGS',meta_categorie:'CATÉGORIE',meta_prix:'PRIX',proj_en_cours:'— Projet en cours',
     board_title:'Carte du projet',
     board_hint:'GLISSER LE FOND POUR NAVIGUER · GLISSER UN ÉLÉMENT POUR LE DÉPLACER · MOLETTE POUR ZOOMER',
     board_hub_label:'LE PROJET',
@@ -824,7 +828,7 @@ const I18N = {
     svg_existant:'existing',svg_extension:'extension',
     home_sec_title:'Selected projects',
     back:'← Back',
-    meta_tags:'TAGS',meta_categorie:'CATEGORY',meta_prix:'AWARD',
+    meta_tags:'TAGS',meta_categorie:'CATEGORY',meta_prix:'AWARD',proj_en_cours:'— Ongoing project',
     board_title:'Project map',
     board_hint:'DRAG THE BACKGROUND TO PAN · DRAG AN ELEMENT TO MOVE IT · SCROLL TO ZOOM',
     board_hub_label:'THE PROJECT',
@@ -864,7 +868,7 @@ const I18N = {
     svg_existant:'existente',svg_extension:'extensión',
     home_sec_title:'Proyectos seleccionados',
     back:'← Volver',
-    meta_tags:'ETIQUETAS',meta_categorie:'CATEGORÍA',meta_prix:'PREMIO',
+    meta_tags:'ETIQUETAS',meta_categorie:'CATEGORÍA',meta_prix:'PREMIO',proj_en_cours:'— Proyecto en curso',
     board_title:'Mapa del proyecto',
     board_hint:'ARRASTRA EL FONDO PARA NAVEGAR · ARRASTRA UN ELEMENTO PARA MOVERLO · RUEDA PARA AMPLIAR',
     board_hub_label:'EL PROYECTO',
@@ -1172,6 +1176,14 @@ function renderProjectView(id){
   const prize=pf(proj,'prize');
   if(prize) metaExtra+=`<div><p class="meta-label">${t('meta_prix')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${prize}</p></div>`;
   document.getElementById('projMetaExtra').innerHTML=metaExtra;
+
+  /* Note de statut (ex : projet en cours) */
+  const noteEl=document.getElementById('projStatusNote');
+  if(proj.onGoing){noteEl.textContent=t('proj_en_cours');noteEl.classList.add('visible');}
+  else{noteEl.textContent='';noteEl.classList.remove('visible');}
+
+  /* Masquer la carte du projet si noBoard */
+  document.getElementById('projBoardSection').style.display=proj.noBoard?'none':'';
 
   const quoteEl=document.getElementById('projHeroQuote');
   quoteEl.textContent=proj.quote||'';
