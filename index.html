@@ -1294,19 +1294,22 @@ const YAPADAGE_BOARD_I18N = {
       capNetworking:'Networking Space - Kiev',capGerry:"Court-métrage - Gerry's Game",
       capMouvement:'Mouvement',capRepetition:'Répétition',capVide:'Vide et plein',
       capAtelier:'Atelier — Rendu 3D',capFenetre:'Bibliothèque — Rendu 3D',
-      capPlanRdc:'Plan RDC',capPlanEtage:'Plan étage'},
+      capPlanRdc:'Plan RDC',capPlanEtage:'Plan étage',
+      capVueA1:'Visuel A1',capCoupe:'Coupe colorée'},
   en:{insp:'INSPIRATIONS',princ:'KEY PRINCIPLES',mat:'MATERIALS USED',espaces:'SPACES',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
       capNetworking:'Networking Space - Kiev',capGerry:"Short film - Gerry's Game",
       capMouvement:'Movement',capRepetition:'Repetition',capVide:'Void and solid',
       capAtelier:'Workshop — 3D render',capFenetre:'Library — 3D render',
-      capPlanRdc:'Ground floor plan',capPlanEtage:'First floor plan'},
+      capPlanRdc:'Ground floor plan',capPlanEtage:'First floor plan',
+      capVueA1:'A1 visual',capCoupe:'Coloured section'},
   es:{insp:'LAS INSPIRACIONES',princ:'LOS GRANDES PRINCIPIOS',mat:'LOS MATERIALES UTILIZADOS',espaces:'LOS ESPACIOS',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
       capNetworking:'Networking Space - Kiev',capGerry:"Cortometraje - Gerry's Game",
       capMouvement:'Movimiento',capRepetition:'Repetición',capVide:'Vacío y lleno',
       capAtelier:'Taller — Render 3D',capFenetre:'Biblioteca — Render 3D',
-      capPlanRdc:'Planta baja',capPlanEtage:'Primera planta'},
+      capPlanRdc:'Planta baja',capPlanEtage:'Primera planta',
+      capVueA1:'Visual A1',capCoupe:'Sección coloreada'},
 };
 function buildYapadageBoard(proj){
   const L=YAPADAGE_BOARD_I18N[currentLang]||YAPADAGE_BOARD_I18N.fr;
@@ -1333,11 +1336,13 @@ function buildYapadageBoard(proj){
   const repetitionC = pbPolar(CX,CY,ANG_PRINC,   R2);
   const videC       = pbPolar(CX,CY,ANG_PRINC+20,R2);
 
-  /* 4 images des espaces, rayonnant autour de la branche espaces */
+  /* 6 images des espaces, rayonnant autour de la branche espaces */
+  const vueA1C     = pbPolar(CX,CY,ANG_ESPACES-50,R2);
   const atelierC   = pbPolar(CX,CY,ANG_ESPACES-30,R2);
   const fenetreC   = pbPolar(CX,CY,ANG_ESPACES-10,R2);
   const planRdcC   = pbPolar(CX,CY,ANG_ESPACES+10,R2);
   const planEtageC = pbPolar(CX,CY,ANG_ESPACES+30,R2);
+  const coupeC     = pbPolar(CX,CY,ANG_ESPACES+50,R2);
 
   const hubP=pbTopLeft(hubC,260,190), inspP=pbTopLeft(inspC,210,50),
         princP=pbTopLeft(princC,210,50), matP=pbTopLeft(matC,210,50),
@@ -1346,8 +1351,10 @@ function buildYapadageBoard(proj){
         networkingP=pbTopLeft(networkingC,190,222), gerryP=pbTopLeft(gerryC,190,222),
         mouvementP=pbTopLeft(mouvementC,190,222), repetitionP=pbTopLeft(repetitionC,190,222),
         videP=pbTopLeft(videC,190,222),
+        vueA1P=pbTopLeft(vueA1C,190,222),
         atelierP=pbTopLeft(atelierC,190,222), fenetreP=pbTopLeft(fenetreC,190,222),
-        planRdcP=pbTopLeft(planRdcC,190,222), planEtageP=pbTopLeft(planEtageC,190,222);
+        planRdcP=pbTopLeft(planRdcC,190,222), planEtageP=pbTopLeft(planEtageC,190,222),
+        coupeP=pbTopLeft(coupeC,190,222);
 
   const C_INSP=TAG_COLORS['developpement-durable'];
   const C_PRINC=TAG_COLORS['collectivites'];
@@ -1366,10 +1373,12 @@ function buildYapadageBoard(proj){
     {id:'mouvement',  type:'image',src:'images/yapadage-mouvement.jpg',               caption:L.capMouvement,  x:mouvementP.x,  y:mouvementP.y,  w:190},
     {id:'repetition', type:'image',src:'images/yapadage-repetition.jpg',              caption:L.capRepetition, x:repetitionP.x, y:repetitionP.y, w:190},
     {id:'vide',       type:'image',src:'images/yapadage-vide-et-plein.jpg',           caption:L.capVide,       x:videP.x,       y:videP.y,       w:190},
+    {id:'vueA1',     type:'image',src:'images/yapadage-vue-a1.png',    caption:L.capVueA1,     x:vueA1P.x,     y:vueA1P.y,     w:190},
     {id:'atelier',   type:'image',src:'images/yapadage-atelier.png',   caption:L.capAtelier,   x:atelierP.x,   y:atelierP.y,   w:190},
     {id:'fenetre',   type:'image',src:'images/yapadage-fenetre.png',   caption:L.capFenetre,   x:fenetreP.x,   y:fenetreP.y,   w:190},
     {id:'planRdc',   type:'image',src:'images/yapadage-plan-rdc.png',  caption:L.capPlanRdc,   x:planRdcP.x,   y:planRdcP.y,   w:190},
     {id:'planEtage', type:'image',src:'images/yapadage-plan-etage.png',caption:L.capPlanEtage, x:planEtageP.x, y:planEtageP.y, w:190},
+    {id:'coupe',     type:'image',src:'images/yapadage-coupe.png',     caption:L.capCoupe,     x:coupeP.x,     y:coupeP.y,     w:190},
   ];
   const links=[
     {from:'hub',to:'insp',       color:TAG_COLORS['developpement-durable']},
@@ -1383,10 +1392,12 @@ function buildYapadageBoard(proj){
     {from:'princ',to:'mouvement', color:C_PRINC},
     {from:'princ',to:'repetition',color:C_PRINC},
     {from:'princ',to:'vide',      color:C_PRINC},
+    {from:'espaces',to:'vueA1',     color:C_ESP},
     {from:'espaces',to:'atelier',   color:C_ESP},
     {from:'espaces',to:'fenetre',   color:C_ESP},
     {from:'espaces',to:'planRdc',   color:C_ESP},
     {from:'espaces',to:'planEtage', color:C_ESP},
+    {from:'espaces',to:'coupe',     color:C_ESP},
   ];
   return {nodes,links};
 }
