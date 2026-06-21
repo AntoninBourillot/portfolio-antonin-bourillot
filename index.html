@@ -1248,7 +1248,7 @@ function buildSeaSheardBoard(proj){
      propre couleur (issue des tags du projet) du hub jusqu'à ses enfants, pour
      que les liens restent bien visibles et lisibles. */
   const CX=620, CY=380, R1=300, R2=600;
-  const ANG_INSP=200, ANG_MAT=320, ANG_PRINC=80, ANG_VIS=140;
+  const ANG_INSP=200, ANG_MAT=320, ANG_PRINC=80, ANG_VIS=20;
   const C_INSP=TAG_COLORS['ux'], C_MAT=TAG_COLORS['reemploi'], C_PRINC=TAG_COLORS['developpement-durable'], C_VIS=TAG_COLORS['collectivites'];
 
   const hubC   = {x:CX,y:CY};
@@ -1317,10 +1317,6 @@ function buildSeaSheardBoard(proj){
     {from:'princ',to:'env',color:C_PRINC},
     {from:'princ',to:'access',color:C_PRINC},
     {from:'princ',to:'diver',color:C_PRINC},
-    /* Liaisons faibles : pointillés, sans force d'attraction élastique */
-    {from:'diver',to:'insp2',color:'#c8c5b5',dashed:true,noPull:true},
-    {from:'insp1',to:'mat3', color:'#c8c5b5',dashed:true,noPull:true},
-    {from:'env',  to:'mat1', color:'#c8c5b5',dashed:true,noPull:true},
   ];
   return {nodes,links};
 }
