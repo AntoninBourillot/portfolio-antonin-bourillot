@@ -1202,6 +1202,7 @@ const SEA_SHEARD_BOARD_I18N = {
   fr:{insp:'LES INSPIRATIONS',
       mat:'LES MATÉRIAUX UTILISÉS',matText:'Réemploi et matériaux bas-carbone choisis pour leur disponibilité locale.',
       princ:'LES GRANDS PRINCIPES',princText:'Accessibilité, sensibilisation environnementale et intégration paysagère.',
+      vis:'LES VISUELS',capBatEntier:'Bâtiment entier',capArriere:'Visuel arrière',
       capTennis:'Balles de tennis recyclées',capOstrea:'Ostrea',capCorten:'Acier corten',
       capDoshi:'Doshi Retreat - Vitra Campus',capKnokke:'Knokke Safety Pavilion par Compagnie O',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
@@ -1210,6 +1211,7 @@ const SEA_SHEARD_BOARD_I18N = {
   en:{insp:'INSPIRATIONS',
       mat:'MATERIALS USED',matText:'Reused and low-carbon materials chosen for their local availability.',
       princ:'KEY PRINCIPLES',princText:'Accessibility, environmental awareness and integration into the landscape.',
+      vis:'VISUALS',capBatEntier:'Full building',capArriere:'Rear view',
       capTennis:'Recycled tennis balls',capOstrea:'Ostrea',capCorten:'Corten steel',
       capDoshi:'Doshi Retreat - Vitra Campus',capKnokke:'Knokke Safety Pavilion by Compagnie O',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
@@ -1218,6 +1220,7 @@ const SEA_SHEARD_BOARD_I18N = {
   es:{insp:'LAS INSPIRACIONES',
       mat:'LOS MATERIALES UTILIZADOS',matText:'Materiales reutilizados y de bajo carbono elegidos por su disponibilidad local.',
       princ:'LOS GRANDES PRINCIPIOS',princText:'Accesibilidad, sensibilización ambiental e integración paisajística.',
+      vis:'LOS VISUALES',capBatEntier:'Edificio completo',capArriere:'Vista trasera',
       capTennis:'Pelotas de tenis recicladas',capOstrea:'Ostrea',capCorten:'Acero corten',
       capDoshi:'Doshi Retreat - Vitra Campus',capKnokke:'Knokke Safety Pavilion por Compagnie O',
       capFos:'Collectif Fos - Madrid',capPlayground:'Playground - Istanbul',
@@ -1245,13 +1248,17 @@ function buildSeaSheardBoard(proj){
      propre couleur (issue des tags du projet) du hub jusqu'à ses enfants, pour
      que les liens restent bien visibles et lisibles. */
   const CX=620, CY=380, R1=300, R2=600;
-  const ANG_INSP=200, ANG_MAT=320, ANG_PRINC=80;
-  const C_INSP=TAG_COLORS['ux'], C_MAT=TAG_COLORS['reemploi'], C_PRINC=TAG_COLORS['developpement-durable'];
+  const ANG_INSP=200, ANG_MAT=320, ANG_PRINC=80, ANG_VIS=140;
+  const C_INSP=TAG_COLORS['ux'], C_MAT=TAG_COLORS['reemploi'], C_PRINC=TAG_COLORS['developpement-durable'], C_VIS=TAG_COLORS['collectivites'];
 
   const hubC   = {x:CX,y:CY};
   const inspC  = pbPolar(CX,CY,ANG_INSP, R1);
   const matC   = pbPolar(CX,CY,ANG_MAT,  R1);
   const princC = pbPolar(CX,CY,ANG_PRINC,R1);
+  const visC   = pbPolar(CX,CY,ANG_VIS,  R1);
+
+  const batEntierC = pbPolar(CX,CY,ANG_VIS-20,R2);
+  const arriereC   = pbPolar(CX,CY,ANG_VIS+20,R2);
 
   const insp1C       = pbPolar(CX,CY,ANG_INSP-50,R2);
   const fosC         = pbPolar(CX,CY,ANG_INSP-30,R2);
@@ -1270,6 +1277,8 @@ function buildSeaSheardBoard(proj){
 
   const hubP=pbTopLeft(hubC,260,190), inspP=pbTopLeft(inspC,210,50),
         matP=pbTopLeft(matC,230,140), princP=pbTopLeft(princC,220,140),
+        visP=pbTopLeft(visC,210,50),
+        batEntierP=pbTopLeft(batEntierC,190,222), arriereP=pbTopLeft(arriereC,190,222),
         insp1P=pbTopLeft(insp1C,190,222), insp2P=pbTopLeft(insp2C,190,222),
         fosP=pbTopLeft(fosC,190,222), playgroundP=pbTopLeft(playgroundC,190,222),
         networkingP=pbTopLeft(networkingC,190,222), gerryP=pbTopLeft(gerryC,190,222),
@@ -1289,11 +1298,17 @@ function buildSeaSheardBoard(proj){
     {id:'env',   type:'tag',label:L.envLabel,   color:'#3b5c32', x:envP.x,y:envP.y},
     {id:'access',type:'tag',label:L.accessLabel,color:'#2a5a6a', x:accessP.x,y:accessP.y},
     {id:'diver', type:'tag',label:L.diverLabel, color:'#c47d2a', x:diverP.x,y:diverP.y},
+    {id:'vis',      type:'text', label:L.vis,                                                x:visP.x,      y:visP.y,      w:210},
+    {id:'batEntier',type:'image',src:'images/sea-sheard-bat-entier.png',  caption:L.capBatEntier,x:batEntierP.x,y:batEntierP.y,w:190},
+    {id:'arriere',  type:'image',src:'images/sea-sheard-visuel-arriere.png',caption:L.capArriere, x:arriereP.x,  y:arriereP.y,  w:190},
   ];
   const links=[
     {from:'hub',to:'insp', color:C_INSP},
     {from:'hub',to:'mat',  color:C_MAT},
     {from:'hub',to:'princ',color:C_PRINC},
+    {from:'hub',to:'vis',       color:C_VIS},
+    {from:'vis',to:'batEntier', color:C_VIS},
+    {from:'vis',to:'arriere',   color:C_VIS},
     {from:'insp',to:'insp1',color:C_INSP},
     {from:'insp',to:'insp2',color:C_INSP},
     {from:'mat',to:'mat1',color:C_MAT},
