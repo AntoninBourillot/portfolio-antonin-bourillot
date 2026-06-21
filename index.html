@@ -316,6 +316,7 @@ img{display:block;max-width:100%;}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--paper3);}
 .acell{background:var(--paper);padding:var(--py) var(--px);}
 .alabel{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--ink3);margin-bottom:16px;}
+.about-wip{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--moss);margin-left:10px;}
 
 /* Galerie de croquis (À propos) */
 .about-gallery{padding:var(--py) var(--px);border-top:var(--r);background:var(--paper);}
@@ -588,7 +589,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     <div class="acell"><p class="alabel" data-i18n="about_skills_label">COMPÉTENCES & OUTILS</p><ul class="alist"><li>AutoCAD · SketchUp · Revit</li><li data-i18n="about_skill_adobe">Adobe Suite (Ps, Ai, Id)</li><li data-i18n="about_skill_wood">Menuiserie bois & assemblages</li><li data-i18n="about_skill_sketch">Rendu à la main & croquis</li><li data-i18n="about_skill_dd">Développement durable & réemploi</li></ul></div>
   </div>
   <div class="about-gallery">
-    <p class="alabel" data-i18n="about_gallery_label">CROQUIS & DESSINS</p>
+    <p class="alabel" data-i18n="about_gallery_label">CROQUIS & DESSINS</p><span class="about-wip" data-i18n="about_wip">— page en construction</span>
     <div class="ag-controls">
       <button class="ag-arrow" id="agPrev" aria-label="Défiler vers la gauche">&#8592;</button>
       <button class="ag-shuffle" id="agShuffle" aria-label="Vignette aléatoire" title="Vignette aléatoire">
@@ -817,7 +818,7 @@ const I18N = {
     about_skills_label:'COMPÉTENCES & OUTILS',
     about_skill_adobe:'Adobe Suite (Ps, Ai, Id)',about_skill_wood:'Menuiserie bois & assemblages',
     about_skill_sketch:'Rendu à la main & croquis',about_skill_dd:'Développement durable & réemploi',
-    about_gallery_label:'CROQUIS & DESSINS',
+    about_gallery_label:'CROQUIS & DESSINS',about_wip:'— page en construction',
     contact_title:'Contact',contact_phone_label:'TÉLÉPHONE',
   },
   en:{
@@ -857,7 +858,7 @@ const I18N = {
     about_skills_label:'SKILLS & TOOLS',
     about_skill_adobe:'Adobe Suite (Ps, Ai, Id)',about_skill_wood:'Woodworking & joinery',
     about_skill_sketch:'Hand rendering & sketching',about_skill_dd:'Sustainability & material reuse',
-    about_gallery_label:'SKETCHES & DRAWINGS',
+    about_gallery_label:'SKETCHES & DRAWINGS',about_wip:'— page under construction',
     contact_title:'Contact',contact_phone_label:'PHONE',
   },
   es:{
@@ -897,7 +898,7 @@ const I18N = {
     about_skills_label:'HABILIDADES Y HERRAMIENTAS',
     about_skill_adobe:'Adobe Suite (Ps, Ai, Id)',about_skill_wood:'Carpintería y ensambles',
     about_skill_sketch:'Renderizado a mano y bocetos',about_skill_dd:'Sostenibilidad y reutilización',
-    about_gallery_label:'BOCETOS Y DIBUJOS',
+    about_gallery_label:'BOCETOS Y DIBUJOS',about_wip:'— página en construcción',
     contact_title:'Contacto',contact_phone_label:'TELÉFONO',
   },
 };
