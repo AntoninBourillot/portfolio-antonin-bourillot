@@ -1442,15 +1442,15 @@ function buildYapadageBoard(proj){
 }
 
 const ISHI_BOARD_I18N = {
-  fr:{vis:'LES VISUELS',
-      capFacade:'Façade',capAxo:'Axonométrie',capInterieur:'Intérieur',
-      capPlan:'Plan',capApres:'Après travaux',capInt2:'Vue intérieure'},
-  en:{vis:'VISUALS',
-      capFacade:'Façade',capAxo:'Axonometric',capInterieur:'Interior',
-      capPlan:'Floor plan',capApres:'After works',capInt2:'Interior view'},
-  es:{vis:'LOS VISUALES',
-      capFacade:'Fachada',capAxo:'Axonométrico',capInterieur:'Interior',
-      capPlan:'Plano',capApres:'Tras las obras',capInt2:'Vista interior'},
+  fr:{vis:'LES VISUELS',insp:'LES INSPIRATIONS',princ:'LES GRANDS PRINCIPES',
+      capFacade:'Façade',capAxo:'Axonométrie',capInterieur:'Intérieur',capPlan:'Plan',
+      equilibre:'Équilibre',reflexion:'Réflexion',partage:'Partage'},
+  en:{vis:'VISUALS',insp:'INSPIRATIONS',princ:'KEY PRINCIPLES',
+      capFacade:'Façade',capAxo:'Axonometric',capInterieur:'Interior',capPlan:'Floor plan',
+      equilibre:'Balance',reflexion:'Reflection',partage:'Sharing'},
+  es:{vis:'LOS VISUALES',insp:'LAS INSPIRACIONES',princ:'LOS GRANDES PRINCIPIOS',
+      capFacade:'Fachada',capAxo:'Axonométrico',capInterieur:'Interior',capPlan:'Plano',
+      equilibre:'Equilibrio',reflexion:'Reflexión',partage:'Compartir'},
 };
 function buildIshiBoard(proj){
   const L=ISHI_BOARD_I18N[currentLang]||ISHI_BOARD_I18N.fr;
@@ -1458,42 +1458,61 @@ function buildIshiBoard(proj){
   const excerpt=desc.length>190?desc.slice(0,190).trim()+'…':desc;
 
   const CX=620, CY=380, R1=300, R2=600;
-  const ANG_VIS=90;
-  const C_VIS=TAG_COLORS['erp'];
+  const ANG_VIS=90, ANG_INSP=210, ANG_PRINC=330;
+  const C_VIS=TAG_COLORS['erp'], C_INSP=TAG_COLORS['petit-espace'], C_PRINC=TAG_COLORS['inclusion'];
 
-  const hubC = {x:CX,y:CY};
-  const visC = pbPolar(CX,CY,ANG_VIS,R1);
+  const hubC   = {x:CX,y:CY};
+  const visC   = pbPolar(CX,CY,ANG_VIS,  R1);
+  const inspC  = pbPolar(CX,CY,ANG_INSP, R1);
+  const princC = pbPolar(CX,CY,ANG_PRINC,R1);
 
-  const facadeC   = pbPolar(CX,CY,ANG_VIS-50,R2);
-  const axoC      = pbPolar(CX,CY,ANG_VIS-25,R2);
-  const interieurC= pbPolar(CX,CY,ANG_VIS,   R2);
-  const planC     = pbPolar(CX,CY,ANG_VIS+25,R2);
-  const apresC    = pbPolar(CX,CY,ANG_VIS+50,R2);
+  /* Visuels : 4 enfants ±30° */
+  const facadeC   = pbPolar(CX,CY,ANG_VIS-30,R2);
+  const axoC      = pbPolar(CX,CY,ANG_VIS-10,R2);
+  const interieurC= pbPolar(CX,CY,ANG_VIS+10,R2);
+  const planC     = pbPolar(CX,CY,ANG_VIS+30,R2);
 
-  const hubP      = pbTopLeft(hubC,260,190);
-  const visP      = pbTopLeft(visC,210,50);
-  const facadeP   = pbTopLeft(facadeC,190,222);
-  const axoP      = pbTopLeft(axoC,190,222);
-  const interieurP= pbTopLeft(interieurC,190,222);
-  const planP     = pbTopLeft(planC,190,222);
-  const apresP    = pbTopLeft(apresC,190,222);
+  /* Grands principes : 3 enfants ±20° */
+  const equilibreC = pbPolar(CX,CY,ANG_PRINC-20,R2);
+  const reflexionC = pbPolar(CX,CY,ANG_PRINC,   R2);
+  const partageC   = pbPolar(CX,CY,ANG_PRINC+20,R2);
+
+  const hubP       = pbTopLeft(hubC,260,190);
+  const visP       = pbTopLeft(visC,210,50);
+  const inspP      = pbTopLeft(inspC,210,50);
+  const princP     = pbTopLeft(princC,220,50);
+  const facadeP    = pbTopLeft(facadeC,190,222);
+  const axoP       = pbTopLeft(axoC,190,222);
+  const interieurP = pbTopLeft(interieurC,190,222);
+  const planP      = pbTopLeft(planC,190,222);
+  const equilibreP = pbTopLeft(equilibreC,160,40);
+  const reflexionP = pbTopLeft(reflexionC,160,40);
+  const partageP   = pbTopLeft(partageC,160,40);
 
   const nodes=[
-    {id:'hub',      type:'text', label:t('board_hub_label'),text:excerpt,x:hubP.x,y:hubP.y,w:260},
-    {id:'vis',      type:'text', label:L.vis,x:visP.x,y:visP.y,w:210},
-    {id:'facade',   type:'image',src:'images/ishi-cafe-facade.png',    caption:L.capFacade,   x:facadeP.x,   y:facadeP.y,   w:190},
-    {id:'axo',      type:'image',src:'images/cafe-ishi-axo.png',       caption:L.capAxo,      x:axoP.x,      y:axoP.y,      w:190},
-    {id:'interieur',type:'image',src:'images/cafe-ishi-interieur.png', caption:L.capInterieur,x:interieurP.x,y:interieurP.y,w:190},
-    {id:'plan',     type:'image',src:'images/cafe-ishi-plan.png',      caption:L.capPlan,     x:planP.x,     y:planP.y,     w:190},
-    {id:'apres',    type:'image',src:'images/ishi-apres.webp',         caption:L.capApres,    x:apresP.x,    y:apresP.y,    w:190},
+    {id:'hub',       type:'text', label:t('board_hub_label'),text:excerpt,x:hubP.x,y:hubP.y,w:260},
+    {id:'vis',       type:'text', label:L.vis,  x:visP.x,  y:visP.y,  w:210},
+    {id:'insp',      type:'text', label:L.insp, x:inspP.x, y:inspP.y, w:210},
+    {id:'princ',     type:'text', label:L.princ,x:princP.x,y:princP.y,w:220},
+    {id:'facade',    type:'image',src:'images/ishi-cafe-facade.png',    caption:L.capFacade,   x:facadeP.x,   y:facadeP.y,   w:190},
+    {id:'axo',       type:'image',src:'images/cafe-ishi-axo.png',       caption:L.capAxo,      x:axoP.x,      y:axoP.y,      w:190},
+    {id:'interieur', type:'image',src:'images/cafe-ishi-interieur.png', caption:L.capInterieur,x:interieurP.x,y:interieurP.y,w:190},
+    {id:'plan',      type:'image',src:'images/cafe-ishi-plan.png',      caption:L.capPlan,     x:planP.x,     y:planP.y,     w:190},
+    {id:'equilibre', type:'tag',  label:L.equilibre,color:C_PRINC,x:equilibreP.x,y:equilibreP.y},
+    {id:'reflexion', type:'tag',  label:L.reflexion, color:C_PRINC,x:reflexionP.x,y:reflexionP.y},
+    {id:'partage',   type:'tag',  label:L.partage,   color:C_PRINC,x:partageP.x,  y:partageP.y},
   ];
   const links=[
     {from:'hub',to:'vis',       color:C_VIS},
+    {from:'hub',to:'insp',      color:C_INSP},
+    {from:'hub',to:'princ',     color:C_PRINC},
     {from:'vis',to:'facade',    color:C_VIS},
     {from:'vis',to:'axo',       color:C_VIS},
     {from:'vis',to:'interieur', color:C_VIS},
     {from:'vis',to:'plan',      color:C_VIS},
-    {from:'vis',to:'apres',     color:C_VIS},
+    {from:'princ',to:'equilibre',color:C_PRINC},
+    {from:'princ',to:'reflexion',color:C_PRINC},
+    {from:'princ',to:'partage',  color:C_PRINC},
   ];
   return {nodes,links};
 }
