@@ -236,6 +236,13 @@ img{display:block;max-width:100%;}
 .pb-text-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--ink3);margin-bottom:8px;}
 .pb-text p{font-family:'Lora',serif;font-size:12.5px;line-height:1.65;color:var(--ink2);}
 .pb-tag{padding:8px 14px;border-radius:20px;border:1.3px solid;background:var(--paper);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.05em;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.08);}
+.pb-slideshow{border-radius:2px;overflow:hidden;border:.5px solid var(--paper3);background:var(--paper);box-shadow:0 8px 24px rgba(0,0,0,.12);}
+.pb-slideshow .pbs-img-wrap{overflow:hidden;position:relative;aspect-ratio:9/16;}
+.pb-slideshow .pbs-img-wrap img{width:100%;height:100%;object-fit:cover;display:none;position:absolute;top:0;left:0;}
+.pb-slideshow .pbs-img-wrap img.pbs-active{display:block;}
+.pb-slideshow .pbs-nav{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-top:.5px solid var(--paper3);}
+.pb-slideshow .pbs-nav button{background:none;border:none;cursor:pointer;font-size:18px;color:var(--ink2);padding:0 2px;line-height:1;}
+.pb-slideshow .pbs-counter{font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3);letter-spacing:.05em;}
 .pb-zoom{position:absolute;bottom:14px;right:14px;display:flex;gap:4px;z-index:10;}
 
 /* Suggestions */
@@ -616,14 +623,15 @@ const PROJECTS = [
    board:buildYapadageBoard},
   {id:'p5',title:'Conception menuiserie - Escalier',cat:'MENUISERIE · PERSONNEL',
    tags:['menuiserie','reemploi'],
-   thumb:null,
+   thumb:'images/conception-menuiserie-escalier-entier-sombre.png',
    color:'#e8e4d8',stroke:'#c47d2a',
-   images:[],mapX:1500,mapY:470,
+   images:['images/conception-menuiserie-escalier-vis1.jpg','images/conception-menuiserie-escalier-vis2.jpg','images/conception-menuiserie-escalier-vis3.jpg','images/conception-menuiserie-escalier-vis4.jpg','images/conception-menuiserie-escalier-vis5.jpg','images/conception-menuiserie-escalier-vis6.jpg','images/conception-menuiserie-escalier-vis7.jpg','images/conception-menuiserie-escalier-vis8.jpg'],mapX:1500,mapY:470,
    desc:"De l'idée à la matière, ce projet compte parmi ceux qui me tiennent le plus à cœur. Entièrement réalisé à partir de bois de palettes récupérées, il m'a sensibilisé à l'importance de la faisabilité en menuiserie. La phase de conception peut parfois faire oublier la réalité de la fabrication : il est difficile d'anticiper le temps et la complexité qu'implique la concrétisation d'une intention de design.",
    i18n:{
      en:{title:'Woodworking design - Staircase',cat:'WOODWORKING · PERSONAL',desc:"From idea to material, this is one of the projects closest to my heart. Built entirely from reclaimed pallet wood, it taught me how important feasibility is in woodworking. The design phase can sometimes make you forget the reality of fabrication: it's hard to anticipate the time and complexity involved in turning a design intention into something real."},
      es:{title:'Diseño de carpintería - Escalera',cat:'CARPINTERÍA · PERSONAL',desc:"De la idea a la materia, este es uno de los proyectos que más me importan. Realizado enteramente con madera de palés recuperada, me hizo tomar conciencia de la importancia de la viabilidad en carpintería. La fase de diseño puede a veces hacer olvidar la realidad de la fabricación: es difícil anticipar el tiempo y la complejidad que implica concretar una intención de diseño."},
-   }},
+   },
+   board:buildEscalierBoard},
   {id:'p6',title:'Carnets espaces collectifs',cat:'CROQUIS',
    tags:['croquis','collectivites'],
    thumb:null,
@@ -1441,6 +1449,28 @@ function buildYapadageBoard(proj){
   return {nodes,links};
 }
 
+function buildEscalierBoard(proj){
+  const desc=pf(proj,'desc');
+  const excerpt=desc.length>190?desc.slice(0,190).trim()+'…':desc;
+  const C=TAG_COLORS['menuiserie'];
+  const images=[
+    'images/conception-menuiserie-escalier-vis1.jpg',
+    'images/conception-menuiserie-escalier-vis2.jpg',
+    'images/conception-menuiserie-escalier-vis3.jpg',
+    'images/conception-menuiserie-escalier-vis4.jpg',
+    'images/conception-menuiserie-escalier-vis5.jpg',
+    'images/conception-menuiserie-escalier-vis6.jpg',
+    'images/conception-menuiserie-escalier-vis7.jpg',
+    'images/conception-menuiserie-escalier-vis8.jpg',
+  ];
+  const nodes=[
+    {id:'hub',    type:'text',      label:t('board_hub_label'),text:excerpt,x:60, y:195,w:280},
+    {id:'slides', type:'slideshow', images,                               x:480,y:120,w:170},
+  ];
+  const links=[{from:'hub',to:'slides',color:C}];
+  return {nodes,links};
+}
+
 const ISHI_BOARD_I18N = {
   fr:{vis:'LES VISUELS',insp:'LES INSPIRATIONS',princ:'LES GRANDS PRINCIPES',
       capFacade:'Façade',capAxo:'Axonométrie',capInterieur:'Intérieur',capPlan:'Plan',
@@ -1547,7 +1577,22 @@ function buildIshiBoard(proj){
   return {nodes,links};
 }
 
+function pbSlide(btn,dir){
+  const wrap=btn.closest('.pb-slideshow');
+  const imgs=wrap.querySelectorAll('.pbs-img-wrap img');
+  let cur=parseInt(wrap.dataset.cur||0);
+  imgs[cur].classList.remove('pbs-active');
+  cur=(cur+dir+imgs.length)%imgs.length;
+  imgs[cur].classList.add('pbs-active');
+  wrap.dataset.cur=cur;
+  wrap.querySelector('.pbs-counter').textContent=`${cur+1} / ${imgs.length}`;
+}
+
 function pbNodeHTML(n){
+  if(n.type==='slideshow'){
+    const imgs=n.images.map((src,i)=>`<img src="${src}" alt="" class="${i===0?'pbs-active':''}">`).join('');
+    return `<div class="pbnode pb-slideshow" id="pbn-${n.id}" data-id="${n.id}" data-cur="0" style="left:${n.x}px;top:${n.y}px;width:${n.w||160}px;"><div class="pbs-img-wrap">${imgs}</div><div class="pbs-nav"><button onmousedown="event.stopPropagation()" onclick="pbSlide(this,-1)">‹</button><span class="pbs-counter">1 / ${n.images.length}</span><button onmousedown="event.stopPropagation()" onclick="pbSlide(this,1)">›</button></div></div>`;
+  }
   if(n.type==='image'){
     const img=n.src
       ? `<img src="${n.src}" alt="${n.caption||''}">`
