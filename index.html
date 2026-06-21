@@ -668,13 +668,14 @@ const PROJECTS = [
    tags:['erp','petit-espace','inclusion'],
    thumb:'images/ishi-cafe-facade.png',
    color:'#d4b898',stroke:'#8a6848',
-   images:['images/ishi-cafe-facade.png','images/cafe-ishi-interieur.png','images/ishi-apres.webp','images/ishi-interieur.webp'],
+   images:['images/ishi-cafe-facade.png','images/cafe-ishi-axo.png','images/cafe-ishi-interieur.png','images/ishi-apres.webp','images/ishi-interieur.webp'],
    mapX:680,mapY:280,
    desc:"Ce projet imagine un lieu de rencontre inspiré des cairns, symboles d'équilibre et de suspension. À travers une atmosphère évoquant les rivières, l'espace invite à la convivialité, au partage et à la réflexion collective.",
    i18n:{
      en:{title:'Neighborhood grocery — Café ISHI',cat:'INTERIOR ARCHITECTURE · PROJECT',desc:"This project imagines a meeting place inspired by cairns, symbols of balance and suspension. Through an atmosphere evoking rivers, the space invites conviviality, sharing and collective reflection."},
      es:{title:'Tienda de barrio — Café ISHI',cat:'ARQUITECTURA INTERIOR · PROYECTO',desc:"Este proyecto imagina un lugar de encuentro inspirado en los cairns, símbolos de equilibrio y suspensión. A través de una atmósfera que evoca los ríos, el espacio invita a la convivencia, al compartir y a la reflexión colectiva."},
-   }},
+   },
+   board:buildIshiBoard},
   {id:'p11',title:'Réhabilitation - SEA SHEARD',cat:'ARCHI INTÉRIEUR · PROJET · 2024',
    tags:['developpement-durable','collectivites','ux','realise-en-groupe','reemploi'],
    thumb:'images/sea-sheard-bat-entier.png',
@@ -1436,6 +1437,63 @@ function buildYapadageBoard(proj){
     {from:'espaces',to:'planRdc',   color:C_ESP},
     {from:'espaces',to:'planEtage', color:C_ESP},
     {from:'espaces',to:'coupe',     color:C_ESP},
+  ];
+  return {nodes,links};
+}
+
+const ISHI_BOARD_I18N = {
+  fr:{vis:'LES VISUELS',
+      capFacade:'Façade',capAxo:'Axonométrie',capInterieur:'Intérieur',
+      capPlan:'Plan',capApres:'Après travaux',capInt2:'Vue intérieure'},
+  en:{vis:'VISUALS',
+      capFacade:'Façade',capAxo:'Axonometric',capInterieur:'Interior',
+      capPlan:'Floor plan',capApres:'After works',capInt2:'Interior view'},
+  es:{vis:'LOS VISUALES',
+      capFacade:'Fachada',capAxo:'Axonométrico',capInterieur:'Interior',
+      capPlan:'Plano',capApres:'Tras las obras',capInt2:'Vista interior'},
+};
+function buildIshiBoard(proj){
+  const L=ISHI_BOARD_I18N[currentLang]||ISHI_BOARD_I18N.fr;
+  const desc=pf(proj,'desc');
+  const excerpt=desc.length>190?desc.slice(0,190).trim()+'…':desc;
+
+  const CX=620, CY=380, R1=300, R2=600;
+  const ANG_VIS=90;
+  const C_VIS=TAG_COLORS['erp'];
+
+  const hubC = {x:CX,y:CY};
+  const visC = pbPolar(CX,CY,ANG_VIS,R1);
+
+  const facadeC   = pbPolar(CX,CY,ANG_VIS-50,R2);
+  const axoC      = pbPolar(CX,CY,ANG_VIS-25,R2);
+  const interieurC= pbPolar(CX,CY,ANG_VIS,   R2);
+  const planC     = pbPolar(CX,CY,ANG_VIS+25,R2);
+  const apresC    = pbPolar(CX,CY,ANG_VIS+50,R2);
+
+  const hubP      = pbTopLeft(hubC,260,190);
+  const visP      = pbTopLeft(visC,210,50);
+  const facadeP   = pbTopLeft(facadeC,190,222);
+  const axoP      = pbTopLeft(axoC,190,222);
+  const interieurP= pbTopLeft(interieurC,190,222);
+  const planP     = pbTopLeft(planC,190,222);
+  const apresP    = pbTopLeft(apresC,190,222);
+
+  const nodes=[
+    {id:'hub',      type:'text', label:t('board_hub_label'),text:excerpt,x:hubP.x,y:hubP.y,w:260},
+    {id:'vis',      type:'text', label:L.vis,x:visP.x,y:visP.y,w:210},
+    {id:'facade',   type:'image',src:'images/ishi-cafe-facade.png',    caption:L.capFacade,   x:facadeP.x,   y:facadeP.y,   w:190},
+    {id:'axo',      type:'image',src:'images/cafe-ishi-axo.png',       caption:L.capAxo,      x:axoP.x,      y:axoP.y,      w:190},
+    {id:'interieur',type:'image',src:'images/cafe-ishi-interieur.png', caption:L.capInterieur,x:interieurP.x,y:interieurP.y,w:190},
+    {id:'plan',     type:'image',src:'images/cafe-ishi-plan.png',      caption:L.capPlan,     x:planP.x,     y:planP.y,     w:190},
+    {id:'apres',    type:'image',src:'images/ishi-apres.webp',         caption:L.capApres,    x:apresP.x,    y:apresP.y,    w:190},
+  ];
+  const links=[
+    {from:'hub',to:'vis',       color:C_VIS},
+    {from:'vis',to:'facade',    color:C_VIS},
+    {from:'vis',to:'axo',       color:C_VIS},
+    {from:'vis',to:'interieur', color:C_VIS},
+    {from:'vis',to:'plan',      color:C_VIS},
+    {from:'vis',to:'apres',     color:C_VIS},
   ];
   return {nodes,links};
 }
