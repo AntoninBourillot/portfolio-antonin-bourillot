@@ -417,8 +417,9 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     <button class="nav-link" id="nav-home"    onclick="navigate('home')" data-i18n="nav_projects">Projets</button>
     <button class="nav-link" id="nav-map"     onclick="navigate('map')" data-i18n="nav_map">Carte</button>
     <button class="nav-link" id="nav-reflex"  onclick="navigate('reflex')" data-i18n="nav_reflex">Réflexions</button>
-    <button class="nav-link" id="nav-about"   onclick="navigate('about')" data-i18n="nav_about">À propos</button>
-    <button class="nav-link" id="nav-contact" onclick="navigate('contact')" data-i18n="nav_contact">Contact</button>
+    <button class="nav-link" id="nav-about"       onclick="navigate('about')" data-i18n="nav_about">Mes compétences</button>
+    <button class="nav-link" id="nav-experiences" onclick="navigate('experiences')" data-i18n="nav_experiences">Mes expériences</button>
+    <button class="nav-link" id="nav-contact"     onclick="navigate('contact')" data-i18n="nav_contact">Contact</button>
   </div>
   <div class="lang-switch" id="langSwitch">
     <button class="lang-btn" id="langBtn" aria-label="Choisir la langue">
@@ -437,7 +438,8 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   <button class="nav-link" onclick="navigate('home');closeMenu()" data-i18n="nav_projects">Projets</button>
   <button class="nav-link" onclick="navigate('map');closeMenu()" data-i18n="nav_map">Carte</button>
   <button class="nav-link" onclick="navigate('reflex');closeMenu()" data-i18n="nav_reflex">Réflexions</button>
-  <button class="nav-link" onclick="navigate('about');closeMenu()" data-i18n="nav_about">À propos</button>
+  <button class="nav-link" onclick="navigate('about');closeMenu()" data-i18n="nav_about">Mes compétences</button>
+  <button class="nav-link" onclick="navigate('experiences');closeMenu()" data-i18n="nav_experiences">Mes expériences</button>
   <button class="nav-link" onclick="navigate('contact');closeMenu()" data-i18n="nav_contact">Contact</button>
 </nav>
 
@@ -662,6 +664,15 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   <footer><span class="fn">ANTONIN BOURILLOT</span><div class="flinks"><a href="mailto:antonin.bourillot@gmail.com" class="flink">antonin.bourillot@gmail.com</a><a href="https://www.linkedin.com/in/antonin-bourillot/" target="_blank" rel="noopener noreferrer" class="flink">LinkedIn</a></div></footer>
 </div>
 
+<!-- MES EXPÉRIENCES -->
+<div class="view" id="view-experiences">
+  <div class="section">
+    <div class="sec-head"><h2 class="sec-title" data-i18n="nav_experiences">Mes expériences</h2></div>
+    <p class="atext" style="font-family:'Lora',serif;font-size:15px;color:var(--ink2);line-height:1.8;">Section à venir.</p>
+  </div>
+  <footer><span class="fn">ANTONIN BOURILLOT</span></footer>
+</div>
+
 <!-- CONTACT -->
 <div class="view" id="view-contact">
   <div class="section">
@@ -820,7 +831,7 @@ const SKETCHES = [
 /* ══════ INTERNATIONALISATION ══════ */
 const I18N = {
   fr:{
-    nav_projects:'Projets',nav_map:'Carte',nav_reflex:'Réflexions',nav_about:'À propos',nav_contact:'Contact',
+    nav_projects:'Projets',nav_map:'Carte',nav_reflex:'Réflexions',nav_about:'Mes compétences',nav_experiences:'Mes expériences',nav_contact:'Contact',
     hero_eyebrow:'Architecture · Intérieur · Collectivités',
     hero_title:'Espaces pour<br><em>le collectif,</em><br>construits<br>pour durer.',
     hero_desc:"Je conçois des espaces qui visent à s'ancrer dans le territoire et à servir les collectivités, avec une attention portée aux usages réels et aux matériaux locaux.",
@@ -870,7 +881,7 @@ const I18N = {
     contact_title:'Contact',contact_phone_label:'TÉLÉPHONE',
   },
   en:{
-    nav_projects:'Projects',nav_map:'Map',nav_reflex:'Reflections',nav_about:'About',nav_contact:'Contact',
+    nav_projects:'Projects',nav_map:'Map',nav_reflex:'Reflections',nav_about:'My skills',nav_experiences:'My experience',nav_contact:'Contact',
     hero_eyebrow:'Architecture · Interior · Public spaces',
     hero_title:'Spaces for<br><em>the collective,</em><br>built<br>to last.',
     hero_desc:"I design spaces meant to root themselves in their territory and serve public communities, with close attention to real-world uses and local materials.",
@@ -920,7 +931,7 @@ const I18N = {
     contact_title:'Contact',contact_phone_label:'PHONE',
   },
   es:{
-    nav_projects:'Proyectos',nav_map:'Mapa',nav_reflex:'Reflexiones',nav_about:'Acerca de',nav_contact:'Contacto',
+    nav_projects:'Proyectos',nav_map:'Mapa',nav_reflex:'Reflexiones',nav_about:'Mis competencias',nav_experiences:'Mis experiencias',nav_contact:'Contacto',
     hero_eyebrow:'Arquitectura · Interiorismo · Colectividades',
     hero_title:'Espacios para<br><em>lo colectivo,</em><br>construidos<br>para durar.',
     hero_desc:"Diseño espacios que buscan arraigarse en el territorio y servir a las colectividades, prestando especial atención a los usos reales y a los materiales locales.",
@@ -1025,7 +1036,7 @@ function initLangSwitch(){
 /* ══════ NAVIGATION ══════ */
 function encodeState(v,p){return p?`${v}/${p}`:v;}
 function decodeHash(h){const s=h.replace('#','');const i=s.indexOf('/');return i===-1?{view:s||'home',param:null}:{view:s.slice(0,i),param:s.slice(i+1)};}
-const NAV_MAP={home:'nav-home',map:'nav-map',reflex:'nav-reflex',about:'nav-about',contact:'nav-contact',tag:'nav-home',project:'nav-home'};
+const NAV_MAP={home:'nav-home',map:'nav-map',reflex:'nav-reflex',about:'nav-about',experiences:'nav-experiences',contact:'nav-contact',tag:'nav-home',project:'nav-home'};
 
 function renderView(view,param){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
