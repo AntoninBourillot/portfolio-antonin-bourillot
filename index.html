@@ -317,6 +317,25 @@ img{display:block;max-width:100%;}
 .rflex-body{font-family:'Lora',serif;font-size:clamp(12px,.95vw,15px);font-weight:300;line-height:1.85;color:var(--ink2);}
 .rflex-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;}
 
+/* ── TIMELINE EXPÉRIENCES ── */
+.exp-header{padding:var(--py) var(--px);border-bottom:var(--r);display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.exp-legend{display:flex;gap:20px;flex-wrap:wrap;}
+.exp-legend-pro{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--moss);}
+.exp-legend-asso{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:#8a6a3a;}
+.exp-wrap{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;border-bottom:var(--r);}
+.exp-wrap:active{cursor:grabbing;}
+.exp-wrap::-webkit-scrollbar{display:none;}
+.exp-canvas{position:relative;height:340px;user-select:none;}
+.exp-axis{position:absolute;height:1px;background:var(--ink3);top:var(--exp-axis-y);}
+.exp-now{position:absolute;top:0;bottom:0;width:1px;background:var(--moss);opacity:.5;}
+.exp-now-label{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:var(--moss);transform:translateX(-50%);white-space:nowrap;}
+.exp-year{position:absolute;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);transform:translateX(-50%);pointer-events:none;}
+.exp-year-tick{position:absolute;width:1px;background:var(--paper3);pointer-events:none;}
+.exp-bar{position:absolute;border-radius:1px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;}
+.exp-bar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.exp-date{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--ink3);white-space:nowrap;pointer-events:none;}
+.exp-connector{position:absolute;width:1px;pointer-events:none;}
+
 /* ABOUT / CONTACT */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--paper3);}
 .acell{background:var(--paper);padding:var(--py) var(--px);}
@@ -666,9 +685,15 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 
 <!-- MES EXPÉRIENCES -->
 <div class="view" id="view-experiences">
-  <div class="section">
-    <div class="sec-head"><h2 class="sec-title" data-i18n="nav_experiences">Mes expériences</h2></div>
-    <p class="atext" style="font-family:'Lora',serif;font-size:15px;color:var(--ink2);line-height:1.8;">Section à venir.</p>
+  <div class="exp-header">
+    <h2 class="sec-title" data-i18n="nav_experiences">Mes expériences</h2>
+    <div class="exp-legend">
+      <span class="exp-legend-pro">&#9632; <span data-i18n="exp_leg_pro">Expériences professionnelles</span></span>
+      <span class="exp-legend-asso">&#9632; <span data-i18n="exp_leg_asso">Expériences associatives</span></span>
+    </div>
+  </div>
+  <div class="exp-wrap" id="expWrap">
+    <div class="exp-canvas" id="expCanvas"></div>
   </div>
   <footer><span class="fn">ANTONIN BOURILLOT</span></footer>
 </div>
@@ -691,6 +716,17 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 <script>
 /* ══════ DONNÉES ══════ */
 let currentLang = 'fr';
+
+/* ── Données fresque chronologique ─────────────────────────────────────────
+   type : 'pro' (au-dessus de l'axe) ou 'asso' (en-dessous)
+   end  : null = en cours                                                   */
+const EXPERIENCES = [
+  {type:'pro',  label:'Expérience professionnelle 1', org:'Structure 1', start:{y:2020,m:6},  end:{y:2021,m:8}},
+  {type:'pro',  label:'Expérience professionnelle 2', org:'Structure 2', start:{y:2022,m:2},  end:{y:2023,m:7}},
+  {type:'pro',  label:'Expérience professionnelle 3', org:'Structure 3', start:{y:2024,m:1},  end:null},
+  {type:'asso', label:'Expérience associative 1',     org:'Association 1',start:{y:2021,m:3},  end:{y:2023,m:12}},
+  {type:'asso', label:'Expérience associative 2',     org:'Association 2',start:{y:2024,m:4},  end:null},
+];
 
 const PROJECTS = [
   {id:'p2',title:'Centre intergénérationnel — YAPADAGE',cat:'ARCHI INTÉRIEUR · ÉCOLE',
@@ -831,7 +867,7 @@ const SKETCHES = [
 /* ══════ INTERNATIONALISATION ══════ */
 const I18N = {
   fr:{
-    nav_projects:'Projets',nav_map:'Carte',nav_reflex:'Réflexions',nav_about:'Mes compétences',nav_experiences:'Mes expériences',nav_contact:'Contact',
+    nav_projects:'Projets',nav_map:'Carte',nav_reflex:'Réflexions',nav_about:'Mes compétences',nav_experiences:'Mes expériences',nav_contact:'Contact',exp_leg_pro:'Expériences professionnelles',exp_leg_asso:'Expériences associatives',
     hero_eyebrow:'Architecture · Intérieur · Collectivités',
     hero_title:'Espaces pour<br><em>le collectif,</em><br>construits<br>pour durer.',
     hero_desc:"Je conçois des espaces qui visent à s'ancrer dans le territoire et à servir les collectivités, avec une attention portée aux usages réels et aux matériaux locaux.",
@@ -881,7 +917,7 @@ const I18N = {
     contact_title:'Contact',contact_phone_label:'TÉLÉPHONE',
   },
   en:{
-    nav_projects:'Projects',nav_map:'Map',nav_reflex:'Reflections',nav_about:'My skills',nav_experiences:'My experience',nav_contact:'Contact',
+    nav_projects:'Projects',nav_map:'Map',nav_reflex:'Reflections',nav_about:'My skills',nav_experiences:'My experience',nav_contact:'Contact',exp_leg_pro:'Professional experiences',exp_leg_asso:'Associative experiences',
     hero_eyebrow:'Architecture · Interior · Public spaces',
     hero_title:'Spaces for<br><em>the collective,</em><br>built<br>to last.',
     hero_desc:"I design spaces meant to root themselves in their territory and serve public communities, with close attention to real-world uses and local materials.",
@@ -931,7 +967,7 @@ const I18N = {
     contact_title:'Contact',contact_phone_label:'PHONE',
   },
   es:{
-    nav_projects:'Proyectos',nav_map:'Mapa',nav_reflex:'Reflexiones',nav_about:'Mis competencias',nav_experiences:'Mis experiencias',nav_contact:'Contacto',
+    nav_projects:'Proyectos',nav_map:'Mapa',nav_reflex:'Reflexiones',nav_about:'Mis competencias',nav_experiences:'Mis experiencias',nav_contact:'Contacto',exp_leg_pro:'Experiencias profesionales',exp_leg_asso:'Experiencias asociativas',
     hero_eyebrow:'Arquitectura · Interiorismo · Colectividades',
     hero_title:'Espacios para<br><em>lo colectivo,</em><br>construidos<br>para durar.',
     hero_desc:"Diseño espacios que buscan arraigarse en el territorio y servir a las colectividades, prestando especial atención a los usos reales y a los materiales locales.",
@@ -1048,6 +1084,7 @@ function renderView(view,param){
   if(view==='project'&&param) renderProjectView(param);
   if(view==='about') requestAnimationFrame(()=>{setAgPadding();updateCenteredFrame();});
   if(view==='map')   requestAnimationFrame(centerMapView);
+  if(view==='experiences') requestAnimationFrame(renderTimeline);
 }
 function navigate(view,param){history.pushState(null,'','#'+encodeState(view,param));renderView(view,param);}
 function goBack(){if(history.length>1)history.back();else navigate('home');}
@@ -2048,6 +2085,122 @@ function centerAgFrame(idx){
   const maxScroll=wrap.scrollWidth-wrap.clientWidth;
   target=Math.max(0,Math.min(target,maxScroll));
   animateAgScrollTo(wrap,target);
+}
+
+/* ══════ FRESQUE CHRONOLOGIQUE ══════ */
+const EXP_PX   = 72;   // px par mois
+const AXIS_Y   = 170;  // px depuis le haut du canvas jusqu'à l'axe
+const BAR_H    = 34;   // hauteur d'une barre
+const BAR_GAP  = 10;   // espace entre axe et première lane
+const LANE_GAP = 6;    // espace entre deux lanes empilées
+const PAD_L    = 60;   // marge gauche avant le début de la frise
+const PAD_R    = 80;   // marge droite après la fin
+const C_PRO    = '#3b5c32';
+const C_ASSO   = '#8a6a3a';
+
+function expMOff(date, ref){ return (date.y - ref.y)*12 + (date.m - ref.m); }
+function expFmt(d){
+  const M=['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  return M[d.m-1]+' '+d.y;
+}
+function expToday(){ const n=new Date(); return {y:n.getFullYear(),m:n.getMonth()+1}; }
+
+function expAssignLanes(exps, ref){
+  const laneEnds=[];
+  exps.forEach(e=>{
+    const s=expMOff(e.start,ref);
+    let lane=0;
+    while(laneEnds[lane]!==undefined && laneEnds[lane]>s) lane++;
+    e._lane=lane;
+    laneEnds[lane]=expMOff(e.end||{y:9999,m:12},ref);
+  });
+}
+
+function renderTimeline(){
+  const canvas=document.getElementById('expCanvas');
+  if(!canvas) return;
+  const today=expToday();
+  const pros =EXPERIENCES.filter(e=>e.type==='pro');
+  const assos=EXPERIENCES.filter(e=>e.type==='asso');
+
+  // Bornes temporelles
+  const allDates=[...EXPERIENCES.map(e=>e.start),...EXPERIENCES.filter(e=>e.end).map(e=>e.end),today];
+  let minY=Math.min(...allDates.map(d=>d.y));
+  let maxY=Math.max(...allDates.map(d=>d.y));
+  const ref={y:minY,m:1};
+  const endRef={y:maxY+1,m:3};
+  const totalM=expMOff(endRef,ref);
+  const W=PAD_L+totalM*EXP_PX+PAD_R;
+
+  canvas.style.width=W+'px';
+  canvas.style.setProperty('--exp-axis-y', AXIS_Y+'px');
+
+  // Assignation des lanes
+  expAssignLanes(pros,ref);
+  expAssignLanes(assos,ref);
+
+  let html='';
+
+  // Axe central
+  html+=`<div class="exp-axis" style="left:${PAD_L}px;width:${totalM*EXP_PX}px;"></div>`;
+
+  // Marqueur "aujourd'hui"
+  const todayX=PAD_L+expMOff(today,ref)*EXP_PX;
+  html+=`<div class="exp-now" style="left:${todayX}px;"></div>`;
+  html+=`<div class="exp-now-label" style="left:${todayX}px;top:${AXIS_Y+6}px;">auj.</div>`;
+
+  // Ticks annuels
+  for(let y=minY;y<=maxY+1;y++){
+    const x=PAD_L+expMOff({y,m:1},ref)*EXP_PX;
+    html+=`<div class="exp-year-tick" style="left:${x}px;top:${AXIS_Y-18}px;height:36px;"></div>`;
+    html+=`<div class="exp-year" style="left:${x}px;top:${AXIS_Y+20}px;">${y}</div>`;
+  }
+
+  // Barres
+  function renderBars(exps, isPro){
+    const color=isPro?C_PRO:C_ASSO;
+    exps.forEach(e=>{
+      const x0=PAD_L+expMOff(e.start,ref)*EXP_PX;
+      const endDate=e.end||today;
+      const x1=PAD_L+expMOff(endDate,ref)*EXP_PX;
+      const w=Math.max(x1-x0, EXP_PX*0.5);
+      const laneOff=e._lane*(BAR_H+LANE_GAP);
+      const barTop=isPro ? AXIS_Y-BAR_GAP-BAR_H-laneOff : AXIS_Y+BAR_GAP+laneOff;
+      const dateY=isPro ? barTop-14 : barTop+BAR_H+4;
+
+      // Trait vertical reliant la barre à l'axe (seulement lane 0)
+      if(e._lane===0){
+        const connH=isPro ? BAR_GAP : BAR_GAP;
+        const connTop=isPro ? barTop+BAR_H : AXIS_Y+1;
+        html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${connH}px;background:${color}40;"></div>`;
+      }
+
+      // Barre
+      html+=`<div class="exp-bar" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color}18;border:1px solid ${color}60;">
+        <span class="exp-bar-label" style="color:${color};">${e.label}</span>
+      </div>`;
+
+      // Dates aux extrémités
+      html+=`<div class="exp-date" style="left:${x0}px;top:${dateY}px;transform:translateX(-50%);">${expFmt(e.start)}</div>`;
+      html+=`<div class="exp-date" style="left:${x1}px;top:${dateY}px;transform:translateX(-50%);">${e.end?expFmt(endDate):'→'}</div>`;
+    });
+  }
+
+  renderBars(pros, true);
+  renderBars(assos, false);
+
+  canvas.innerHTML=html;
+}
+
+function initTimeline(){
+  renderTimeline();
+  // Drag-to-scroll
+  const wrap=document.getElementById('expWrap');
+  if(!wrap) return;
+  let down=false,startX=0,scrollStart=0;
+  wrap.addEventListener('pointerdown',e=>{down=true;startX=e.clientX;scrollStart=wrap.scrollLeft;wrap.setPointerCapture(e.pointerId);});
+  wrap.addEventListener('pointermove',e=>{if(!down)return;wrap.scrollLeft=scrollStart-(e.clientX-startX);});
+  wrap.addEventListener('pointerup',()=>{down=false;});
 }
 
 function initAboutSlides(){
