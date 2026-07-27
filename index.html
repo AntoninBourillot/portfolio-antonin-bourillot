@@ -98,9 +98,9 @@ img{display:block;max-width:100%;}
 
 /* CARROUSEL sur aperçu projet */
 .pcwrap{position:relative;overflow:hidden;height:clamp(150px,18vw,290px);}
-/* Grille 2×2 sur la carte d'accueil */
-.pcgrid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:clamp(150px,18vw,290px);overflow:hidden;cursor:pointer;gap:1px;background:var(--paper3);}
-.pcgrid2x2 img{width:100%;height:100%;object-fit:cover;display:block;}
+/* Bande 4 images sur la carte d'accueil */
+.pcgrid4{display:grid;grid-template-columns:repeat(4,1fr);height:clamp(150px,18vw,290px);overflow:hidden;cursor:pointer;gap:1px;background:var(--paper3);}
+.pcgrid4 img{width:100%;height:100%;object-fit:cover;display:block;}
 .pcslides{display:flex;height:100%;transition:transform .38s ease;}
 .pcslide{min-width:100%;width:100%;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--paper2);}
 .pcslide img{width:100%;height:100%;object-fit:contain;object-position:center;}
@@ -730,7 +730,7 @@ const PROJECTS = [
    thumb:'images/jean-jaures-1.jpg',
    color:'#e8e4d8',stroke:'#6a5c3a',
    images:['images/jean-jaures-1.jpg','images/jean-jaures-2.jpg','images/jean-jaures-3.jpg','images/jean-jaures-4.jpg','images/jean-jaures-5.jpg','images/jean-jaures-6.jpg','images/jean-jaures-7.jpg','images/jean-jaures-8.jpg'],
-   mapX:200,mapY:620,noBoard:true,thumbGrid:true,heroContain:true,
+   mapX:200,mapY:620,noBoard:true,thumbGrid:true,heroContain:true,layout:'portrait-right',
    desc:"Projet mené sur mon temps libre, centré sur le conseil en aménagement intérieur d'un appartement étudiant. Réflexion sur l'optimisation des espaces réduits et l'adaptation du logement aux usages et rythmes de vie propres à l'étudiant.",
    i18n:{
      en:{title:'Consultancy mission — Student apartment',cat:'FROM DESIGN TO COMPLETION',desc:"A project carried out in my own time, focused on interior design consultancy for a student apartment. Reflection on optimising small spaces and adapting the layout to the specific uses and daily rhythms of student life."},
@@ -1019,7 +1019,7 @@ function thumbHTML(proj,w=80,h=58){
 /* ══════ CARROUSEL sur aperçu ══════ */
 function buildThumbGrid(proj){
   const imgs=(proj.images||[]).slice(0,4);
-  return`<div class="pcgrid2x2" onclick="navigate('project','${proj.id}')">
+  return`<div class="pcgrid4" onclick="navigate('project','${proj.id}')">
     ${imgs.map(src=>`<img src="${src}" alt="${pf(proj,'title')}">`).join('')}
   </div>`;
 }
