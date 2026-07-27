@@ -2029,11 +2029,13 @@ function centerAgFrame(idx){
   agIndex=idx;
   const frame=frames[idx];
   const wrap=document.querySelector('.ag-track-wrap');
-  let target=frame.offsetLeft+frame.offsetWidth/2-wrap.clientWidth/2;
+  const wrapRect=wrap.getBoundingClientRect();
+  const frameRect=frame.getBoundingClientRect();
+  // Position du centre du cadre dans l'espace de scroll du wrap
+  const frameCenterInScroll=wrap.scrollLeft+(frameRect.left+frameRect.width/2-wrapRect.left);
+  let target=frameCenterInScroll-wrap.clientWidth/2;
   const maxScroll=wrap.scrollWidth-wrap.clientWidth;
   target=Math.max(0,Math.min(target,maxScroll));
-  if(idx===0) target=0;            // garantit l'extrémité gauche exacte
-  if(idx===n-1) target=maxScroll;  // garantit l'extrémité droite exacte
   animateAgScrollTo(wrap,target);
 }
 
