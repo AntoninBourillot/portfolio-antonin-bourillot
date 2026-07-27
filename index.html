@@ -322,6 +322,23 @@ img{display:block;max-width:100%;}
 .acell{background:var(--paper);padding:var(--py) var(--px);}
 .alabel{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--ink3);margin-bottom:16px;}
 .about-wip{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--moss);margin-left:10px;}
+/* ── About slides (Comprendre / Concevoir) ── */
+.about-slides-wrap{border-bottom:var(--r);}
+.about-slides-section{padding:var(--py) var(--px);border-bottom:var(--r);}
+.about-slides-section:last-child{border-bottom:none;}
+.aslide-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(20px,2.2vw,26px);font-weight:400;color:var(--ink);margin-bottom:28px;}
+.aslides{display:flex;flex-direction:column;}
+.aslide{border-top:1px solid var(--paper3);}
+.aslide:last-child{border-bottom:1px solid var(--paper3);}
+.aslide-track{position:relative;height:54px;display:flex;align-items:center;overflow:hidden;}
+.aslide-phrase{position:absolute;inset:0;display:flex;align-items:center;padding-left:4px;font-family:'Lora',serif;font-size:13px;font-style:italic;font-weight:300;color:var(--ink2);clip-path:inset(0 100% 0 0);pointer-events:none;white-space:nowrap;z-index:1;}
+.aslide-handle{position:relative;z-index:2;flex-shrink:0;display:inline-flex;align-items:center;gap:12px;background:var(--paper);cursor:ew-resize;user-select:none;white-space:nowrap;will-change:transform;padding-right:6px;}
+.aslide-label{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(13px,1.15vw,15px);font-weight:400;color:var(--ink);transition:color .3s ease;}
+.aslide-ico{width:18px;height:1px;background:var(--ink3);position:relative;flex-shrink:0;transition:background .3s ease;}
+.aslide-ico::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);border:3px solid transparent;border-left:4px solid var(--ink3);transition:border-left-color .3s ease;}
+.aslide.open .aslide-label{color:var(--moss);}
+.aslide.open .aslide-ico{background:var(--moss);}
+.aslide.open .aslide-ico::after{border-left-color:var(--moss);}
 
 /* Galerie de croquis (À propos) */
 .about-gallery{padding:var(--py) var(--px);border-top:var(--r);background:var(--paper);}
@@ -580,9 +597,24 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 
 <!-- À PROPOS -->
 <div class="view" id="view-about">
-  <div class="about-grid">
-    <div class="acell"><p class="alabel" data-i18n="about_approach_label">DÉMARCHE</p><p class="atext" data-i18n="about_approach_text">Je conçois des espaces pour les collectivités, avec une attention portée aux usages réels, aux matériaux locaux et à la durabilité structurelle. La menuiserie est pour moi un laboratoire : comprendre les assemblages en fabriquant.</p></div>
-    <div class="acell"><p class="alabel" data-i18n="about_skills_label">COMPÉTENCES & OUTILS</p><ul class="alist"><li>AutoCAD · SketchUp · Revit</li><li data-i18n="about_skill_adobe">Adobe Suite (Ps, Ai, Id)</li><li data-i18n="about_skill_wood">Menuiserie bois & assemblages</li><li data-i18n="about_skill_sketch">Rendu à la main & croquis</li><li data-i18n="about_skill_dd">Développement durable & réemploi</li></ul></div>
+  <div class="about-slides-wrap">
+    <div class="about-slides-section">
+      <p class="aslide-title" data-i18n="about_sec_comprendre">Comprendre</p>
+      <div class="aslides">
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_empathie">Compréhension fine des besoins et des usages</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_empathie">Empathie utilisateur</span><span class="aslide-ico"></span></div></div></div>
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_approche">Capacité à traduire des comportements en espaces</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_approche">Approche des usages</span><span class="aslide-ico"></span></div></div></div>
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_analyse">Anticipation des différents scénarios d'usages</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_analyse">Analyse des usages</span><span class="aslide-ico"></span></div></div></div>
+      </div>
+    </div>
+    <div class="about-slides-section">
+      <p class="aslide-title" data-i18n="about_sec_concevoir">Concevoir</p>
+      <div class="aslides">
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_rigueur">Précision apportée dans la conception et la production</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_rigueur">Rigueur</span><span class="aslide-ico"></span></div></div></div>
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_croquis">Exploration rapide d'intention spatiale</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_croquis">Croquis</span><span class="aslide-ico"></span></div></div></div>
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_maquette">Compréhension volumétrique et sensible</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_maquette">Maquette</span><span class="aslide-ico"></span></div></div></div>
+        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_esprit">Prise de recul sur les choix de conception</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_esprit">Esprit critique</span><span class="aslide-ico"></span></div></div></div>
+      </div>
+    </div>
   </div>
   <div class="about-gallery">
     <p class="alabel" data-i18n="about_gallery_label">CROQUIS & DESSINS</p><span class="about-wip" data-i18n="about_wip">— page en construction</span>
@@ -789,11 +821,14 @@ const I18N = {
     reflex3_body:'Réflexion sur les usages simultanés et les espaces-ponts entre générations, du carnet de croquis au programme spatial.',
     rflex_tag_co:'Collectivités',rflex_tag_dd:'Durable',rflex_tag_bois:'Matériaux',rflex_tag_cr:'Croquis',
     reflex_add:'Ajouter une réflexion',
-    about_approach_label:'DÉMARCHE',
-    about_approach_text:"Je conçois des espaces pour les collectivités, avec une attention portée aux usages réels, aux matériaux locaux et à la durabilité structurelle. La menuiserie est pour moi un laboratoire : comprendre les assemblages en fabriquant.",
-    about_skills_label:'COMPÉTENCES & OUTILS',
-    about_skill_adobe:'Adobe Suite (Ps, Ai, Id)',about_skill_wood:'Menuiserie bois & assemblages',
-    about_skill_sketch:'Rendu à la main & croquis',about_skill_dd:'Développement durable & réemploi',
+    about_sec_comprendre:'Comprendre',about_sec_concevoir:'Concevoir',
+    about_btn_empathie:'Empathie utilisateur',about_phrase_empathie:'Compréhension fine des besoins et des usages',
+    about_btn_approche:'Approche des usages',about_phrase_approche:'Capacité à traduire des comportements en espaces',
+    about_btn_analyse:'Analyse des usages',about_phrase_analyse:"Anticipation des différents scénarios d'usages",
+    about_btn_rigueur:'Rigueur',about_phrase_rigueur:'Précision apportée dans la conception et la production',
+    about_btn_croquis:'Croquis',about_phrase_croquis:"Exploration rapide d'intention spatiale",
+    about_btn_maquette:'Maquette',about_phrase_maquette:'Compréhension volumétrique et sensible',
+    about_btn_esprit:'Esprit critique',about_phrase_esprit:'Prise de recul sur les choix de conception',
     about_gallery_label:'CROQUIS & DESSINS',about_wip:'— page en construction',
     contact_title:'Contact',contact_phone_label:'TÉLÉPHONE',
   },
@@ -829,11 +864,14 @@ const I18N = {
     reflex3_body:'A reflection on simultaneous uses and bridge-spaces between generations, from sketchbook to spatial program.',
     rflex_tag_co:'Public spaces',rflex_tag_dd:'Sustainable',rflex_tag_bois:'Materials',rflex_tag_cr:'Sketches',
     reflex_add:'Add a reflection',
-    about_approach_label:'APPROACH',
-    about_approach_text:"I design spaces for public authorities, paying close attention to real-world uses, local materials and structural durability. Woodworking is, for me, a laboratory: understanding joinery by building it.",
-    about_skills_label:'SKILLS & TOOLS',
-    about_skill_adobe:'Adobe Suite (Ps, Ai, Id)',about_skill_wood:'Woodworking & joinery',
-    about_skill_sketch:'Hand rendering & sketching',about_skill_dd:'Sustainability & material reuse',
+    about_sec_comprendre:'Understand',about_sec_concevoir:'Design',
+    about_btn_empathie:'User empathy',about_phrase_empathie:'In-depth understanding of needs and uses',
+    about_btn_approche:'Usage approach',about_phrase_approche:'Ability to translate behaviours into spaces',
+    about_btn_analyse:'Usage analysis',about_phrase_analyse:'Anticipating different usage scenarios',
+    about_btn_rigueur:'Rigour',about_phrase_rigueur:'Precision in design and production',
+    about_btn_croquis:'Sketching',about_phrase_croquis:'Rapid exploration of spatial intention',
+    about_btn_maquette:'Model-making',about_phrase_maquette:'Volumetric and sensory understanding',
+    about_btn_esprit:'Critical thinking',about_phrase_esprit:'Stepping back to question design choices',
     about_gallery_label:'SKETCHES & DRAWINGS',about_wip:'— page under construction',
     contact_title:'Contact',contact_phone_label:'PHONE',
   },
@@ -869,11 +907,14 @@ const I18N = {
     reflex3_body:'Reflexión sobre los usos simultáneos y los espacios puente entre generaciones, desde el cuaderno de bocetos hasta el programa espacial.',
     rflex_tag_co:'Colectividades',rflex_tag_dd:'Sostenible',rflex_tag_bois:'Materiales',rflex_tag_cr:'Bocetos',
     reflex_add:'Añadir una reflexión',
-    about_approach_label:'ENFOQUE',
-    about_approach_text:"Diseño espacios para las administraciones públicas, prestando especial atención a los usos reales, a los materiales locales y a la durabilidad estructural. La carpintería es para mí un laboratorio: comprender los ensambles fabricándolos.",
-    about_skills_label:'HABILIDADES Y HERRAMIENTAS',
-    about_skill_adobe:'Adobe Suite (Ps, Ai, Id)',about_skill_wood:'Carpintería y ensambles',
-    about_skill_sketch:'Renderizado a mano y bocetos',about_skill_dd:'Sostenibilidad y reutilización',
+    about_sec_comprendre:'Comprender',about_sec_concevoir:'Concebir',
+    about_btn_empathie:'Empatía con el usuario',about_phrase_empathie:'Comprensión profunda de las necesidades y los usos',
+    about_btn_approche:'Enfoque de usos',about_phrase_approche:'Capacidad de traducir comportamientos en espacios',
+    about_btn_analyse:'Análisis de usos',about_phrase_analyse:'Anticipación de los distintos escenarios de uso',
+    about_btn_rigueur:'Rigor',about_phrase_rigueur:'Precisión en la concepción y la producción',
+    about_btn_croquis:'Bocetos',about_phrase_croquis:'Exploración rápida de intención espacial',
+    about_btn_maquette:'Maqueta',about_phrase_maquette:'Comprensión volumétrica y sensible',
+    about_btn_esprit:'Espíritu crítico',about_phrase_esprit:'Distancia reflexiva sobre las decisiones de diseño',
     about_gallery_label:'BOCETOS Y DIBUJOS',about_wip:'— página en construcción',
     contact_title:'Contacto',contact_phone_label:'TELÉFONO',
   },
@@ -1945,6 +1986,47 @@ function centerAgFrame(idx){
   animateAgScrollTo(wrap,target);
 }
 
+function initAboutSlides(){
+  document.querySelectorAll('#view-about .aslide').forEach(slide=>{
+    const track=slide.querySelector('.aslide-track');
+    const handle=slide.querySelector('.aslide-handle');
+    const phrase=slide.querySelector('.aslide-phrase');
+    const THRESH=50;
+    let dragging=false,startX=0,curX=0;
+    function maxX(){return track.offsetWidth-handle.offsetWidth;}
+    function setProgress(x){
+      const mx=maxX(),clamped=Math.max(0,Math.min(x,mx)),pct=clamped/mx;
+      handle.style.transform=`translateX(${clamped}px)`;
+      phrase.style.clipPath=`inset(0 ${100-pct*100}% 0 0)`;
+    }
+    function openFull(){
+      slide.classList.add('open');
+      handle.style.transition='transform .42s cubic-bezier(.4,0,.2,1)';
+      phrase.style.transition='clip-path .42s cubic-bezier(.4,0,.2,1)';
+      handle.style.transform=`translateX(${maxX()}px)`;
+      phrase.style.clipPath='inset(0 0% 0 0)';
+      setTimeout(()=>{handle.style.transition='';},440);
+    }
+    function closeAll(){
+      slide.classList.remove('open');
+      handle.style.transition='transform .35s cubic-bezier(.4,0,.2,1)';
+      phrase.style.transition='clip-path .35s cubic-bezier(.4,0,.2,1)';
+      handle.style.transform='translateX(0)';
+      phrase.style.clipPath='inset(0 100% 0 0)';
+      setTimeout(()=>{handle.style.transition='';},370);
+    }
+    handle.addEventListener('pointerdown',e=>{
+      if(slide.classList.contains('open')){closeAll();return;}
+      dragging=true;startX=e.clientX;curX=0;
+      phrase.style.transition='none';
+      handle.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    handle.addEventListener('pointermove',e=>{if(!dragging)return;curX=e.clientX-startX;setProgress(curX);});
+    handle.addEventListener('pointerup',()=>{if(!dragging)return;dragging=false;curX>THRESH?openFull():closeAll();});
+  });
+}
+
 function initAboutGallery(){
   renderAboutGallery();
   setAgPadding();
@@ -2145,6 +2227,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   renderMapNodes();
   initMap();
   initAboutGallery();
+  initAboutSlides();
   const{view,param}=decodeHash(location.hash||'#home');
   renderView(view||'home',param);
 });
