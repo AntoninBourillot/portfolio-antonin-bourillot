@@ -323,9 +323,17 @@ img{display:block;max-width:100%;}
 .alabel{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--ink3);margin-bottom:16px;}
 .about-wip{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--moss);margin-left:10px;}
 /* ── About slides (Comprendre / Concevoir) ── */
-.about-slides-wrap{border-bottom:var(--r);}
-.about-slides-section{padding:var(--py) var(--px);border-bottom:var(--r);}
-.about-slides-section:last-child{border-bottom:none;}
+.about-slides-wrap{}
+.aslides-row{display:grid;grid-template-columns:1fr 1px 1fr;border-bottom:var(--r);}
+.aslides-row:last-child{border-bottom:none;}
+.aslides-divider{background:var(--paper3);}
+.about-slides-section{padding:var(--py) var(--px);}
+@media(max-width:900px){
+  .aslides-row{grid-template-columns:1fr;}
+  .aslides-divider{height:1px;background:var(--paper3);}
+  .aslides-row .about-slides-section{border-bottom:var(--r);}
+  .aslides-row .about-slides-section:last-of-type{border-bottom:none;}
+}
 .aslide-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(20px,2.2vw,26px);font-weight:400;color:var(--ink);margin-bottom:28px;}
 .aslides{display:flex;flex-direction:column;}
 .aslide{border-top:1px solid var(--paper3);}
@@ -598,21 +606,44 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 <!-- À PROPOS -->
 <div class="view" id="view-about">
   <div class="about-slides-wrap">
-    <div class="about-slides-section">
-      <p class="aslide-title" data-i18n="about_sec_comprendre">Comprendre</p>
-      <div class="aslides">
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_empathie">Compréhension fine des besoins et des usages</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_empathie">Empathie utilisateur</span><span class="aslide-ico"></span></div></div></div>
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_approche">Capacité à traduire des comportements en espaces</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_approche">Approche des usages</span><span class="aslide-ico"></span></div></div></div>
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_analyse">Anticipation des différents scénarios d'usages</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_analyse">Analyse des usages</span><span class="aslide-ico"></span></div></div></div>
+    <div class="aslides-row">
+      <div class="about-slides-section">
+        <p class="aslide-title" data-i18n="about_sec_comprendre">Comprendre</p>
+        <div class="aslides">
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_empathie">Compréhension fine des besoins et des usages</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_empathie">Empathie utilisateur</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_approche">Capacité à traduire des comportements en espaces</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_approche">Approche des usages</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_analyse">Anticipation des différents scénarios d'usages</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_analyse">Analyse des usages</span><span class="aslide-ico"></span></div></div></div>
+        </div>
+      </div>
+      <div class="aslides-divider"></div>
+      <div class="about-slides-section">
+        <p class="aslide-title" data-i18n="about_sec_representer">Représenter</p>
+        <div class="aslides">
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_archicad">Développement et production de plans techniques</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_archicad">Archicad / Autocad</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_sketchup">Modélisation et mise en ambiance du projet</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_sketchup">Sketchup / V-Ray</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_detail">Cohérence entre dessin et mise en œuvre</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_detail">Sens du détail</span><span class="aslide-ico"></span></div></div></div>
+        </div>
       </div>
     </div>
-    <div class="about-slides-section">
-      <p class="aslide-title" data-i18n="about_sec_concevoir">Concevoir</p>
-      <div class="aslides">
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_rigueur">Précision apportée dans la conception et la production</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_rigueur">Rigueur</span><span class="aslide-ico"></span></div></div></div>
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_croquis">Exploration rapide d'intention spatiale</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_croquis">Croquis</span><span class="aslide-ico"></span></div></div></div>
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_maquette">Compréhension volumétrique et sensible</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_maquette">Maquette</span><span class="aslide-ico"></span></div></div></div>
-        <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_esprit">Prise de recul sur les choix de conception</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_esprit">Esprit critique</span><span class="aslide-ico"></span></div></div></div>
+    <div class="aslides-row">
+      <div class="about-slides-section">
+        <p class="aslide-title" data-i18n="about_sec_concevoir">Concevoir</p>
+        <div class="aslides">
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_rigueur">Précision apportée dans la conception et la production</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_rigueur">Rigueur</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_croquis">Exploration rapide d'intention spatiale</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_croquis">Croquis</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_maquette">Compréhension volumétrique et sensible</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_maquette">Maquette</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_esprit">Prise de recul sur les choix de conception</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_esprit">Esprit critique</span><span class="aslide-ico"></span></div></div></div>
+        </div>
+      </div>
+      <div class="aslides-divider"></div>
+      <div class="about-slides-section">
+        <p class="aslide-title" data-i18n="about_sec_mettreenoeuvre">Mettre en œuvre</p>
+        <div class="aslides">
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_suivi">Coordination et adaptation aux réalités du terrain</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_suivi">Suivi de chantier</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_adaptabilite">Capacité à orienter le projet selon les contraintes</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_adaptabilite">Adaptabilité</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_ecoute">Dialogue avec les usagers et les acteurs du projet</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_ecoute">Écoute</span><span class="aslide-ico"></span></div></div></div>
+          <div class="aslide"><div class="aslide-track"><div class="aslide-phrase" data-i18n="about_phrase_vigilance">Suivi attentif des détails en phase de réalisation</div><div class="aslide-handle"><span class="aslide-label" data-i18n="about_btn_vigilance">Vigilance</span><span class="aslide-ico"></span></div></div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -821,7 +852,14 @@ const I18N = {
     reflex3_body:'Réflexion sur les usages simultanés et les espaces-ponts entre générations, du carnet de croquis au programme spatial.',
     rflex_tag_co:'Collectivités',rflex_tag_dd:'Durable',rflex_tag_bois:'Matériaux',rflex_tag_cr:'Croquis',
     reflex_add:'Ajouter une réflexion',
-    about_sec_comprendre:'Comprendre',about_sec_concevoir:'Concevoir',
+    about_sec_comprendre:'Comprendre',about_sec_concevoir:'Concevoir',about_sec_representer:'Représenter',about_sec_mettreenoeuvre:'Mettre en œuvre',
+    about_btn_archicad:'Archicad / Autocad',about_phrase_archicad:'Développement et production de plans techniques',
+    about_btn_sketchup:'Sketchup / V-Ray',about_phrase_sketchup:'Modélisation et mise en ambiance du projet',
+    about_btn_detail:'Sens du détail',about_phrase_detail:'Cohérence entre dessin et mise en œuvre',
+    about_btn_suivi:'Suivi de chantier',about_phrase_suivi:'Coordination et adaptation aux réalités du terrain',
+    about_btn_adaptabilite:'Adaptabilité',about_phrase_adaptabilite:'Capacité à orienter le projet selon les contraintes',
+    about_btn_ecoute:'Écoute',about_phrase_ecoute:'Dialogue avec les usagers et les acteurs du projet',
+    about_btn_vigilance:'Vigilance',about_phrase_vigilance:'Suivi attentif des détails en phase de réalisation',
     about_btn_empathie:'Empathie utilisateur',about_phrase_empathie:'Compréhension fine des besoins et des usages',
     about_btn_approche:'Approche des usages',about_phrase_approche:'Capacité à traduire des comportements en espaces',
     about_btn_analyse:'Analyse des usages',about_phrase_analyse:"Anticipation des différents scénarios d'usages",
@@ -864,7 +902,14 @@ const I18N = {
     reflex3_body:'A reflection on simultaneous uses and bridge-spaces between generations, from sketchbook to spatial program.',
     rflex_tag_co:'Public spaces',rflex_tag_dd:'Sustainable',rflex_tag_bois:'Materials',rflex_tag_cr:'Sketches',
     reflex_add:'Add a reflection',
-    about_sec_comprendre:'Understand',about_sec_concevoir:'Design',
+    about_sec_comprendre:'Understand',about_sec_concevoir:'Design',about_sec_representer:'Represent',about_sec_mettreenoeuvre:'Build',
+    about_btn_archicad:'Archicad / Autocad',about_phrase_archicad:'Development and production of technical drawings',
+    about_btn_sketchup:'Sketchup / V-Ray',about_phrase_sketchup:'3D modelling and project visualisation',
+    about_btn_detail:'Eye for detail',about_phrase_detail:'Consistency between drawing and execution',
+    about_btn_suivi:'Site supervision',about_phrase_suivi:'Coordination and adaptation to on-site realities',
+    about_btn_adaptabilite:'Adaptability',about_phrase_adaptabilite:'Ability to steer the project around constraints',
+    about_btn_ecoute:'Listening',about_phrase_ecoute:'Dialogue with users and project stakeholders',
+    about_btn_vigilance:'Vigilance',about_phrase_vigilance:'Close attention to detail during the construction phase',
     about_btn_empathie:'User empathy',about_phrase_empathie:'In-depth understanding of needs and uses',
     about_btn_approche:'Usage approach',about_phrase_approche:'Ability to translate behaviours into spaces',
     about_btn_analyse:'Usage analysis',about_phrase_analyse:'Anticipating different usage scenarios',
@@ -907,7 +952,14 @@ const I18N = {
     reflex3_body:'Reflexión sobre los usos simultáneos y los espacios puente entre generaciones, desde el cuaderno de bocetos hasta el programa espacial.',
     rflex_tag_co:'Colectividades',rflex_tag_dd:'Sostenible',rflex_tag_bois:'Materiales',rflex_tag_cr:'Bocetos',
     reflex_add:'Añadir una reflexión',
-    about_sec_comprendre:'Comprender',about_sec_concevoir:'Concebir',
+    about_sec_comprendre:'Comprender',about_sec_concevoir:'Concebir',about_sec_representer:'Representar',about_sec_mettreenoeuvre:'Ejecutar',
+    about_btn_archicad:'Archicad / Autocad',about_phrase_archicad:'Desarrollo y producción de planos técnicos',
+    about_btn_sketchup:'Sketchup / V-Ray',about_phrase_sketchup:'Modelización y ambientación del proyecto',
+    about_btn_detail:'Sentido del detalle',about_phrase_detail:'Coherencia entre el dibujo y la ejecución',
+    about_btn_suivi:'Seguimiento de obra',about_phrase_suivi:'Coordinación y adaptación a las realidades del terreno',
+    about_btn_adaptabilite:'Adaptabilidad',about_phrase_adaptabilite:'Capacidad de orientar el proyecto según las restricciones',
+    about_btn_ecoute:'Escucha',about_phrase_ecoute:'Diálogo con los usuarios y los actores del proyecto',
+    about_btn_vigilance:'Vigilancia',about_phrase_vigilance:'Seguimiento atento de los detalles en fase de realización',
     about_btn_empathie:'Empatía con el usuario',about_phrase_empathie:'Comprensión profunda de las necesidades y los usos',
     about_btn_approche:'Enfoque de usos',about_phrase_approche:'Capacidad de traducir comportamientos en espacios',
     about_btn_analyse:'Análisis de usos',about_phrase_analyse:'Anticipación de los distintos escenarios de uso',
