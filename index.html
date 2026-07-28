@@ -334,6 +334,7 @@ img{display:block;max-width:100%;}
 .exp-bar{position:absolute;border-radius:1px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;}
 .exp-bar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .exp-date{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--ink3);white-space:nowrap;pointer-events:none;}
+.exp-point-label{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;line-height:1.45;max-width:150px;white-space:normal;pointer-events:none;}
 .exp-connector{position:absolute;width:1px;pointer-events:none;}
 
 /* ABOUT / CONTACT */
@@ -721,11 +722,10 @@ let currentLang = 'fr';
    type : 'pro' (au-dessus de l'axe) ou 'asso' (en-dessous)
    end  : null = en cours                                                   */
 const EXPERIENCES = [
-  {type:'pro',  label:'Expérience professionnelle 1', org:'Structure 1', start:{y:2020,m:6},  end:{y:2021,m:8}},
-  {type:'pro',  label:'Expérience professionnelle 2', org:'Structure 2', start:{y:2022,m:2},  end:{y:2023,m:7}},
-  {type:'pro',  label:'Expérience professionnelle 3', org:'Structure 3', start:{y:2024,m:1},  end:null},
-  {type:'asso', label:'Expérience associative 1',     org:'Association 1',start:{y:2021,m:3},  end:{y:2023,m:12}},
-  {type:'asso', label:'Expérience associative 2',     org:'Association 2',start:{y:2024,m:4},  end:null},
+  {type:'pro',  point:true, label:'Baccalauréat mention très bien, spécialités Mathématiques & Sciences de l\'ingénieur', start:{y:2023,m:6}},
+  {type:'pro',  label:'Stage ouvrier en entreprise de rénovation générale du bâtiment', start:{y:2024,m:6}, end:{y:2024,m:7}},
+  {type:'asso', label:'Participation active au Bureau des Étudiants : organisation d\'évènements pour les étudiants et intervenants', start:{y:2023,m:9}, end:{y:2025,m:5}},
+  {type:'asso', label:'Présidence du Bureau des Étudiants : organisation administrative et gestion des adhérents', start:{y:2025,m:7}, end:{y:2026,m:7}},
 ];
 
 const PROJECTS = [
@@ -2088,7 +2088,7 @@ function centerAgFrame(idx){
 }
 
 /* ══════ FRESQUE CHRONOLOGIQUE ══════ */
-const EXP_PX   = 72;   // px par mois
+const EXP_PX   = 48;   // px par mois
 const AXIS_Y   = 170;  // px depuis le haut du canvas jusqu'à l'axe
 const BAR_H    = 34;   // hauteur d'une barre
 const BAR_GAP  = 10;   // espace entre axe et première lane
@@ -2156,10 +2156,26 @@ function renderTimeline(){
     html+=`<div class="exp-year" style="left:${x}px;top:${AXIS_Y+20}px;">${y}</div>`;
   }
 
-  // Barres
+  // Événement ponctuel (borne verticale)
+  function renderPoint(e, isPro){
+    const color=isPro?C_PRO:C_ASSO;
+    const x=PAD_L+expMOff(e.start,ref)*EXP_PX;
+    const lineH=70;
+    const dotR=4;
+    const connTop=isPro ? AXIS_Y-lineH : AXIS_Y+1;
+    const labelTop=isPro ? connTop : AXIS_Y+lineH+8;
+    const dateTop=isPro ? AXIS_Y+6 : AXIS_Y-14;
+    html+=`<div style="position:absolute;left:${x}px;top:${connTop}px;width:1px;height:${lineH}px;background:${color}90;"></div>`;
+    html+=`<div style="position:absolute;left:${x-dotR}px;top:${AXIS_Y-dotR}px;width:${dotR*2}px;height:${dotR*2}px;border-radius:50%;background:${color};"></div>`;
+    html+=`<div class="exp-point-label" style="left:${x+8}px;top:${isPro?connTop:labelTop}px;color:${color};">${e.label}</div>`;
+    html+=`<div class="exp-date" style="left:${x}px;top:${dateTop}px;transform:translateX(-50%);">${expFmt(e.start)}</div>`;
+  }
+
+  // Barres (périodes)
   function renderBars(exps, isPro){
     const color=isPro?C_PRO:C_ASSO;
     exps.forEach(e=>{
+      if(e.point){ renderPoint(e, isPro); return; }
       const x0=PAD_L+expMOff(e.start,ref)*EXP_PX;
       const endDate=e.end||today;
       const x1=PAD_L+expMOff(endDate,ref)*EXP_PX;
@@ -2168,19 +2184,15 @@ function renderTimeline(){
       const barTop=isPro ? AXIS_Y-BAR_GAP-BAR_H-laneOff : AXIS_Y+BAR_GAP+laneOff;
       const dateY=isPro ? barTop-14 : barTop+BAR_H+4;
 
-      // Trait vertical reliant la barre à l'axe (seulement lane 0)
       if(e._lane===0){
-        const connH=isPro ? BAR_GAP : BAR_GAP;
         const connTop=isPro ? barTop+BAR_H : AXIS_Y+1;
-        html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${connH}px;background:${color}40;"></div>`;
+        html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${BAR_GAP}px;background:${color}40;"></div>`;
       }
 
-      // Barre
       html+=`<div class="exp-bar" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color}18;border:1px solid ${color}60;">
         <span class="exp-bar-label" style="color:${color};">${e.label}</span>
       </div>`;
 
-      // Dates aux extrémités
       html+=`<div class="exp-date" style="left:${x0}px;top:${dateY}px;transform:translateX(-50%);">${expFmt(e.start)}</div>`;
       html+=`<div class="exp-date" style="left:${x1}px;top:${dateY}px;transform:translateX(-50%);">${e.end?expFmt(endDate):'→'}</div>`;
     });
