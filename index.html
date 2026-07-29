@@ -331,10 +331,25 @@ img{display:block;max-width:100%;}
 .exp-now-label{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:var(--moss);transform:translateX(-50%);white-space:nowrap;}
 .exp-year{position:absolute;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);transform:translateX(-50%);pointer-events:none;}
 .exp-year-tick{position:absolute;width:1px;background:var(--paper3);pointer-events:none;}
-.exp-bar{position:absolute;border-radius:1px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;}
+.exp-bar{position:absolute;border-radius:3px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;cursor:pointer;transition:filter .15s;}
+.exp-bar:hover{filter:brightness(1.08);}
 .exp-bar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .exp-date{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--ink3);white-space:nowrap;pointer-events:none;}
 .exp-point-label{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;line-height:1.45;max-width:150px;white-space:normal;pointer-events:none;}
+.exp-point-hit{position:absolute;cursor:pointer;}
+.exp-point-hit:hover .exp-point-sq{filter:brightness(1.2);}
+/* Panneau détail */
+.exp-detail{border-top:var(--r);padding:32px var(--px) 40px;animation:expDetailIn .25s ease;}
+@keyframes expDetailIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.exp-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px;}
+.exp-detail-title{font-family:'Playfair Display',serif;font-size:clamp(16px,2vw,22px);font-style:italic;color:var(--ink);}
+.exp-detail-close{flex-shrink:0;background:none;border:1px solid var(--paper3);padding:4px 10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);cursor:pointer;border-radius:2px;transition:border-color .2s,color .2s;}
+.exp-detail-close:hover{border-color:var(--ink3);color:var(--ink);}
+.exp-detail-meta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);margin-bottom:20px;}
+.exp-detail-desc{font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.75;color:var(--ink2);max-width:640px;margin-bottom:28px;}
+.exp-detail-photos{display:flex;gap:10px;flex-wrap:wrap;}
+.exp-detail-photo{width:clamp(140px,20vw,220px);aspect-ratio:4/3;object-fit:cover;border-radius:2px;display:block;}
+.exp-detail-empty{font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3);letter-spacing:.08em;}
 .exp-connector{position:absolute;width:1px;pointer-events:none;}
 
 /* ABOUT / CONTACT */
@@ -696,6 +711,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   <div class="exp-wrap" id="expWrap">
     <div class="exp-canvas" id="expCanvas"></div>
   </div>
+  <div class="exp-detail" id="expDetail" style="display:none;"></div>
   <footer><span class="fn">ANTONIN BOURILLOT</span></footer>
 </div>
 
@@ -722,10 +738,14 @@ let currentLang = 'fr';
    type : 'pro' (au-dessus de l'axe) ou 'asso' (en-dessous)
    end  : null = en cours                                                   */
 const EXPERIENCES = [
-  {type:'pro',  point:true, label:'Baccalauréat<br>Mention très bien', start:{y:2023,m:6}},
-  {type:'pro',  point:true, label:'Stage ouvrier en entreprise de rénovation générale du bâtiment', start:{y:2024,m:6}},
-  {type:'asso', label:'Participation active au Bureau des Étudiants : organisation d\'évènements pour les étudiants et intervenants', start:{y:2023,m:9}, end:{y:2025,m:5}},
-  {type:'asso', label:'Présidence du Bureau des Étudiants : organisation administrative et gestion des adhérents', start:{y:2025,m:7}, end:{y:2026,m:7}},
+  {type:'pro', point:true, label:'Baccalauréat<br>Mention très bien', start:{y:2023,m:6},
+   desc:'', photos:[]},
+  {type:'pro', point:true, label:'Stage ouvrier en entreprise de rénovation générale du bâtiment', start:{y:2024,m:6},
+   desc:'', photos:[]},
+  {type:'asso', label:'Participation active au Bureau des Étudiants : organisation d\'évènements pour les étudiants et intervenants', start:{y:2023,m:9}, end:{y:2025,m:5},
+   desc:'', photos:[]},
+  {type:'asso', label:'Présidence du Bureau des Étudiants : organisation administrative et gestion des adhérents', start:{y:2025,m:7}, end:{y:2026,m:7},
+   desc:'', photos:[]},
 ];
 
 const PROJECTS = [
@@ -2095,8 +2115,8 @@ const BAR_GAP  = 10;   // espace entre axe et première lane
 const LANE_GAP = 6;    // espace entre deux lanes empilées
 const PAD_L    = 60;   // marge gauche avant le début de la frise
 const PAD_R    = 80;   // marge droite après la fin
-const C_PRO    = '#3b5c32';
-const C_ASSO   = '#8a6a3a';
+const C_PRO    = '#4d7e3e';
+const C_ASSO   = '#a0712a';
 
 function expMOff(date, ref){ return (date.y - ref.y)*12 + (date.m - ref.m); }
 function expFmt(d){
@@ -2149,33 +2169,44 @@ function renderTimeline(){
   html+=`<div class="exp-now" style="left:${todayX}px;"></div>`;
   html+=`<div class="exp-now-label" style="left:${todayX}px;top:${AXIS_Y+6}px;">auj.</div>`;
 
-  // Ticks annuels
+  // Ticks annuels — en dessous de l'axe uniquement
+  const YEAR_TICK_TOP = AXIS_Y + 1;
+  const YEAR_TICK_H   = 24;
+  const YEAR_LABEL_Y  = AXIS_Y + 30;
   for(let y=minY;y<=maxY+1;y++){
     const x=PAD_L+expMOff({y,m:1},ref)*EXP_PX;
-    html+=`<div class="exp-year-tick" style="left:${x}px;top:${AXIS_Y-18}px;height:36px;"></div>`;
-    html+=`<div class="exp-year" style="left:${x}px;top:${AXIS_Y+20}px;">${y}</div>`;
+    html+=`<div class="exp-year-tick" style="left:${x}px;top:${YEAR_TICK_TOP}px;height:${YEAR_TICK_H}px;"></div>`;
+    html+=`<div class="exp-year" style="left:${x}px;top:${YEAR_LABEL_Y}px;">${y}</div>`;
   }
 
-  // Événement ponctuel (borne verticale)
-  function renderPoint(e, isPro){
+  // Événement ponctuel (borne verticale avec carré arrondi)
+  function renderPoint(e, isPro, idx){
     const color=isPro?C_PRO:C_ASSO;
     const x=PAD_L+expMOff(e.start,ref)*EXP_PX;
-    const lineH=70;
-    const dotR=4;
+    const lineH=72;
+    const sqS=10; // taille du carré
     const connTop=isPro ? AXIS_Y-lineH : AXIS_Y+1;
-    const labelTop=isPro ? connTop : AXIS_Y+lineH+8;
+    const labelTop=isPro ? connTop : AXIS_Y+lineH+10;
     const dateTop=isPro ? AXIS_Y+6 : AXIS_Y-14;
-    html+=`<div style="position:absolute;left:${x}px;top:${connTop}px;width:1px;height:${lineH}px;background:${color}90;"></div>`;
-    html+=`<div style="position:absolute;left:${x-dotR}px;top:${AXIS_Y-dotR}px;width:${dotR*2}px;height:${dotR*2}px;border-radius:50%;background:${color};"></div>`;
-    html+=`<div class="exp-point-label" style="left:${x+8}px;top:${isPro?connTop:labelTop}px;color:${color};">${e.label}</div>`;
-    html+=`<div class="exp-date" style="left:${x}px;top:${dateTop}px;transform:translateX(-50%);">${expFmt(e.start)}</div>`;
+    // Zone cliquable englobante
+    const hitTop=isPro ? connTop : AXIS_Y;
+    const hitH=lineH+sqS;
+    html+=`<div class="exp-point-hit" data-exp-idx="${idx}" style="left:${x-sqS}px;top:${hitTop}px;width:${sqS*2+1}px;height:${hitH}px;" onclick="showExpDetail(${idx})">`;
+    html+=`<div style="position:absolute;left:${sqS}px;top:0;width:1px;height:${lineH}px;background:${color}90;"></div>`;
+    html+=`<div class="exp-point-sq" style="position:absolute;left:${sqS-sqS/2}px;top:${isPro?lineH-sqS/2:0}px;width:${sqS}px;height:${sqS}px;border-radius:2px;background:${color};transition:filter .15s;"></div>`;
+    html+=`</div>`;
+    // Date alignée avec l'extrémité du trait, label en dessous
+    const tipY = isPro ? connTop : connTop + lineH;
+    html+=`<div class="exp-date" style="left:${x+sqS}px;top:${tipY}px;pointer-events:none;">${expFmt(e.start)}</div>`;
+    html+=`<div class="exp-point-label" style="left:${x+sqS}px;top:${tipY+13}px;color:${color};pointer-events:none;">${e.label}</div>`;
   }
 
   // Barres (périodes)
   function renderBars(exps, isPro){
     const color=isPro?C_PRO:C_ASSO;
-    exps.forEach(e=>{
-      if(e.point){ renderPoint(e, isPro); return; }
+    exps.forEach((e,i)=>{
+      const idx=EXPERIENCES.indexOf(e);
+      if(e.point){ renderPoint(e, isPro, idx); return; }
       const x0=PAD_L+expMOff(e.start,ref)*EXP_PX;
       const endDate=e.end||today;
       const x1=PAD_L+expMOff(endDate,ref)*EXP_PX;
@@ -2186,15 +2217,15 @@ function renderTimeline(){
 
       if(e._lane===0){
         const connTop=isPro ? barTop+BAR_H : AXIS_Y+1;
-        html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${BAR_GAP}px;background:${color}40;"></div>`;
+        html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${BAR_GAP}px;background:${color}40;pointer-events:none;"></div>`;
       }
 
-      html+=`<div class="exp-bar" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color}18;border:1px solid ${color}60;">
+      html+=`<div class="exp-bar" data-exp-idx="${idx}" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color}22;border:1px solid ${color}80;" onclick="showExpDetail(${idx})">
         <span class="exp-bar-label" style="color:${color};">${e.label}</span>
       </div>`;
 
-      html+=`<div class="exp-date" style="left:${x0}px;top:${dateY}px;transform:translateX(-50%);">${expFmt(e.start)}</div>`;
-      html+=`<div class="exp-date" style="left:${x1}px;top:${dateY}px;transform:translateX(-50%);">${e.end?expFmt(endDate):'→'}</div>`;
+      html+=`<div class="exp-date" style="left:${x0}px;top:${dateY}px;transform:translateX(-50%);pointer-events:none;">${expFmt(e.start)}</div>`;
+      html+=`<div class="exp-date" style="left:${x1}px;top:${dateY}px;transform:translateX(-50%);pointer-events:none;">${e.end?expFmt(endDate):'→'}</div>`;
     });
   }
 
@@ -2202,6 +2233,43 @@ function renderTimeline(){
   renderBars(assos, false);
 
   canvas.innerHTML=html;
+}
+
+function showExpDetail(idx){
+  const e=EXPERIENCES[idx];
+  if(!e) return;
+  const panel=document.getElementById('expDetail');
+  const color=e.type==='pro'?C_PRO:C_ASSO;
+  const typeLabel=e.type==='pro'?'Expérience professionnelle':'Expérience associative';
+  const dateFmt=e.point
+    ? expFmt(e.start)
+    : e.end
+      ? `${expFmt(e.start)} — ${expFmt(e.end)}`
+      : `${expFmt(e.start)} — en cours`;
+  const cleanLabel=e.label.replace(/<br>/gi,' ');
+  const photosHtml=e.photos&&e.photos.length
+    ? e.photos.map(src=>`<img class="exp-detail-photo" src="${src}" alt="">`).join('')
+    : `<p class="exp-detail-empty">— photos à venir —</p>`;
+  const descHtml=e.desc
+    ? `<p class="exp-detail-desc">${e.desc}</p>`
+    : '';
+
+  // Fermeture si déjà ouvert sur le même élément
+  if(panel.dataset.open===String(idx) && panel.style.display!=='none'){
+    panel.style.display='none'; panel.dataset.open=''; return;
+  }
+
+  panel.innerHTML=`
+    <div class="exp-detail-head">
+      <span class="exp-detail-title" style="color:${color};">${cleanLabel}</span>
+      <button class="exp-detail-close" onclick="document.getElementById('expDetail').style.display='none'">FERMER ×</button>
+    </div>
+    <div class="exp-detail-meta">${typeLabel} · ${dateFmt}</div>
+    ${descHtml}
+    <div class="exp-detail-photos">${photosHtml}</div>`;
+  panel.dataset.open=String(idx);
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function initTimeline(){
