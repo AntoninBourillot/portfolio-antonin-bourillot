@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -322,7 +322,8 @@ img{display:block;max-width:100%;}
 .exp-legend{display:flex;gap:20px;flex-wrap:wrap;}
 .exp-legend-pro{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--moss);}
 .exp-legend-asso{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:#8a6a3a;}
-.exp-wrap{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;border-bottom:var(--r);}
+.exp-stage{position:relative;overflow:hidden;height:340px;border-bottom:var(--r);}
+.exp-wrap{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;}
 .exp-wrap:active{cursor:grabbing;}
 .exp-wrap::-webkit-scrollbar{display:none;}
 .exp-canvas{position:relative;height:340px;user-select:none;}
@@ -330,7 +331,9 @@ img{display:block;max-width:100%;}
 .exp-now{position:absolute;top:0;bottom:0;width:1px;background:var(--moss);opacity:.5;}
 .exp-now-label{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:var(--moss);transform:translateX(-50%);white-space:nowrap;}
 .exp-year{position:absolute;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);transform:translateX(-50%);pointer-events:none;}
-.exp-year-tick{position:absolute;width:1px;background:var(--paper3);pointer-events:none;}
+.exp-year-tick{position:absolute;width:0;border-left:1px dashed var(--paper3);pointer-events:none;}
+/* Panneau detail - overlay remontant */
+.exp-detail{position:absolute;inset:0;overflow-y:auto;background:var(--paper);padding:28px var(--px) 36px;transform:translateY(100%);transition:transform .45s cubic-bezier(.4,0,.2,1);}.exp-detail.visible{transform:translateY(0);}.exp-detail.switching{opacity:0;transition:opacity .15s ease !important;}
 .exp-bar{position:absolute;border-radius:3px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;cursor:pointer;transition:filter .15s;}
 .exp-bar:hover{filter:brightness(1.08);}
 .exp-bar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
@@ -339,8 +342,7 @@ img{display:block;max-width:100%;}
 .exp-point-hit{position:absolute;cursor:pointer;}
 .exp-point-hit:hover .exp-point-sq{filter:brightness(1.2);}
 /* Panneau détail */
-.exp-detail{border-top:var(--r);padding:32px var(--px) 40px;opacity:0;transform:translateY(18px);transition:opacity .4s ease,transform .4s ease;}
-.exp-detail.visible{opacity:1;transform:translateY(0);}
+
 .exp-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px;}
 .exp-detail-title{font-family:'Playfair Display',serif;font-size:clamp(16px,2vw,22px);font-style:italic;color:var(--ink);}
 .exp-detail-close{flex-shrink:0;background:none;border:1px solid var(--paper3);padding:4px 10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);cursor:pointer;border-radius:2px;transition:border-color .2s,color .2s;}
@@ -708,10 +710,12 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <span class="exp-legend-asso">&#9632; <span data-i18n="exp_leg_asso">Expériences associatives</span></span>
     </div>
   </div>
-  <div class="exp-wrap" id="expWrap">
-    <div class="exp-canvas" id="expCanvas"></div>
+  <div class="exp-stage">
+    <div class="exp-wrap" id="expWrap">
+      <div class="exp-canvas" id="expCanvas"></div>
+    </div>
+    <div class="exp-detail" id="expDetail"></div>
   </div>
-  <div class="exp-detail" id="expDetail" style="display:none;"></div>
   <footer><span class="fn">ANTONIN BOURILLOT</span></footer>
 </div>
 
@@ -2169,9 +2173,9 @@ function renderTimeline(){
   html+=`<div class="exp-now" style="left:${todayX}px;"></div>`;
   html+=`<div class="exp-now-label" style="left:${todayX}px;top:${AXIS_Y+6}px;">auj.</div>`;
 
-  // Ticks annuels — en dessous de l'axe uniquement
-  const YEAR_TICK_TOP = AXIS_Y + 1;
-  const YEAR_TICK_H   = 24;
+  // Ticks annuels — du haut du canvas jusqu'à l'axe (pointillé)
+  const YEAR_TICK_TOP = 8;
+  const YEAR_TICK_H   = AXIS_Y - 8;
   const YEAR_LABEL_Y  = AXIS_Y + 30;
   for(let y=minY;y<=maxY+1;y++){
     const x=PAD_L+expMOff({y,m:1},ref)*EXP_PX;
@@ -2198,7 +2202,8 @@ function renderTimeline(){
     // Date alignée avec l'extrémité du trait, label en dessous — tout cliquable
     const tipY = isPro ? connTop : connTop + lineH;
     html+=`<div style="position:absolute;left:${x+sqS}px;top:${tipY}px;cursor:pointer;" onclick="showExpDetail(${idx})">`;
-    html+=`<div class="exp-date" style="position:relative;">${expFmt(e.start)}</div>`;
+    const [dm,dy]=expFmt(e.start).split(' ');
+    html+=`<div class="exp-date" style="position:relative;line-height:1.5;">${dm}<br>${dy}</div>`;
     html+=`<div class="exp-point-label" style="position:relative;color:${color};margin-top:3px;">${e.label}</div>`;
     html+=`</div>`;
   }
@@ -2256,12 +2261,7 @@ function showExpDetail(idx){
     ? `<p class="exp-detail-desc">${e.desc}</p>`
     : '';
 
-  // Fermeture si déjà ouvert sur le même élément
-  if(panel.dataset.open===String(idx) && panel.classList.contains('visible')){
-    closeExpDetail(); return;
-  }
-
-  panel.innerHTML=`
+  const newHtml=`
     <div class="exp-detail-head">
       <span class="exp-detail-title" style="color:${color};">${cleanLabel}</span>
       <button class="exp-detail-close" onclick="closeExpDetail()">FERMER ×</button>
@@ -2269,19 +2269,37 @@ function showExpDetail(idx){
     <div class="exp-detail-meta">${typeLabel} · ${dateFmt}</div>
     ${descHtml}
     <div class="exp-detail-photos">${photosHtml}</div>`;
+
+  // Même borne déjà ouverte → fermer
+  if(panel.dataset.open===String(idx) && panel.classList.contains('visible')){
+    closeExpDetail(); return;
+  }
+
+  // Autre borne pendant que le panneau est visible → fondu rapide entre contenus
+  if(panel.classList.contains('visible')){
+    panel.classList.add('switching');
+    setTimeout(()=>{
+      panel.innerHTML=newHtml;
+      panel.dataset.open=String(idx);
+      panel.scrollTop=0;
+      panel.classList.remove('switching');
+    },160);
+    return;
+  }
+
+  // Première ouverture — le panneau remonte depuis le bas
+  panel.innerHTML=newHtml;
   panel.dataset.open=String(idx);
-  panel.style.display='block';
-  // Double rAF pour forcer le repaint avant la transition
+  panel.scrollTop=0;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     panel.classList.add('visible');
-    setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
   }));
 }
 
 function closeExpDetail(){
   const panel=document.getElementById('expDetail');
   panel.classList.remove('visible');
-  setTimeout(()=>{ panel.style.display='none'; panel.dataset.open=''; },420);
+  setTimeout(()=>{ panel.dataset.open=''; },460);
 }
 
 function initTimeline(){
@@ -2543,3 +2561,4 @@ window.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
