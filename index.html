@@ -339,8 +339,8 @@ img{display:block;max-width:100%;}
 .exp-point-hit{position:absolute;cursor:pointer;}
 .exp-point-hit:hover .exp-point-sq{filter:brightness(1.2);}
 /* Panneau détail */
-.exp-detail{border-top:var(--r);padding:32px var(--px) 40px;animation:expDetailIn .25s ease;}
-@keyframes expDetailIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.exp-detail{border-top:var(--r);padding:32px var(--px) 40px;opacity:0;transform:translateY(18px);transition:opacity .4s ease,transform .4s ease;}
+.exp-detail.visible{opacity:1;transform:translateY(0);}
 .exp-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px;}
 .exp-detail-title{font-family:'Playfair Display',serif;font-size:clamp(16px,2vw,22px);font-style:italic;color:var(--ink);}
 .exp-detail-close{flex-shrink:0;background:none;border:1px solid var(--paper3);padding:4px 10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);cursor:pointer;border-radius:2px;transition:border-color .2s,color .2s;}
@@ -2257,21 +2257,31 @@ function showExpDetail(idx){
     : '';
 
   // Fermeture si déjà ouvert sur le même élément
-  if(panel.dataset.open===String(idx) && panel.style.display!=='none'){
-    panel.style.display='none'; panel.dataset.open=''; return;
+  if(panel.dataset.open===String(idx) && panel.classList.contains('visible')){
+    closeExpDetail(); return;
   }
 
   panel.innerHTML=`
     <div class="exp-detail-head">
       <span class="exp-detail-title" style="color:${color};">${cleanLabel}</span>
-      <button class="exp-detail-close" onclick="document.getElementById('expDetail').style.display='none'">FERMER ×</button>
+      <button class="exp-detail-close" onclick="closeExpDetail()">FERMER ×</button>
     </div>
     <div class="exp-detail-meta">${typeLabel} · ${dateFmt}</div>
     ${descHtml}
     <div class="exp-detail-photos">${photosHtml}</div>`;
   panel.dataset.open=String(idx);
   panel.style.display='block';
-  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Double rAF pour forcer le repaint avant la transition
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    panel.classList.add('visible');
+    setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+  }));
+}
+
+function closeExpDetail(){
+  const panel=document.getElementById('expDetail');
+  panel.classList.remove('visible');
+  setTimeout(()=>{ panel.style.display='none'; panel.dataset.open=''; },420);
 }
 
 function initTimeline(){
