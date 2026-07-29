@@ -742,9 +742,9 @@ const EXPERIENCES = [
    desc:'', photos:[]},
   {type:'pro', point:true, label:'Stage ouvrier en entreprise de rénovation générale du bâtiment', start:{y:2024,m:6},
    desc:'', photos:[]},
-  {type:'asso', label:'Participation active au Bureau des Étudiants : organisation d\'évènements pour les étudiants et intervenants', start:{y:2023,m:9}, end:{y:2025,m:5},
+  {type:'asso', label:'Participation active au Bureau des Étudiants', start:{y:2023,m:9}, end:{y:2025,m:5},
    desc:'', photos:[]},
-  {type:'asso', label:'Présidence du Bureau des Étudiants : organisation administrative et gestion des adhérents', start:{y:2025,m:7}, end:{y:2026,m:7},
+  {type:'asso', label:'Présidence du Bureau des Étudiants', start:{y:2025,m:7}, end:{y:2026,m:7},
    desc:'', photos:[]},
 ];
 
@@ -2108,7 +2108,7 @@ function centerAgFrame(idx){
 }
 
 /* ══════ FRESQUE CHRONOLOGIQUE ══════ */
-const EXP_PX   = 48;   // px par mois
+const EXP_PX   = 64;   // px par mois
 const AXIS_Y   = 170;  // px depuis le haut du canvas jusqu'à l'axe
 const BAR_H    = 34;   // hauteur d'une barre
 const BAR_GAP  = 10;   // espace entre axe et première lane
@@ -2120,7 +2120,7 @@ const C_ASSO   = '#a0712a';
 
 function expMOff(date, ref){ return (date.y - ref.y)*12 + (date.m - ref.m); }
 function expFmt(d){
-  const M=['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  const M=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   return M[d.m-1]+' '+d.y;
 }
 function expToday(){ const n=new Date(); return {y:n.getFullYear(),m:n.getMonth()+1}; }
@@ -2195,10 +2195,12 @@ function renderTimeline(){
     html+=`<div style="position:absolute;left:${sqS}px;top:0;width:1px;height:${lineH}px;background:${color}90;"></div>`;
     html+=`<div class="exp-point-sq" style="position:absolute;left:${sqS-sqS/2}px;top:${isPro?lineH-sqS/2:0}px;width:${sqS}px;height:${sqS}px;border-radius:2px;background:${color};transition:filter .15s;"></div>`;
     html+=`</div>`;
-    // Date alignée avec l'extrémité du trait, label en dessous
+    // Date alignée avec l'extrémité du trait, label en dessous — tout cliquable
     const tipY = isPro ? connTop : connTop + lineH;
-    html+=`<div class="exp-date" style="left:${x+sqS}px;top:${tipY}px;pointer-events:none;">${expFmt(e.start)}</div>`;
-    html+=`<div class="exp-point-label" style="left:${x+sqS}px;top:${tipY+13}px;color:${color};pointer-events:none;">${e.label}</div>`;
+    html+=`<div style="position:absolute;left:${x+sqS}px;top:${tipY}px;cursor:pointer;" onclick="showExpDetail(${idx})">`;
+    html+=`<div class="exp-date" style="position:relative;">${expFmt(e.start)}</div>`;
+    html+=`<div class="exp-point-label" style="position:relative;color:${color};margin-top:3px;">${e.label}</div>`;
+    html+=`</div>`;
   }
 
   // Barres (périodes)
