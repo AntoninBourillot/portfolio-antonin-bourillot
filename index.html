@@ -151,7 +151,19 @@ img{display:block;max-width:100%;}
 }
 .proj-hero-slides{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1);}
 .proj-hero-slide{min-width:100%;height:100%;flex-shrink:0;}
-.proj-hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.proj-hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;cursor:zoom-in;}
+/* Lightbox */
+.lightbox{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:2px;box-shadow:0 8px 48px rgba(0,0,0,.6);transition:opacity .18s ease;}
+.lightbox-close{position:fixed;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;line-height:1;cursor:pointer;opacity:.8;transition:opacity .15s;}
+.lightbox-close:hover{opacity:1;}
+.lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:22px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;opacity:.85;}
+.lightbox-nav:hover{background:rgba(255,255,255,.25);}
+.lightbox-nav.prev{left:20px;}
+.lightbox-nav.next{right:20px;}
+.lightbox-nav.hidden{display:none;}
+.lightbox-counter{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;}
 .proj-hero--contain .proj-hero-slide img{object-fit:contain;background:var(--paper2);}
 .proj-hero-slide-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
 .proj-hero-arrow{
@@ -322,8 +334,7 @@ img{display:block;max-width:100%;}
 .exp-legend{display:flex;gap:20px;flex-wrap:wrap;}
 .exp-legend-pro{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--moss);}
 .exp-legend-asso{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:#8a6a3a;}
-.exp-stage{position:relative;overflow:hidden;height:340px;border-bottom:var(--r);}
-.exp-wrap{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;}
+.exp-wrap{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;border-bottom:var(--r);}
 .exp-wrap:active{cursor:grabbing;}
 .exp-wrap::-webkit-scrollbar{display:none;}
 .exp-canvas{position:relative;height:340px;user-select:none;}
@@ -333,7 +344,7 @@ img{display:block;max-width:100%;}
 .exp-year{position:absolute;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink3);transform:translateX(-50%);pointer-events:none;}
 .exp-year-tick{position:absolute;width:0;border-left:1px dashed var(--paper3);pointer-events:none;}
 /* Panneau detail - overlay remontant */
-.exp-detail{position:absolute;inset:0;overflow-y:auto;background:var(--paper);padding:28px var(--px) 36px;transform:translateY(100%);transition:transform .45s cubic-bezier(.4,0,.2,1);}.exp-detail.visible{transform:translateY(0);}.exp-detail.switching{opacity:0;transition:opacity .15s ease !important;}
+.exp-detail{overflow-y:auto;background:var(--paper);padding:28px var(--px) 36px;opacity:0;transform:translateY(18px);transition:opacity .4s ease,transform .4s ease;display:none;}.exp-detail.visible{opacity:1;transform:translateY(0);}.exp-detail.switching{opacity:0;transition:opacity .15s ease !important;}
 .exp-bar{position:absolute;border-radius:3px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;cursor:pointer;transition:filter .15s;}
 .exp-bar:hover{filter:brightness(1.08);}
 .exp-bar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
@@ -710,12 +721,10 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <span class="exp-legend-asso">&#9632; <span data-i18n="exp_leg_asso">Expériences associatives</span></span>
     </div>
   </div>
-  <div class="exp-stage">
-    <div class="exp-wrap" id="expWrap">
-      <div class="exp-canvas" id="expCanvas"></div>
-    </div>
-    <div class="exp-detail" id="expDetail"></div>
+  <div class="exp-wrap" id="expWrap">
+    <div class="exp-canvas" id="expCanvas"></div>
   </div>
+  <div class="exp-detail" id="expDetail"></div>
   <footer><span class="fn">ANTONIN BOURILLOT</span></footer>
 </div>
 
@@ -746,10 +755,23 @@ const EXPERIENCES = [
    desc:'', photos:[]},
   {type:'pro', point:true, label:'Stage ouvrier en entreprise de rénovation générale du bâtiment', start:{y:2024,m:6},
    desc:'', photos:[]},
+  {type:'pro', point:true, label:'1ère place — Concours d\'école pour Clean My Calanques', start:{y:2025,m:2},
+   desc:'', photos:[]},
+  {type:'pro', point:true, label:'Stage en assistance en architecture d\'intérieur — Deust Associés, Lyon', start:{y:2025,m:5}, end:{y:2025,m:6},
+   desc:'', photos:[]},
+  {type:'pro', point:true, label:'Stage en cabinet d\'architecture — Architecture4Future, Vienne', start:{y:2026,m:5}, end:{y:2026,m:8},
+   desc:'De mai à août 2026, j\'ai eu la chance de réaliser un stage dans le cabinet Architecture4Future. J\'ai eu l\'occasion d\'assister à différents rendez-vous client, séances de conception, suivi de chantier. J\'ai ainsi pu développer ma connaissance sur la gestion de projets en marchés publics en France. Il était également très intéressant de voir la différence dans la gestion des projets entre un cabinet d\'architecture d\'intérieur et un cabinet d\'architecture.',
+   photos:[]},
+  {type:'asso', point:true, color:'#4a7fa5', label:'Départ en Erasmus — Montréal', start:{y:2026,m:8},
+   desc:'', photos:[]},
+  {type:'pro', point:true, color:'#4a7fa5', label:'Participation à "La Foulée" — course caritative en soutien aux femmes touchées par le cancer du sein', start:{y:2024,m:10},
+   desc:'', photos:[]},
   {type:'asso', label:'Participation active au Bureau des Étudiants', start:{y:2023,m:9}, end:{y:2025,m:5},
-   desc:'', photos:[]},
+   desc:'Durant mes deux premières années d\'études supérieures, j\'ai été actif comme membre au sein de l\'association étudiante "BDE CREADIEN". À travers ma participation, j\'ai pu apprendre à gérer mon emploi du temps entre les projets d\'école, la vie professionnelle et mon engagement associatif.',
+   photos:[]},
   {type:'asso', label:'Présidence du Bureau des Étudiants', start:{y:2025,m:7}, end:{y:2026,m:7},
-   desc:'', photos:[]},
+   desc:'Dans la continuité de mon engagement au sein de l\'association "BDE CREADIEN", j\'ai pris le rôle de président pour un mandat d\'une année. Le rôle et les responsabilités sont totalement différents et m\'ont notamment sensibilisé sur la nécessité de bien s\'entourer quand on prend un rôle à responsabilités.',
+   photos:[]},
 ];
 
 const PROJECTS = [
@@ -783,8 +805,8 @@ const PROJECTS = [
    tags:['collectivites','moe'],
    thumb:'images/chuzelles-1.jpg',
    color:'#d8dce8',stroke:'#3a4a6a',
-   images:['images/chuzelles-1.jpg','images/chuzelles-2.jpg','images/chuzelles-3.jpg','images/chuzelles-4.jpg'],mapX:360,mapY:480,
-   onGoing:true,
+   images:['images/chuzelles-1.jpg','images/chuzelles-2.jpg','images/chuzelles-3.jpg','images/chuzelles-4.jpg','images/chuzelles-refectoire-1.jpg','images/chuzelles-refectoire-2.jpg','images/chuzelles-sanitaires.jpg'],mapX:360,mapY:480,
+   status:'Terminé en septembre 2026',
    desc:"En charge de la partie administrative d'une mission de maîtrise d'œuvre dans le cadre d'un marché public : suivi des procédures réglementaires, organisation et coordination des intervenants, gestion des plannings et diplomatie sur chantier pour assurer la bonne conduite des travaux.",
    i18n:{
      en:{title:'Project management assistance — CHUZELLES',cat:'ARCHITECTURE · PUBLIC SECTOR',desc:"Responsible for the administrative side of a project management mission under public procurement rules: tracking regulatory procedures, organising and coordinating stakeholders, managing schedules and maintaining constructive dialogue on site to ensure the smooth running of works."},
@@ -1159,19 +1181,21 @@ function buildThumbGrid(proj){
 }
 function buildCarousel(proj){
   if(proj.thumbGrid) return buildThumbGrid(proj);
-  // Slides : thumb (ou svg) + cardImages si défini, sinon photos galerie[1+]
+  // Slides : thumb + cardImages si défini, sinon photos galerie[1+]
   const slides = [];
   if(proj.thumb) slides.push({type:'img',src:proj.thumb});
-  else slides.push({type:'svg',color:proj.color,stroke:proj.stroke});
-  const extra = proj.cardImages || (proj.images||[]).slice(1);
+  const extra = proj.cardImages || (proj.images||[]).slice(proj.thumb?1:0);
   extra.forEach(src=>slides.push({type:'img',src}));
+
+  // Aucune image réelle → pas de bandeau
+  if(slides.length===0) return '';
 
   if(slides.length<=1){
     // Pas de carrousel, juste l'image
     const d=slides[0];
     return`<div class="pcwrap" onclick="navigate('project','${proj.id}')">
       <div class="pcslides">
-        <div class="pcslide">${d.type==='img'?`<img src="${d.src}" alt="${pf(proj,'title')}">`:`<div style="width:100%;height:100%;background:${d.color};display:flex;align-items:center;justify-content:center;">${makeSVGThumb(d.color,d.stroke)}</div>`}</div>
+        <div class="pcslide"><img src="${d.src}" alt="${pf(proj,'title')}"></div>
       </div>
     </div>`;
   }
@@ -1249,13 +1273,13 @@ function initProjHero(proj){
 
   // Construire les slides
   if(imgs.length === 0){
-    const svg = makeSVGThumb(proj.color, proj.stroke, 160, 110);
-    slidesEl.innerHTML = `<div class="proj-hero-slide"><div class="proj-hero-slide-placeholder" style="background:${proj.color}">${svg}</div></div>`;
+    slidesEl.innerHTML = '';
     dotsEl.innerHTML = '';
     prevBtn.style.display = nextBtn.style.display = 'none';
   } else {
+    window._heroImgs=imgs;
     slidesEl.innerHTML = imgs.map((src,i) =>
-      `<div class="proj-hero-slide"><img src="${src}" alt="${pf(proj,'title')} ${i+1}" loading="${i===0?'eager':'lazy'}"></div>`
+      `<div class="proj-hero-slide"><img src="${src}" alt="${pf(proj,'title')} ${i+1}" loading="${i===0?'eager':'lazy'}" onclick="openLightbox(this.src,window._heroImgs)"></div>`
     ).join('');
     dotsEl.innerHTML = imgs.map((_,i) =>
       `<div class="proj-hero-dot${i===0?' active':''}" id="phd${i}"></div>`
@@ -1331,7 +1355,8 @@ function renderProjectView(id){
 
   /* Note de statut (ex : projet en cours) */
   const noteEl=document.getElementById('projStatusNote');
-  if(proj.onGoing){noteEl.textContent=t('proj_en_cours');noteEl.classList.add('visible');}
+  if(proj.status){noteEl.textContent='— '+proj.status;noteEl.classList.add('visible');}
+  else if(proj.onGoing){noteEl.textContent=t('proj_en_cours');noteEl.classList.add('visible');}
   else{noteEl.textContent='';noteEl.classList.remove('visible');}
 
   /* Masquer la carte du projet si noBoard */
@@ -1366,7 +1391,7 @@ function renderProjectView(id){
     ?sugg.map(({project:s})=>{
         const ml=proj.tags.filter(tg=>s.tags.includes(tg)).map(tg=>tagLabel(tg)).join(', ');
         return`<div class="sugg-card" onclick="navigate('project','${s.id}')">
-          <div class="sc-wrap"><div class="sc-img">${s.thumb?`<img src="${s.thumb}" alt="${pf(s,'title')}">`:`<div style="width:100%;height:100%;background:${s.color};display:flex;align-items:center;justify-content:center;">${makeSVGThumb(s.color,s.stroke)}</div>`}</div></div>
+          ${s.thumb?`<div class="sc-wrap"><div class="sc-img"><img src="${s.thumb}" alt="${pf(s,'title')}"></div></div>`:''}
           <div class="sc-body"><p class="sc-cat">${pf(s,'cat')}</p><p class="sc-title">${pf(s,'title')}</p><div class="pctags" style="margin-bottom:5px;">${makeTagBadges(s.tags)}</div><p class="sc-match">${t('sugg_common')}${ml}</p></div>
         </div>`;}).join('')
     :`<p style="font-family:'DM Mono',monospace;font-size:11px;color:#9a9c90;padding:20px;">${t('sugg_none')}</p>`;
@@ -1575,12 +1600,11 @@ function buildYapadageBoard(proj){
   const excerpt=desc.length>190?desc.slice(0,190).trim()+'…':desc;
 
   const CX=600,CY=380,R1=300,R2=590;
-  const ANG_INSP=225,ANG_PRINC=315,ANG_MAT=45,ANG_ESPACES=135;
+  const ANG_INSP=225,ANG_PRINC=315,ANG_ESPACES=135;
 
   const hubC=    {x:CX,y:CY};
   const inspC=   pbPolar(CX,CY,ANG_INSP,   R1);
   const princC=  pbPolar(CX,CY,ANG_PRINC,  R1);
-  const matC=    pbPolar(CX,CY,ANG_MAT,    R1);
   const espacesC=pbPolar(CX,CY,ANG_ESPACES,R1);
 
   /* 4 inspirations issues de Sea Sheard, rayonnant autour de la branche insp */
@@ -1603,7 +1627,7 @@ function buildYapadageBoard(proj){
   const coupeC     = pbPolar(CX,CY,ANG_ESPACES+50,R2);
 
   const hubP=pbTopLeft(hubC,260,190), inspP=pbTopLeft(inspC,210,50),
-        princP=pbTopLeft(princC,210,50), matP=pbTopLeft(matC,210,50),
+        princP=pbTopLeft(princC,210,50),
         espacesP=pbTopLeft(espacesC,210,50),
         fosP=pbTopLeft(fosC,190,222), playgroundP=pbTopLeft(playgroundC,190,222),
         networkingP=pbTopLeft(networkingC,190,222), gerryP=pbTopLeft(gerryC,190,222),
@@ -1622,7 +1646,6 @@ function buildYapadageBoard(proj){
     {id:'hub',    type:'text',label:t('board_hub_label'),text:excerpt,x:hubP.x,y:hubP.y,w:260},
     {id:'insp',   type:'text',label:L.insp,   x:inspP.x,   y:inspP.y,   w:210},
     {id:'princ',  type:'text',label:L.princ,  x:princP.x,  y:princP.y,  w:210},
-    {id:'mat',    type:'text',label:L.mat,    x:matP.x,    y:matP.y,    w:210},
     {id:'espaces',type:'text',label:L.espaces,x:espacesP.x,y:espacesP.y,w:210},
     {id:'fos',        type:'image',src:'images/yapadage-collectif-fos.jpg',       caption:L.capFos,        x:fosP.x,        y:fosP.y,        w:190},
     {id:'playground', type:'image',src:'images/yapadage-playground-istanbul.jpeg', caption:L.capPlayground, x:playgroundP.x, y:playgroundP.y, w:190},
@@ -1641,7 +1664,6 @@ function buildYapadageBoard(proj){
   const links=[
     {from:'hub',to:'insp',       color:TAG_COLORS['developpement-durable']},
     {from:'hub',to:'princ',      color:TAG_COLORS['collectivites']},
-    {from:'hub',to:'mat',        color:TAG_COLORS['ux']},
     {from:'hub',to:'espaces',    color:C_ESP},
     {from:'insp',to:'fos',       color:C_INSP},
     {from:'insp',to:'playground',color:C_INSP},
@@ -2185,9 +2207,9 @@ function renderTimeline(){
 
   // Événement ponctuel (borne verticale avec carré arrondi)
   function renderPoint(e, isPro, idx){
-    const color=isPro?C_PRO:C_ASSO;
+    const color=e.color||(isPro?C_PRO:C_ASSO);
     const x=PAD_L+expMOff(e.start,ref)*EXP_PX;
-    const lineH=72;
+    const lineH=100;
     const sqS=10; // taille du carré
     const connTop=isPro ? AXIS_Y-lineH : AXIS_Y+1;
     const labelTop=isPro ? connTop : AXIS_Y+lineH+10;
@@ -2256,7 +2278,7 @@ function showExpDetail(idx){
   const cleanLabel=e.label.replace(/<br>/gi,' ');
   const photosHtml=e.photos&&e.photos.length
     ? e.photos.map(src=>`<img class="exp-detail-photo" src="${src}" alt="">`).join('')
-    : `<p class="exp-detail-empty">— photos à venir —</p>`;
+    : '';
   const descHtml=e.desc
     ? `<p class="exp-detail-desc">${e.desc}</p>`
     : '';
@@ -2287,19 +2309,21 @@ function showExpDetail(idx){
     return;
   }
 
-  // Première ouverture — le panneau remonte depuis le bas
+  // Première ouverture — slide depuis le bas
   panel.innerHTML=newHtml;
   panel.dataset.open=String(idx);
   panel.scrollTop=0;
+  panel.style.display='block';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     panel.classList.add('visible');
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
   }));
 }
 
 function closeExpDetail(){
   const panel=document.getElementById('expDetail');
   panel.classList.remove('visible');
-  setTimeout(()=>{ panel.dataset.open=''; },460);
+  setTimeout(()=>{ panel.style.display='none'; panel.dataset.open=''; },420);
 }
 
 function initTimeline(){
@@ -2375,7 +2399,7 @@ function renderMapNodes(){
   document.getElementById('mapNodes').innerHTML=PROJECTS.map(p=>`
     <div class="mnode" id="mn-${p.id}" data-id="${p.id}" style="left:${p.mapX}px;top:${p.mapY}px;">
       <div class="mncard">
-        <div class="mnthumb">${p.thumb?`<img src="${p.thumb}" alt="${pf(p,'title')}">`:`<div style="width:100%;height:100%;background:${p.color};display:flex;align-items:center;justify-content:center;">${makeSVGThumb(p.color,p.stroke,90,66)}</div>`}</div>
+        ${p.thumb?`<div class="mnthumb"><img src="${p.thumb}" alt="${pf(p,'title')}"></div>`:''}
         <p class="mncat">${pf(p,'cat')}</p>
         <p class="mntitle">${pf(p,'title')}</p>
         <div class="mntags">${makeTagBadges(p.tags)}</div>
@@ -2541,6 +2565,47 @@ window.addEventListener('DOMContentLoaded',()=>{
   const{view,param}=decodeHash(location.hash||'#home');
   renderView(view||'home',param);
 });
+</script>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fermer">&#x2715;</button>
+  <button class="lightbox-nav prev" id="lbPrev" onclick="event.stopPropagation();lbGo(-1)" aria-label="Précédente">&#8249;</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav next" id="lbNext" onclick="event.stopPropagation();lbGo(1)" aria-label="Suivante">&#8250;</button>
+  <div class="lightbox-counter" id="lbCounter"></div>
+</div>
+
+<script>
+let _lbImgs=[], _lbIdx=0;
+function openLightbox(src,imgs){
+  _lbImgs=imgs||[src];
+  _lbIdx=_lbImgs.indexOf(src);
+  if(_lbIdx<0)_lbIdx=0;
+  _lbShow();
+  document.getElementById('lightbox').classList.add('open');
+  document.addEventListener('keydown',lightboxKey);
+}
+function _lbShow(){
+  document.getElementById('lightboxImg').src=_lbImgs[_lbIdx];
+  const n=_lbImgs.length;
+  document.getElementById('lbPrev').classList.toggle('hidden',n<=1);
+  document.getElementById('lbNext').classList.toggle('hidden',n<=1);
+  document.getElementById('lbCounter').textContent=n>1?(_lbIdx+1)+' / '+n:'';
+}
+function lbGo(dir){
+  _lbIdx=(_lbIdx+dir+_lbImgs.length)%_lbImgs.length;
+  _lbShow();
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.removeEventListener('keydown',lightboxKey);
+}
+function lightboxKey(e){
+  if(e.key==='Escape') closeLightbox();
+  else if(e.key==='ArrowRight') lbGo(1);
+  else if(e.key==='ArrowLeft')  lbGo(-1);
+}
 </script>
 </body>
 </html>
