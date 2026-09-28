@@ -1231,7 +1231,7 @@ function renderGrid(tid,projects){
       ${buildCarousel(p)}
       <div class="pcbody" onclick="navigate('project','${p.id}')">
         <p class="pccat">${pf(p,'cat')}</p>
-        <p class="pctitle">${pf(p,'title')}</p>
+        <p class="pctitle">${pf(p,'title').replace(/ — /g,'<br>')}</p>
         <div class="pctags">${makeTagBadges(p.tags)}</div>
       </div>
     </div>`).join('');
@@ -1346,7 +1346,7 @@ function renderProjectView(id){
   initProjHero(proj);
 
   document.getElementById('projCat').textContent=pf(proj,'cat');
-  document.getElementById('projTitle').textContent=pf(proj,'title');
+  document.getElementById('projTitle').innerHTML=pf(proj,'title').replace(/ — /g,'<br>');
   document.getElementById('projDesc').textContent=pf(proj,'desc');
   document.getElementById('projTags').innerHTML=makeTagBadges(proj.tags);
   let metaExtra=`<div><p class="meta-label">${t('meta_categorie')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${pf(proj,'cat')}</p></div>`;
