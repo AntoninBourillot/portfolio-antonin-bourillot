@@ -1367,7 +1367,7 @@ function renderProjectView(id){
   document.getElementById('projTitle').innerHTML=pf(proj,'title').replace(/ — /g,'<br>');
   document.getElementById('projDesc').textContent=pf(proj,'desc');
   document.getElementById('projTags').innerHTML=makeTagBadges(proj.tags);
-  let metaExtra=`<div><p class="meta-label">${t('meta_categorie')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${pf(proj,'cat')}</p></div>`;
+  let metaExtra='';
   const prize=pf(proj,'prize');
   if(prize) metaExtra+=`<div><p class="meta-label">${t('meta_prix')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${prize}</p></div>`;
   document.getElementById('projMetaExtra').innerHTML=metaExtra;
