@@ -2361,6 +2361,7 @@ function initAboutSlides(){
 }
 
 function initAboutGallery(){
+  if(!document.getElementById('agPrev')) return;
   renderAboutGallery();
   setAgPadding();
   document.getElementById('agPrev').onclick=()=>centerAgFrame(agIndex-1);
