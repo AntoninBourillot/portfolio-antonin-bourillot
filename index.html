@@ -247,7 +247,10 @@ img{display:block;max-width:100%;}
 .proj-header-bar .proj-cat{margin-bottom:0;white-space:nowrap;}
 .proj-header-bar .proj-tags-wrap{flex:1;min-width:0;}
 /* Corps titre+desc sous le hero */
-.proj-body{padding:var(--py) var(--px);border-bottom:var(--r);max-width:900px;}
+.proj-below-hero{display:flex;border-bottom:var(--r);}
+.proj-body{padding:var(--py) var(--px);flex:1;min-width:0;}
+.proj-body-img{flex:1.6;border-left:var(--r);height:clamp(300px,52vh,680px);overflow:hidden;background:var(--paper2);}
+.proj-body-img img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;}
 .proj-cat{font-family:'DM Mono',monospace;font-size:clamp(9px,.65vw,11px);letter-spacing:.14em;color:var(--ink3);margin-bottom:10px;}
 .proj-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(28px,3.2vw,52px);line-height:1.08;margin-bottom:18px;}
 .proj-desc{font-family:'Lora',serif;font-size:clamp(13px,1vw,15px);font-weight:300;line-height:1.8;color:var(--ink2);}
@@ -559,11 +562,16 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     </button>
   </div>
   <!-- Titre + description sous le hero -->
-  <div class="proj-body">
-    <h1 class="proj-title" id="projTitle"></h1>
-    <p class="proj-desc" id="projDesc"></p>
-    <p class="proj-status-note" id="projStatusNote"></p>
-    <div id="projMetaExtra"></div>
+  <div class="proj-below-hero" id="projBelowHero">
+    <div class="proj-body">
+      <h1 class="proj-title" id="projTitle"></h1>
+      <p class="proj-desc" id="projDesc"></p>
+      <p class="proj-status-note" id="projStatusNote"></p>
+      <div id="projMetaExtra"></div>
+    </div>
+    <div class="proj-body-img" id="projBodyImg" style="display:none">
+      <img id="projBodyImgEl" src="" alt="">
+    </div>
   </div>
   <!-- Portrait slider (layout spécial) -->
   <div class="proj-portrait-slider" id="projPortraitSlider" style="display:none">
@@ -856,6 +864,7 @@ const PROJECTS = [
    color:'#d8e4f0',stroke:'#2a4a6a',
    images:[],mapX:700,mapY:300,
    heroGrid:['images/optometrie-clinique.webp','images/optometrie-appartement.webp','images/optometrie-couloir.webp'],
+   bodyImage:'images/optometrie-plan.webp',
    noHeroZoom:true,noBoard:true,
    desc:'Dans le cadre d\'un concours de design inclusif organisé par l\'Université de Montréal, nous avons eu deux jours pour formuler une proposition convaincante pour une clinique dédiée à la recherche, l\'enseignement et l\'accompagnement des personnes malvoyantes et non-voyantes. L\'enjeu : superposer les usages dans un même espace tout en garantissant un environnement clair et lisible pour des usagers aux perceptions sensorielles très différentes.',
    i18n:{
@@ -1371,6 +1380,17 @@ function renderProjectView(id){
   const prize=pf(proj,'prize');
   if(prize) metaExtra+=`<div><p class="meta-label">${t('meta_prix')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${prize}</p></div>`;
   document.getElementById('projMetaExtra').innerHTML=metaExtra;
+
+  /* Image latérale sous le hero (bodyImage) */
+  const bodyImgWrap=document.getElementById('projBodyImg');
+  const bodyImgEl=document.getElementById('projBodyImgEl');
+  if(proj.bodyImage){
+    bodyImgEl.src=proj.bodyImage;
+    bodyImgEl.alt=pf(proj,'title');
+    bodyImgWrap.style.display='';
+  } else {
+    bodyImgWrap.style.display='none';
+  }
 
   /* Note de statut (ex : projet en cours) */
   const noteEl=document.getElementById('projStatusNote');
