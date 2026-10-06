@@ -1385,7 +1385,7 @@ function renderProjectView(id){
   initProjHero(proj);
 
   document.getElementById('projCat').textContent=pf(proj,'cat');
-  document.getElementById('projTitleBar').textContent=pf(proj,'title');
+  document.getElementById('projTitleBar').textContent=pf(proj,'title').replace(/ — /g,' ');
   document.getElementById('projDesc').textContent=pf(proj,'desc');
   document.getElementById('projTags').innerHTML=makeTagBadges(proj.tags);
   let metaExtra='';
