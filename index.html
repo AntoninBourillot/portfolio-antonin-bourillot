@@ -243,11 +243,12 @@ img{display:block;max-width:100%;}
 .proj-linkedin-sticker .pls-text{font-size:6.5px;letter-spacing:.06em;line-height:1.2;}
 
 /* PROJECT DETAIL — bandeau tags */
-.proj-header-bar{display:flex;align-items:center;gap:20px;padding:12px var(--px);border-bottom:var(--r);background:var(--paper);flex-wrap:wrap;}
-.proj-header-bar .proj-cat{margin-bottom:0;white-space:nowrap;}
-.proj-header-bar .proj-tags-wrap{flex:1;min-width:0;}
-.proj-title-bar{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(15px,1.3vw,22px);color:var(--ink);white-space:nowrap;margin-right:auto;}
-.proj-header-bar .back-btn{align-self:center;flex-shrink:0;}
+.proj-header-bar{display:flex;align-items:center;gap:20px;padding:12px var(--px);border-bottom:var(--r);background:var(--paper);}
+.proj-header-bar .back-btn{flex-shrink:0;align-self:center;}
+.proj-header-info{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.proj-header-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.proj-header-meta .proj-cat{margin-bottom:0;white-space:nowrap;}
+.proj-title-bar{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(15px,1.3vw,22px);color:var(--ink);}
 /* Corps titre+desc sous le hero */
 .proj-below-hero{display:grid;grid-template-columns:var(--below-cols,1fr);border-bottom:var(--r);}
 .proj-body{padding:var(--py) var(--px);min-width:0;}
@@ -546,10 +547,14 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 <div class="view" id="view-project">
   <!-- BANDEAU TAGS -->
   <div class="proj-header-bar">
-    <span class="proj-title-bar" id="projTitleBar"></span>
     <button class="back-btn" onclick="goBack()" data-i18n="back">← Retour</button>
-    <p class="proj-cat" id="projCat"></p>
-    <div class="proj-tags-wrap" id="projTags"></div>
+    <div class="proj-header-info">
+      <span class="proj-title-bar" id="projTitleBar"></span>
+      <div class="proj-header-meta">
+        <p class="proj-cat" id="projCat"></p>
+        <div class="proj-tags-wrap" id="projTags"></div>
+      </div>
+    </div>
   </div>
   <!-- HERO CARROUSEL -->
   <div class="proj-hero" id="projHero">
