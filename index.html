@@ -1267,7 +1267,8 @@ function initProjHero(proj){
   const nextBtn  = document.getElementById('projHeroNext');
   projHeroIdx = 0;
 
-  const imgs = proj.images && proj.images.length ? proj.images : [];
+  const _base = proj.images && proj.images.length ? proj.images : (proj.thumb ? [proj.thumb] : []);
+  const imgs = _base;
   projHeroTotal = Math.max(1, imgs.length);
 
   // Construire les slides
