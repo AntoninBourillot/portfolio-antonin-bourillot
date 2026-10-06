@@ -850,7 +850,7 @@ const PROJECTS = [
    }},
   {id:'p13',title:'Design inclusif — Clinique d\'optométrie',cat:'ARCHI INTÉRIEUR · ÉCOLE',
    tags:['ux','realise-en-groupe','inclusion','collectivites'],
-   thumb:null,
+   thumb:'images/optometrie-clinique.webp',
    color:'#d8e4f0',stroke:'#2a4a6a',
    images:[],mapX:700,mapY:300,
    noBoard:true,
@@ -1284,6 +1284,7 @@ function initProjHero(proj){
       `<div class="proj-hero-dot${i===0?' active':''}" id="phd${i}"></div>`
     ).join('');
     prevBtn.style.display = nextBtn.style.display = imgs.length > 1 ? '' : 'none';
+    dotsEl.style.display = imgs.length > 1 ? '' : 'none';
   }
   slidesEl.style.transform = 'translateX(0)';
   document.getElementById('projHero').classList.toggle('proj-hero--contain', !!proj.heroContain);
