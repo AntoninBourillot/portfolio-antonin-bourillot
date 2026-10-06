@@ -258,6 +258,10 @@ img{display:block;max-width:100%;}
 .proj-images-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
 .proj-images-row .pir-cell{background:#fff;overflow:hidden;height:clamp(300px,52vh,680px);}
 .proj-images-row .pir-cell img{width:100%;height:100%;object-fit:contain;display:block;box-sizing:border-box;padding:5%;}
+.proj-labeled-row{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
+.proj-labeled-cell{background:var(--paper);display:flex;flex-direction:column;}
+.proj-labeled-cell img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+.proj-labeled-cell .plc-label{text-align:center;padding:12px 8px;font-family:'DM Mono',monospace;font-size:clamp(8px,.6vw,10px);letter-spacing:.1em;color:var(--ink2);text-transform:uppercase;}
 .proj-cat{font-family:'DM Mono',monospace;font-size:clamp(9px,.65vw,11px);letter-spacing:.14em;color:var(--ink3);margin-bottom:10px;}
 .proj-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(28px,3.2vw,52px);line-height:1.08;margin-bottom:18px;}
 .proj-desc{font-family:'Lora',serif;font-size:clamp(13px,1vw,15px);font-weight:300;line-height:1.8;color:var(--ink2);}
@@ -589,6 +593,8 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   </div>
   <!-- Ligne d'images supplémentaire -->
   <div class="proj-images-row" id="projImagesRow" style="display:none"></div>
+  <!-- Ligne d'images étiquetées -->
+  <div class="proj-labeled-row" id="projLabeledRow" style="display:none"></div>
   <!-- Portrait slider (layout spécial) -->
   <div class="proj-portrait-slider" id="projPortraitSlider" style="display:none">
     <div class="proj-portrait-wrap" id="projPortraitWrap"></div>
@@ -883,6 +889,13 @@ const PROJECTS = [
    bodyImage:'images/optometrie-plan.webp',
    bodyImage2:'images/optometrie-axo-bureau.webp',
    bodyImagesRow:['images/optometrie-axo-cuisine.png','images/optometrie-axo-salle.webp','images/optometrie-axonometrie.webp'],
+   bodyLabeledRow:[
+     {src:'images/optometrie-vision-normale.png', label:'Vision normale'},
+     {src:'images/optometrie-retinopathie.webp',  label:'Rétinopathie diabétique'},
+     {src:'images/optometrie-nystagmus.webp',     label:'Nystagmus'},
+     {src:'images/optometrie-nevrite.webp',       label:'Névrite optique'},
+     {src:'images/optometrie-cecite.webp',        label:'Cécité totale'},
+   ],
    noHeroZoom:true,noBoard:true,
    desc:'Dans le cadre d\'un concours de design inclusif organisé par l\'Université de Montréal, nous avons eu deux jours pour formuler une proposition convaincante pour une clinique dédiée à la recherche, l\'enseignement et l\'accompagnement des personnes malvoyantes et non-voyantes. L\'enjeu : superposer les usages dans un même espace tout en garantissant un environnement clair et lisible pour des usagers aux perceptions sensorielles très différentes.',
    i18n:{
@@ -1398,6 +1411,16 @@ function renderProjectView(id){
   const prize=pf(proj,'prize');
   if(prize) metaExtra+=`<div><p class="meta-label">${t('meta_prix')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${prize}</p></div>`;
   document.getElementById('projMetaExtra').innerHTML=metaExtra;
+
+  /* Ligne d'images étiquetées (bodyLabeledRow) */
+  const plrEl=document.getElementById('projLabeledRow');
+  if(proj.bodyLabeledRow&&proj.bodyLabeledRow.length){
+    plrEl.innerHTML=proj.bodyLabeledRow.map(({src,label})=>
+      `<div class="proj-labeled-cell"><img src="${src}" alt="${label}" loading="lazy"><span class="plc-label">${label}</span></div>`
+    ).join('');
+    plrEl.style.gridTemplateColumns=`repeat(${proj.bodyLabeledRow.length},1fr)`;
+    plrEl.style.display='';
+  } else { plrEl.style.display='none'; }
 
   /* Ligne d'images supplémentaire (bodyImagesRow) */
   const pirEl=document.getElementById('projImagesRow');
