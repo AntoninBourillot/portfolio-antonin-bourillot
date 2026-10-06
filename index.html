@@ -570,10 +570,9 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <span class="pls-icon">&#8599;</span><span class="pls-text" data-i18n-html="linkedin_sticker">VOIR LE<br>POST</span>
     </button>
   </div>
-  <!-- Titre + description sous le hero -->
+  <!-- Description sous le hero -->
   <div class="proj-below-hero" id="projBelowHero">
     <div class="proj-body">
-      <h1 class="proj-title" id="projTitle"></h1>
       <p class="proj-desc" id="projDesc"></p>
       <p class="proj-status-note" id="projStatusNote"></p>
       <div id="projMetaExtra"></div>
@@ -1386,8 +1385,7 @@ function renderProjectView(id){
   initProjHero(proj);
 
   document.getElementById('projCat').textContent=pf(proj,'cat');
-  document.getElementById('projTitle').innerHTML=pf(proj,'title').replace(/ — /g,'<br>');
-  document.getElementById('projTitleBar').innerHTML=pf(proj,'title').replace(/ — /g,' — ');
+  document.getElementById('projTitleBar').innerHTML=pf(proj,'title').replace(/ — /g,'<br>');
   document.getElementById('projDesc').textContent=pf(proj,'desc');
   document.getElementById('projTags').innerHTML=makeTagBadges(proj.tags);
   let metaExtra='';
