@@ -258,6 +258,8 @@ img{display:block;max-width:100%;}
 .proj-images-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
 .proj-images-row .pir-cell{background:#fff;overflow:hidden;height:clamp(300px,52vh,680px);}
 .proj-images-row .pir-cell img{width:100%;height:100%;object-fit:contain;display:block;box-sizing:border-box;padding:5%;}
+.proj-centered-img{display:flex;justify-content:center;border-bottom:var(--r);background:#fff;padding:var(--py) 0;}
+.proj-centered-img img{width:60%;object-fit:contain;display:block;}
 .proj-labeled-row{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
 .proj-labeled-cell{background:var(--paper);display:flex;flex-direction:column;}
 .proj-labeled-cell img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
@@ -595,6 +597,10 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   <div class="proj-images-row" id="projImagesRow" style="display:none"></div>
   <!-- Ligne d'images étiquetées -->
   <div class="proj-labeled-row" id="projLabeledRow" style="display:none"></div>
+  <!-- Visuel centré pleine largeur -->
+  <div class="proj-centered-img" id="projCenteredImg" style="display:none">
+    <img id="projCenteredImgEl" src="" alt="">
+  </div>
   <!-- Portrait slider (layout spécial) -->
   <div class="proj-portrait-slider" id="projPortraitSlider" style="display:none">
     <div class="proj-portrait-wrap" id="projPortraitWrap"></div>
@@ -896,6 +902,7 @@ const PROJECTS = [
      {src:'images/optometrie-retinopathie.webp',  label:'Névrite optique'},
      {src:'images/optometrie-vision-normale.png', label:'Cécité totale'},
    ],
+   bodyCenteredImage:'images/optometrie-notice.webp',
    noHeroZoom:true,noBoard:true,
    desc:'Dans le cadre d\'un concours de design inclusif organisé par l\'Université de Montréal, nous avons eu deux jours pour formuler une proposition convaincante pour une clinique dédiée à la recherche, l\'enseignement et l\'accompagnement des personnes malvoyantes et non-voyantes. L\'enjeu : superposer les usages dans un même espace tout en garantissant un environnement clair et lisible pour des usagers aux perceptions sensorielles très différentes.',
    i18n:{
@@ -1411,6 +1418,15 @@ function renderProjectView(id){
   const prize=pf(proj,'prize');
   if(prize) metaExtra+=`<div><p class="meta-label">${t('meta_prix')}</p><p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);">${prize}</p></div>`;
   document.getElementById('projMetaExtra').innerHTML=metaExtra;
+
+  /* Visuel centré (bodyCenteredImage) */
+  const pciEl=document.getElementById('projCenteredImg');
+  const pciImg=document.getElementById('projCenteredImgEl');
+  if(proj.bodyCenteredImage){
+    pciImg.src=proj.bodyCenteredImage;
+    pciImg.alt=pf(proj,'title');
+    pciEl.style.display='';
+  } else { pciEl.style.display='none'; }
 
   /* Ligne d'images étiquetées (bodyLabeledRow) */
   const plrEl=document.getElementById('projLabeledRow');
