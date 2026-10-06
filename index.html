@@ -242,13 +242,14 @@ img{display:block;max-width:100%;}
 .proj-linkedin-sticker .pls-icon{font-size:13px;line-height:1;}
 .proj-linkedin-sticker .pls-text{font-size:6.5px;letter-spacing:.06em;line-height:1.2;}
 
-/* PROJECT DETAIL — bandeau horizontal */
-.proj-header-bar{display:flex;align-items:flex-start;gap:40px;padding:22px var(--px);border-bottom:var(--r);background:var(--paper);}
-.proj-header-left{flex-shrink:0;width:clamp(180px,22vw,300px);}
-.proj-header-desc{flex:1;min-width:0;}
-.proj-header-right{flex-shrink:0;width:clamp(160px,18vw,240px);}
+/* PROJECT DETAIL — bandeau tags */
+.proj-header-bar{display:flex;align-items:center;gap:20px;padding:12px var(--px);border-bottom:var(--r);background:var(--paper);flex-wrap:wrap;}
+.proj-header-bar .proj-cat{margin-bottom:0;white-space:nowrap;}
+.proj-header-bar .proj-tags-wrap{flex:1;min-width:0;}
+/* Corps titre+desc sous le hero */
+.proj-body{padding:var(--py) var(--px);border-bottom:var(--r);max-width:900px;}
 .proj-cat{font-family:'DM Mono',monospace;font-size:clamp(9px,.65vw,11px);letter-spacing:.14em;color:var(--ink3);margin-bottom:10px;}
-.proj-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(20px,2vw,34px);line-height:1.1;margin-bottom:0;}
+.proj-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(28px,3.2vw,52px);line-height:1.08;margin-bottom:18px;}
 .proj-desc{font-family:'Lora',serif;font-size:clamp(13px,1vw,15px);font-weight:300;line-height:1.8;color:var(--ink2);}
 .proj-tags-wrap{display:flex;gap:8px;flex-wrap:wrap;}
 .meta-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--ink3);margin-bottom:10px;}
@@ -439,8 +440,6 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   .about-grid{grid-template-columns:1fr;}
   .about-gallery{--agw:180px;}
   .contact-grid{grid-template-columns:1fr;}
-  .proj-header-bar{flex-direction:column;gap:16px;}
-  .proj-header-left,.proj-header-right{width:100%;}
   .sugg-grid{grid-template-columns:repeat(2,1fr);}
   .map-hint{display:none;}
 }
@@ -539,22 +538,11 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 
 <!-- PROJECT -->
 <div class="view" id="view-project">
-  <!-- BANDEAU HEADER -->
+  <!-- BANDEAU TAGS -->
   <div class="proj-header-bar">
-    <div class="proj-header-left">
-      <button class="back-btn" onclick="goBack()" data-i18n="back">← Retour</button>
-      <p class="proj-cat" id="projCat"></p>
-      <h1 class="proj-title" id="projTitle"></h1>
-    </div>
-    <div class="proj-header-desc">
-      <p class="proj-desc" id="projDesc"></p>
-      <p class="proj-status-note" id="projStatusNote"></p>
-    </div>
-    <div class="proj-header-right">
-      <p class="meta-label" data-i18n="meta_tags">TAGS</p>
-      <div class="proj-tags-wrap" id="projTags"></div>
-      <div id="projMetaExtra"></div>
-    </div>
+    <button class="back-btn" onclick="goBack()" data-i18n="back">← Retour</button>
+    <p class="proj-cat" id="projCat"></p>
+    <div class="proj-tags-wrap" id="projTags"></div>
   </div>
   <!-- HERO CARROUSEL -->
   <div class="proj-hero" id="projHero">
@@ -569,6 +557,13 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     <button class="proj-linkedin-sticker" id="projLinkedinSticker" aria-label="Voir la publication LinkedIn du projet">
       <span class="pls-icon">&#8599;</span><span class="pls-text" data-i18n-html="linkedin_sticker">VOIR LE<br>POST</span>
     </button>
+  </div>
+  <!-- Titre + description sous le hero -->
+  <div class="proj-body">
+    <h1 class="proj-title" id="projTitle"></h1>
+    <p class="proj-desc" id="projDesc"></p>
+    <p class="proj-status-note" id="projStatusNote"></p>
+    <div id="projMetaExtra"></div>
   </div>
   <!-- Portrait slider (layout spécial) -->
   <div class="proj-portrait-slider" id="projPortraitSlider" style="display:none">
