@@ -96,6 +96,10 @@ img{display:block;max-width:100%;}
 .pcard{background:var(--paper);cursor:pointer;transition:background .15s;overflow:hidden;}
 .pcard:hover{background:var(--paper2);}
 
+/* Overlay hover sur carte projet */
+.pcard-hover-label{position:absolute;inset:0;background:rgba(0,0,0,.48);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .22s ease;pointer-events:none;z-index:2;}
+.pcard-hover-label span{color:#fff;font-family:'DM Mono',monospace;font-size:clamp(9px,.7vw,11px);letter-spacing:.12em;text-align:center;padding:0 16px;text-transform:uppercase;}
+.pcard:hover .pcard-hover-label{opacity:1;}
 /* CARROUSEL sur aperçu projet */
 .pcwrap{position:relative;overflow:hidden;height:clamp(150px,18vw,290px);}
 /* Bande 2 images sur la carte d'accueil */
@@ -146,24 +150,30 @@ img{display:block;max-width:100%;}
 /* HERO PROJET — carrousel pleine largeur */
 .proj-hero{
   position:relative;overflow:hidden;
-  height:clamp(300px,52vh,680px);
+  height:clamp(520px,90vh,1200px);
   border-bottom:var(--r);
 }
 .proj-hero-slides{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1);}
 .proj-hero-slide{min-width:100%;height:100%;flex-shrink:0;}
 .proj-hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;cursor:zoom-in;}
 /* Lightbox */
-.lightbox{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+.lightbox{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease,background .2s ease;}
 .lightbox.open{opacity:1;pointer-events:all;}
+.lightbox.lb-white{background:#fff;}
 .lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:2px;box-shadow:0 8px 48px rgba(0,0,0,.6);transition:opacity .18s ease;}
-.lightbox-close{position:fixed;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;line-height:1;cursor:pointer;opacity:.8;transition:opacity .15s;}
+.lightbox.lb-white img{box-shadow:0 4px 24px rgba(0,0,0,.12);}
+.lightbox-close{position:fixed;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;line-height:1;cursor:pointer;opacity:.8;transition:opacity .15s,color .2s;}
+.lightbox.lb-white .lightbox-close{color:#333;}
 .lightbox-close:hover{opacity:1;}
-.lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:22px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;opacity:.85;}
+.lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:22px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .2s;opacity:.85;}
+.lightbox.lb-white .lightbox-nav{background:rgba(0,0,0,.08);color:#333;}
+.lightbox.lb-white .lightbox-nav:hover{background:rgba(0,0,0,.16);}
 .lightbox-nav:hover{background:rgba(255,255,255,.25);}
 .lightbox-nav.prev{left:20px;}
 .lightbox-nav.next{right:20px;}
 .lightbox-nav.hidden{display:none;}
-.lightbox-counter{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;}
+.lightbox-counter{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;transition:color .2s;}
+.lightbox.lb-white .lightbox-counter{color:rgba(0,0,0,.4);}
 .proj-hero--contain .proj-hero-slide img{object-fit:contain;background:var(--paper2);cursor:default;}
 .proj-hero-grid{display:grid;height:100%;gap:1px;background:var(--paper3);}
 .proj-hero-grid img{width:100%;height:100%;object-fit:cover;display:block;cursor:default;}
@@ -196,12 +206,28 @@ img{display:block;max-width:100%;}
 .proj-hero-dot.active{background:var(--paper);}
 
 /* ── LAYOUT PORTRAIT-RIGHT (images verticales à droite) ── */
+.proj-layout-portrait .proj-header-bar{display:none!important;}
 .proj-layout-portrait .proj-hero{display:none!important;}
-.proj-layout-portrait .proj-content{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
-.proj-layout-portrait .proj-body{grid-column:1;grid-row:1;}
-.proj-layout-portrait .proj-meta{grid-column:1;grid-row:2;border-left:none;border-top:var(--r);}
-.proj-portrait-slider{display:none;grid-column:2;grid-row:1/3;border-left:var(--r);padding:var(--py) var(--px);flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--paper2);}
+.proj-layout-portrait{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+.proj-layout-portrait #projBelowHero{grid-column:1;grid-row:1;border-bottom:var(--r);}
+.proj-layout-portrait #projPortraitSlider{grid-column:2;grid-row:1;}
+.proj-layout-portrait #projImagesRow,.proj-layout-portrait #projLabeledRow,.proj-layout-portrait #projCenteredImg{display:none!important;}
+.proj-layout-portrait .proj-board-section{grid-column:1/-1;display:none;}
+.proj-layout-portrait footer{grid-column:1/-1;}
+.proj-portrait-slider{display:none;border-left:var(--r);padding:var(--py) var(--px);flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--paper2);}
 .proj-layout-portrait .proj-portrait-slider{display:flex;}
+/* Titre/cat/tags dans la colonne gauche (portrait uniquement) */
+.proj-portrait-body-title{display:none;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(24px,2.8vw,46px);line-height:1.1;margin-bottom:14px;color:var(--ink);}
+.proj-portrait-body-cat{display:none;font-family:'DM Mono',monospace;font-size:clamp(8px,.6vw,10px);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;}
+.proj-portrait-body-tags{display:none;flex-wrap:wrap;gap:6px;margin-top:18px;}
+.proj-layout-portrait .proj-portrait-body-title{display:block;}
+.proj-layout-portrait .proj-portrait-body-cat{display:block;}
+.proj-layout-portrait .proj-portrait-body-tags{display:flex;}
+/* titleBelow : titre/cat/tags sous le hero, pas dans le bandeau */
+.proj-title-below .proj-header-info{display:none!important;}
+.proj-title-below .proj-portrait-body-title{display:block;}
+.proj-title-below .proj-portrait-body-cat{display:block;}
+.proj-title-below .proj-portrait-body-tags{display:flex;}
 .proj-portrait-wrap{width:100%;max-width:320px;max-height:calc(100vh - 180px);aspect-ratio:9/16;position:relative;overflow:hidden;border-radius:2px;background:var(--ink);}
 .proj-portrait-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity .35s;}
 .proj-portrait-img.active{opacity:1;}
@@ -256,7 +282,7 @@ img{display:block;max-width:100%;}
 .proj-body-img img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;}
 #projBodyImg2 img{box-sizing:border-box;padding:5%;}
 .proj-images-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
-.proj-images-row .pir-cell{background:#fff;overflow:hidden;height:clamp(300px,52vh,680px);}
+.proj-images-row .pir-cell{background:#fff;overflow:hidden;height:clamp(520px,90vh,1200px);}
 .proj-images-row .pir-cell img{width:100%;height:100%;object-fit:contain;display:block;box-sizing:border-box;padding:5%;}
 .proj-centered-img{display:flex;justify-content:center;border-bottom:var(--r);background:#fff;padding:var(--py) 0;}
 .proj-centered-img img{width:38%;object-fit:contain;display:block;}
@@ -272,7 +298,8 @@ img{display:block;max-width:100%;}
 #projMetaExtra{display:flex;flex-direction:column;gap:var(--meta-gap);}
 
 /* CARTE DU PROJET — visuels + blocs texte reliés par des traits colorés */
-.proj-board-section{padding:var(--py) var(--px);border-top:var(--r);background:var(--paper);}
+/* HIDDEN: .proj-board-section visible — réactiver en retirant display:none */
+.proj-board-section{display:none!important;padding:var(--py) var(--px);border-top:var(--r);background:var(--paper);}
 .proj-board-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
 .proj-board-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(17px,1.8vw,26px);}
 .proj-board-hint{font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3);letter-spacing:.09em;}
@@ -365,9 +392,9 @@ img{display:block;max-width:100%;}
 .exp-year-tick{position:absolute;width:0;border-left:1px dashed var(--paper3);pointer-events:none;}
 /* Panneau detail - overlay remontant */
 .exp-detail{overflow-y:auto;background:var(--paper);padding:28px var(--px) 36px;opacity:0;transform:translateY(18px);transition:opacity .4s ease,transform .4s ease;display:none;}.exp-detail.visible{opacity:1;transform:translateY(0);}.exp-detail.switching{opacity:0;transition:opacity .15s ease !important;}
-.exp-bar{position:absolute;border-radius:3px;display:flex;align-items:center;padding:0 8px;height:34px;overflow:hidden;cursor:pointer;transition:filter .15s;}
-.exp-bar:hover{filter:brightness(1.08);}
-.exp-bar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.exp-bar{position:absolute;border-radius:2px;height:4px;padding:0;overflow:visible;cursor:pointer;transition:filter .15s;}
+.exp-bar:hover{filter:brightness(1.3);}
+.exp-bar-label{position:absolute;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;pointer-events:none;}
 .exp-date{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--ink3);white-space:nowrap;pointer-events:none;}
 .exp-point-label{position:absolute;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;line-height:1.45;max-width:150px;white-space:normal;pointer-events:none;}
 .exp-point-hit{position:absolute;cursor:pointer;}
@@ -401,7 +428,8 @@ img{display:block;max-width:100%;}
   .aslides-row .about-slides-section{border-bottom:var(--r);}
   .aslides-row .about-slides-section:last-of-type{border-bottom:none;}
 }
-.aslide-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(20px,2.2vw,26px);font-weight:400;color:var(--ink);margin-bottom:28px;}
+.aslide-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(20px,2.2vw,26px);font-weight:400;color:var(--ink);margin-bottom:28px;transition:color .2s;}
+.aslide-title:hover{color:var(--moss);}
 .aslides{display:flex;flex-direction:column;}
 .aslide{border-top:1px solid var(--paper3);}
 .aslide:last-child{border-bottom:1px solid var(--paper3);}
@@ -434,6 +462,9 @@ img{display:block;max-width:100%;}
 .alist{list-style:none;font-family:'DM Mono',monospace;font-size:clamp(10px,.8vw,12px);color:var(--ink2);line-height:2.6;}
 .alist li{padding-left:18px;position:relative;}
 .alist li::before{content:'→';position:absolute;left:0;color:var(--moss);}
+.profile-blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--paper3);margin-bottom:clamp(24px,3vh,48px);}
+.profile-block{background:var(--paper);padding:clamp(22px,3.5vh,48px) var(--px);display:flex;flex-direction:column;gap:14px;}
+.profile-text{font-family:'Lora',serif;font-size:clamp(13px,1vw,15px);font-weight:300;line-height:1.8;color:var(--ink2);}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--paper3);max-width:min(800px,90vw);}
 .contact-cell{background:var(--paper);padding:clamp(22px,3.5vh,48px) var(--px);}
 
@@ -455,6 +486,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   .rflex-grid{grid-template-columns:1fr;}
   .about-grid{grid-template-columns:1fr;}
   .about-gallery{--agw:180px;}
+  .profile-blocks{grid-template-columns:1fr;}
   .contact-grid{grid-template-columns:1fr;}
   .sugg-grid{grid-template-columns:repeat(2,1fr);}
   .map-hint{display:none;}
@@ -481,8 +513,8 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   <span class="nav-name" onclick="navigate('home')">ANTONIN BOURILLOT</span>
   <div class="nav-links">
     <button class="nav-link" id="nav-home"    onclick="navigate('home')" data-i18n="nav_projects">Projets</button>
-    <button class="nav-link" id="nav-map"     onclick="navigate('map')" data-i18n="nav_map">Carte</button>
-    <button class="nav-link" id="nav-reflex"  onclick="navigate('reflex')" data-i18n="nav_reflex">Réflexions</button>
+    <!-- HIDDEN: <button class="nav-link" id="nav-map"     onclick="navigate('map')" data-i18n="nav_map">Carte</button> -->
+    <!-- HIDDEN: <button class="nav-link" id="nav-reflex"  onclick="navigate('reflex')" data-i18n="nav_reflex">Réflexions</button> -->
     <button class="nav-link" id="nav-about"       onclick="navigate('about')" data-i18n="nav_about">Mes compétences</button>
     <button class="nav-link" id="nav-experiences" onclick="navigate('experiences')" data-i18n="nav_experiences">Mes expériences</button>
     <button class="nav-link" id="nav-contact"     onclick="navigate('contact')" data-i18n="nav_contact">Contact</button>
@@ -502,8 +534,8 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 </nav>
 <nav class="nav-mobile" id="navMobile">
   <button class="nav-link" onclick="navigate('home');closeMenu()" data-i18n="nav_projects">Projets</button>
-  <button class="nav-link" onclick="navigate('map');closeMenu()" data-i18n="nav_map">Carte</button>
-  <button class="nav-link" onclick="navigate('reflex');closeMenu()" data-i18n="nav_reflex">Réflexions</button>
+  <!-- HIDDEN: <button class="nav-link" onclick="navigate('map');closeMenu()" data-i18n="nav_map">Carte</button> -->
+  <!-- HIDDEN: <button class="nav-link" onclick="navigate('reflex');closeMenu()" data-i18n="nav_reflex">Réflexions</button> -->
   <button class="nav-link" onclick="navigate('about');closeMenu()" data-i18n="nav_about">Mes compétences</button>
   <button class="nav-link" onclick="navigate('experiences');closeMenu()" data-i18n="nav_experiences">Mes expériences</button>
   <button class="nav-link" onclick="navigate('contact');closeMenu()" data-i18n="nav_contact">Contact</button>
@@ -517,13 +549,13 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       <h1 class="hero-title" data-i18n-html="hero_title">Espaces pour<br><em>le collectif,</em><br>construits<br>pour durer.</h1>
       <p class="hero-desc" data-i18n="hero_desc">Je conçois des espaces qui visent à s'ancrer dans le territoire et à servir les collectivités, avec une attention portée aux usages réels et aux matériaux locaux.</p>
       <div class="hero-filter">
-        <button class="hero-filter-btn" id="heroTagsToggle" onclick="toggleHeroTags()" aria-expanded="false">
+        <!-- HIDDEN: <button class="hero-filter-btn" id="heroTagsToggle" onclick="toggleHeroTags()" aria-expanded="false">
           <span data-i18n="hero_filter_label">Filtrer par thématique</span>
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="hero-tags" id="heroTags" aria-hidden="true"></div>
+        </button> -->
+        <div class="hero-tags open" id="heroTags" aria-hidden="false"></div>
       </div>
-      <button class="hero-cta" onclick="navigate('map')" data-i18n="hero_cta">Explorer la carte des projets</button>
+      <!-- HIDDEN: <button class="hero-cta" onclick="navigate('map')" data-i18n="hero_cta">Explorer la carte des projets</button> -->
     </div>
     <div class="hero-right">
       <div class="hero-photo-wrap">
@@ -582,9 +614,12 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   <!-- Description sous le hero -->
   <div class="proj-below-hero" id="projBelowHero">
     <div class="proj-body">
+      <p class="proj-portrait-body-cat" id="projPortraitBodyCat"></p>
+      <h1 class="proj-portrait-body-title" id="projPortraitBodyTitle"></h1>
       <p class="proj-desc" id="projDesc"></p>
       <p class="proj-status-note" id="projStatusNote"></p>
       <div id="projMetaExtra"></div>
+      <div class="proj-portrait-body-tags" id="projPortraitBodyTags"></div>
     </div>
     <div class="proj-body-img" id="projBodyImg" style="display:none">
       <img id="projBodyImgEl" src="" alt="">
@@ -602,7 +637,7 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
     <img id="projCenteredImgEl" src="" alt="">
   </div>
   <!-- Portrait slider (layout spécial) -->
-  <div class="proj-portrait-slider" id="projPortraitSlider" style="display:none">
+  <div class="proj-portrait-slider" id="projPortraitSlider">
     <div class="proj-portrait-wrap" id="projPortraitWrap"></div>
     <div class="proj-portrait-nav">
       <button id="projPortraitPrev">&#8592;</button>
@@ -756,7 +791,23 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
 <!-- CONTACT -->
 <div class="view" id="view-contact">
   <div class="section">
-    <div class="sec-head"><h2 class="sec-title" data-i18n="contact_title">Contact</h2></div>
+    <div class="sec-head"><h2 class="sec-title" data-i18n="contact_title">Mon profil</h2></div>
+    <div class="profile-blocks">
+      <div class="profile-block">
+        <p class="alabel" data-i18n="profile_q1">Moi ?</p>
+        <p class="profile-text" data-i18n="profile_a1">Je me décris comme quelqu'un de curieux, motivé et attentif à son environnement. Je suis spontané et ouvert à la discussion. Mes actions sont guidées par la bienveillance et le respect d'autrui.</p>
+      </div>
+      <div class="profile-block">
+        <p class="alabel" data-i18n="profile_q2">Et dans cinq ans ?</p>
+        <p class="profile-text" data-i18n="profile_a2">À la fin de mon master en architecture d'intérieur, j'ai pour projet de rejoindre une école d'architecture pour axer mon parcours sur la conception d'espaces publics.</p>
+      </div>
+      <div class="profile-block">
+        <p class="alabel" data-i18n="profile_q3">Vous voulez en savoir plus ?</p>
+        <p class="profile-text" data-i18n="profile_a3">Je serais ravi d'échanger avec vous. N'hésitez pas à me contacter par téléphone ou par mail !</p>
+      </div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0">
     <div class="contact-grid">
       <div class="contact-cell"><p class="alabel">EMAIL</p><a href="mailto:antonin.bourillot@gmail.com" class="flink" style="font-size:14px;">antonin.bourillot@gmail.com</a></div>
       <div class="contact-cell"><p class="alabel" data-i18n="contact_phone_label">TÉLÉPHONE</p><a href="tel:+33622506748" class="flink" style="font-size:14px;">+33 06 22 50 67 48</a></div>
@@ -787,7 +838,7 @@ const EXPERIENCES = [
   {type:'pro', point:true, label:'Stage en cabinet d\'architecture — Architecture4Future, Vienne', start:{y:2026,m:5}, end:{y:2026,m:8},
    desc:'De mai à août 2026, j\'ai eu la chance de réaliser un stage dans le cabinet Architecture4Future. J\'ai eu l\'occasion d\'assister à différents rendez-vous client, séances de conception, suivi de chantier. J\'ai ainsi pu développer ma connaissance sur la gestion de projets en marchés publics en France. Il était également très intéressant de voir la différence dans la gestion des projets entre un cabinet d\'architecture d\'intérieur et un cabinet d\'architecture.',
    photos:[]},
-  {type:'pro', point:true, color:'#4a7fa5', label:'Départ en Erasmus<br>Montréal', start:{y:2026,m:8},
+  {type:'pro', point:true, label:'Départ en Erasmus<br>Montréal', start:{y:2026,m:8},
    desc:'', photos:[]},
   {type:'pro', point:true, color:'#4a7fa5', label:'Participation à "La Foulée" — course caritative en soutien aux femmes touchées par le cancer du sein', start:{y:2024,m:10},
    desc:'', photos:[]},
@@ -800,34 +851,23 @@ const EXPERIENCES = [
 ];
 
 const PROJECTS = [
-  {id:'p2',title:'Centre intergénérationnel — YAPADAGE',cat:'ARCHI INTÉRIEUR · ÉCOLE',
+  {id:'p2',title:'Centre intergénérationnel — YAPADAGE',cat:'ÉCOLE · 2026 · CONCEPTION',
    tags:['developpement-durable','collectivites','ux'],
    thumb:'images/yapadage-vue-a1.png',
    color:'#ddeede',stroke:'#3b5c32',
-   images:['images/yapadage-vue-a1.png'],
+   images:['images/yapadage-vue-a1.png','images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
    cardImages:['images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
+   lightboxWhite:['images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
    quote:'"Constater l\'isolation des générations entre elles m\'a fait prendre conscience de l\'importance de concevoir des lieux de reconnexion"',
    mapX:500,mapY:400,
-   noBoard:true,
+   noBoard:true,titleBelow:true,
    desc:"Conception d'un centre intégrant espaces enfants, adultes et séniors dans un même bâtiment. La circulation est pensée pour favoriser les rencontres spontanées entre générations.",
    i18n:{
-     en:{title:'Intergenerational center — YAPADAGE',cat:'INTERIOR ARCHITECTURE · SCHOOL',desc:"Design of a center bringing together spaces for children, adults and seniors within the same building. Circulation is designed to encourage spontaneous encounters between generations."},
-     es:{title:'Centro intergeneracional — YAPADAGE',cat:'ARQUITECTURA INTERIOR · ESCUELA',desc:"Diseño de un centro que integra espacios para niños, adultos y personas mayores en un mismo edificio. La circulación está pensada para favorecer los encuentros espontáneos entre generaciones."},
+     en:{title:'Intergenerational center — YAPADAGE',cat:'SCHOOL · 2026 · DESIGN',desc:"Design of a center bringing together spaces for children, adults and seniors within the same building. Circulation is designed to encourage spontaneous encounters between generations."},
+     es:{title:'Centro intergeneracional — YAPADAGE',cat:'ESCUELA · 2026 · CONCEPCIÓN',desc:"Diseño de un centro que integra espacios para niños, adultos y personas mayores en un mismo edificio. La circulación está pensada para favorecer los encuentros espontáneos entre generaciones."},
    },
    board:buildYapadageBoard},
-  {id:'p5',title:'Conception menuiserie - Escalier',cat:'DE LA CONCEPTION À LA RÉALISATION',
-   tags:['menuiserie','reemploi'],
-   thumb:'images/conception-menuiserie-escalier-entier-sombre.png',
-   color:'#e8e4d8',stroke:'#c47d2a',
-   images:['images/conception-menuiserie-escalier-vis1.jpg','images/conception-menuiserie-escalier-vis2.jpg','images/conception-menuiserie-escalier-vis3.jpg','images/conception-menuiserie-escalier-vis4.jpg','images/conception-menuiserie-escalier-vis5.jpg','images/conception-menuiserie-escalier-vis6.jpg','images/conception-menuiserie-escalier-vis7.jpg','images/conception-menuiserie-escalier-vis8.jpg'],mapX:1500,mapY:470,
-   desc:"De l'idée à la matière, ce projet compte parmi ceux qui me tiennent le plus à cœur. Entièrement réalisé à partir de bois de palettes récupérées, il m'a sensibilisé à l'importance de la faisabilité en menuiserie. La phase de conception peut parfois faire oublier la réalité de la fabrication : il est difficile d'anticiper le temps et la complexité qu'implique la concrétisation d'une intention de design.",
-   i18n:{
-     en:{title:'Woodworking design - Staircase',cat:'FROM DESIGN TO COMPLETION',desc:"From idea to material, this is one of the projects closest to my heart. Built entirely from reclaimed pallet wood, it taught me how important feasibility is in woodworking. The design phase can sometimes make you forget the reality of fabrication: it's hard to anticipate the time and complexity involved in turning a design intention into something real."},
-     es:{title:'Diseño de carpintería - Escalera',cat:'DEL DISEÑO A LA REALIZACIÓN',desc:"De la idea a la materia, este es uno de los proyectos que más me importan. Realizado enteramente con madera de palés recuperada, me hizo tomar conciencia de la importancia de la viabilidad en carpintería. La fase de diseño puede a veces hacer olvidar la realidad de la fabricación: es difícil anticipar el tiempo y la complejidad que implica concretar una intención de diseño."},
-   },
-   layout:'portrait-right',
-   noBoard:true},
-  {id:'p8',title:'Assistance à la maîtrise d\'œuvre — CHUZELLES',cat:'ARCHI · COLLECTIVITÉ',
+  {id:'p8',title:'Assistance à la maîtrise d\'œuvre — CHUZELLES',cat:'STAGE · 2026',
    tags:['collectivites','moe'],
    thumb:'images/chuzelles-1.jpg',
    color:'#d8dce8',stroke:'#3a4a6a',
@@ -835,33 +875,10 @@ const PROJECTS = [
    status:'Terminé en septembre 2026',
    desc:"En charge de la partie administrative d'une mission de maîtrise d'œuvre dans le cadre d'un marché public : suivi des procédures réglementaires, organisation et coordination des intervenants, gestion des plannings et diplomatie sur chantier pour assurer la bonne conduite des travaux.",
    i18n:{
-     en:{title:'Project management assistance — CHUZELLES',cat:'ARCHITECTURE · PUBLIC SECTOR',desc:"Responsible for the administrative side of a project management mission under public procurement rules: tracking regulatory procedures, organising and coordinating stakeholders, managing schedules and maintaining constructive dialogue on site to ensure the smooth running of works."},
-     es:{title:'Asistencia a la dirección de obra — CHUZELLES',cat:'ARQUITECTURA · SECTOR PÚBLICO',desc:"A cargo de la parte administrativa de una misión de dirección de obra en el marco de la contratación pública: seguimiento de los procedimientos reglamentarios, organización y coordinación de los intervinientes, gestión de los plazos y diplomacia en obra para garantizar el buen desarrollo de los trabajos."},
+     en:{title:'Project management assistance — CHUZELLES',cat:'INTERNSHIP · 2026',desc:"Responsible for the administrative side of a project management mission under public procurement rules: tracking regulatory procedures, organising and coordinating stakeholders, managing schedules and maintaining constructive dialogue on site to ensure the smooth running of works."},
+     es:{title:'Asistencia a la dirección de obra — CHUZELLES',cat:'PRÁCTICAS · 2026',desc:"A cargo de la parte administrativa de una misión de dirección de obra en el marco de la contratación pública: seguimiento de los procedimientos reglamentarios, organización y coordinación de los intervinientes, gestión de los plazos y diplomacia en obra para garantizar el buen desarrollo de los trabajos."},
    }},
-  {id:'p10',title:'Espace de jeu — Le Pré Des Sourires',cat:'ARCHI INTÉRIEUR · PROJET · Réalisé en groupe',
-   tags:['ux','inclusion'],
-   thumb:'images/pre-des-sourires-herbe.png',
-   color:'#e8e0d8',stroke:'#6a5a3a',
-   images:['images/pre-des-sourires-herbe.png','images/pre-des-sourires-intention-1.png','images/pre-des-sourires-intention-2.png','images/pre-des-sourires-intention-3.png'],mapX:900,mapY:340,
-   heroContain:true,noBoard:true,
-   desc:"Conception d'une aire de jeux pour les enfants hospitalisés sur la base d'un modèle répétable. Prise en compte des besoins spécifiques des utilisateurs. Réflexion sur la gestion du bien-être des enfants en hôpitaux.",
-   i18n:{
-     en:{title:'Play area — Le Pré Des Sourires',cat:'INTERIOR ARCHITECTURE · PROJECT · Group project',desc:"Design of a play area for hospitalized children based on a repeatable model. Specific user needs were taken into account, alongside a broader reflection on children's wellbeing in hospitals."},
-     es:{title:'Espacio de juego — Le Pré Des Sourires',cat:'ARQUITECTURA INTERIOR · PROYECTO · Realizado en grupo',desc:"Diseño de un área de juegos para niños hospitalizados basada en un modelo repetible. Se tuvieron en cuenta las necesidades específicas de los usuarios, junto con una reflexión sobre el bienestar de los niños en los hospitales."},
-   }},
-  {id:'p7',title:'Épicerie de quartier — Café ISHI',cat:'ARCHI INTÉRIEUR · PROJET',
-   tags:['erp','petit-espace','inclusion'],
-   thumb:'images/ishi-cafe-facade.png',
-   color:'#d4b898',stroke:'#8a6848',
-   images:['images/ishi-cafe-facade.png','images/cafe-ishi-axo.png','images/cafe-ishi-interieur.png','images/ishi-apres.webp','images/ishi-interieur.webp'],
-   mapX:680,mapY:280,
-   desc:"Ce projet imagine un lieu de rencontre inspiré des cairns, symboles d'équilibre et de suspension. À travers une atmosphère évoquant les rivières, l'espace invite à la convivialité, au partage et à la réflexion collective.",
-   i18n:{
-     en:{title:'Neighborhood grocery — Café ISHI',cat:'INTERIOR ARCHITECTURE · PROJECT',desc:"This project imagines a meeting place inspired by cairns, symbols of balance and suspension. Through an atmosphere evoking rivers, the space invites conviviality, sharing and collective reflection."},
-     es:{title:'Tienda de barrio — Café ISHI',cat:'ARQUITECTURA INTERIOR · PROYECTO',desc:"Este proyecto imagina un lugar de encuentro inspirado en los cairns, símbolos de equilibrio y suspensión. A través de una atmósfera que evoca los ríos, el espacio invita a la convivencia, al compartir y a la reflexión colectiva."},
-   },
-   board:buildIshiBoard},
-  {id:'p11',title:'Réhabilitation - SEA SHEARD',cat:'ARCHI INTÉRIEUR · PROJET · 2024',
+  {id:'p11',title:'Réhabilitation - SEA SHEARD',cat:'CONCOURS · 2024',
    tags:['developpement-durable','collectivites','ux','realise-en-groupe','reemploi'],
    thumb:'images/sea-sheard-bat-entier.png',
    color:'#cfe3d6',stroke:'#3b5c32',
@@ -869,13 +886,14 @@ const PROJECTS = [
    prize:"Projet gagnant d'un concours d'école à l'échelle nationale",
    video:'https://www.youtube.com/watch?v=vNMssFP1qxg',
    linkedin:'https://www.linkedin.com/feed/update/urn:li:share:7307796887976198144/',
+   hoverLabel:"Projet gagnant d'un concours d'école national",
    board:buildSeaSheardBoard,
    desc:"Réhabilitation de la plage de l'Anse du Pharo en collaboration avec l'association Clean My Calanques. Le principe de cette réhabilitation était de proposer un espace agréable à l'utilisation, capable de sensibiliser les utilisateurs aux sujets du dérèglement climatique et au tri des déchets.",
    i18n:{
-     en:{title:'Renovation - SEA SHEARD',cat:'INTERIOR ARCHITECTURE · PROJECT · 2024',prize:"Winning project of a nationwide school competition",desc:"Renovation of the Anse du Pharo beach in collaboration with the association Clean My Calanques. The aim of this renovation was to create a pleasant space to use, capable of raising users' awareness of climate change and waste sorting."},
-     es:{title:'Rehabilitación - SEA SHEARD',cat:'ARQUITECTURA INTERIOR · PROYECTO · 2024',prize:"Proyecto ganador de un concurso escolar de ámbito nacional",desc:"Rehabilitación de la playa de la Anse du Pharo en colaboración con la asociación Clean My Calanques. El objetivo de esta rehabilitación era proponer un espacio agradable de utilizar, capaz de sensibilizar a los usuarios sobre el cambio climático y la separación de residuos."},
+     en:{title:'Renovation - SEA SHEARD',cat:'COMPETITION · 2024',prize:"Winning project of a nationwide school competition",desc:"Renovation of the Anse du Pharo beach in collaboration with the association Clean My Calanques. The aim of this renovation was to create a pleasant space to use, capable of raising users' awareness of climate change and waste sorting."},
+     es:{title:'Rehabilitación - SEA SHEARD',cat:'CONCURSO · 2024',prize:"Proyecto ganador de un concurso escolar de ámbito nacional",desc:"Rehabilitación de la playa de la Anse du Pharo en colaboración con la asociación Clean My Calanques. El objetivo de esta rehabilitación era proponer un espacio agradable de utilizar, capaz de sensibilizar a los usuarios sobre el cambio climático y la separación de residuos."},
    }},
-  {id:'p12',title:'Mission de conseil — Appartement étudiant',cat:'DE LA CONCEPTION À LA RÉALISATION',
+  {id:'p12',title:'Mission de conseil — Appartement étudiant',cat:'DE LA CONCEPTION À LA RÉALISATION · PERSONNEL',
    tags:['petit-espace','ux'],
    thumb:'images/jean-jaures-1.jpg',
    color:'#e8e4d8',stroke:'#6a5c3a',
@@ -883,10 +901,10 @@ const PROJECTS = [
    mapX:200,mapY:620,noBoard:true,thumbGrid:true,thumbGridSlice:[2,3],heroContain:true,layout:'portrait-right',
    desc:"Projet mené sur mon temps libre, centré sur le conseil en aménagement intérieur d'un appartement étudiant. Réflexion sur l'optimisation des espaces réduits et l'adaptation du logement aux usages et rythmes de vie propres à l'étudiant.",
    i18n:{
-     en:{title:'Consultancy mission — Student apartment',cat:'FROM DESIGN TO COMPLETION',desc:"A project carried out in my own time, focused on interior design consultancy for a student apartment. Reflection on optimising small spaces and adapting the layout to the specific uses and daily rhythms of student life."},
-     es:{title:'Misión de asesoramiento — Piso de estudiante',cat:'DEL DISEÑO A LA REALIZACIÓN',desc:"Proyecto realizado en mi tiempo libre, centrado en el asesoramiento en interiorismo de un piso de estudiante. Reflexión sobre la optimización de los espacios reducidos y la adaptación del alojamiento a los usos y ritmos de vida propios del estudiante."},
+     en:{title:'Consultancy mission — Student apartment',cat:'FROM DESIGN TO COMPLETION · PERSONAL',desc:"A project carried out in my own time, focused on interior design consultancy for a student apartment. Reflection on optimising small spaces and adapting the layout to the specific uses and daily rhythms of student life."},
+     es:{title:'Misión de asesoramiento — Piso de estudiante',cat:'DEL DISEÑO A LA REALIZACIÓN · PERSONAL',desc:"Proyecto realizado en mi tiempo libre, centrado en el asesoramiento en interiorismo de un piso de estudiante. Reflexión sobre la optimización de los espacios reducidos y la adaptación del alojamiento a los usos y ritmos de vida propios del estudiante."},
    }},
-  {id:'p13',title:'Charette de design — Clinique d\'optométrie',cat:'ARCHI INTÉRIEUR · ÉCOLE',
+  {id:'p13',title:'Charette de design — Clinique d\'optométrie',cat:'CONCOURS · 2026',
    tags:['ux','realise-en-groupe','inclusion','collectivites'],
    thumb:'images/optometrie-clinique.webp',
    color:'#d8e4f0',stroke:'#2a4a6a',
@@ -904,11 +922,46 @@ const PROJECTS = [
    ],
    bodyCenteredImage:'images/optometrie-notice.webp',
    noHeroZoom:true,noBoard:true,
+   hoverLabel:"Projet lauréat d'un concours universitaire · Université de Montréal · UDEM",
    desc:'Dans le cadre d\'un concours de design inclusif organisé par l\'Université de Montréal, nous avons eu deux jours pour formuler une proposition convaincante pour une clinique dédiée à la recherche, l\'enseignement et l\'accompagnement des personnes malvoyantes et non-voyantes. L\'enjeu : superposer les usages dans un même espace tout en garantissant un environnement clair et lisible pour des usagers aux perceptions sensorielles très différentes.',
    i18n:{
-     en:{title:'Design charette — Optometry clinic',cat:'INTERIOR ARCHITECTURE · SCHOOL',desc:'As part of an inclusive design competition organised by the Université de Montréal, two days to put forward a compelling proposal for a clinic dedicated to research, education and support for people with low vision or blindness. The challenge: layering uses within a shared space while ensuring a clear, readable environment for users with very different sensory perceptions.'},
-     es:{title:'Charette de diseño — Clínica de optometría',cat:'ARQUITECTURA INTERIOR · ESCUELA',desc:'En el marco de un concurso de diseño inclusivo organizado por la Universidad de Montreal, dos días para formular una propuesta convincente para una clínica dedicada a la investigación, la enseñanza y el apoyo a personas con baja visión o ceguera. El reto: superponer usos en un mismo espacio garantizando al mismo tiempo un entorno claro y legible para usuarios con percepciones sensoriales muy diferentes.'},
+     en:{title:'Design charette — Optometry clinic',cat:'COMPETITION · 2026',desc:'As part of an inclusive design competition organised by the Université de Montréal, two days to put forward a compelling proposal for a clinic dedicated to research, education and support for people with low vision or blindness. The challenge: layering uses within a shared space while ensuring a clear, readable environment for users with very different sensory perceptions.'},
+     es:{title:'Charette de diseño — Clínica de optometría',cat:'CONCURSO · 2026',desc:'En el marco de un concurso de diseño inclusivo organizado por la Universidad de Montreal, dos días para formular una propuesta convincente para una clínica dedicada a la investigación, la enseñanza y el apoyo a personas con baja visión o ceguera. El reto: superponer usos en un mismo espacio garantizando al mismo tiempo un entorno claro y legible para usuarios con percepciones sensoriales muy diferentes.'},
    }},
+  {id:'p7',title:'Épicerie de quartier — Café ISHI',cat:'ÉCOLE · 2026',
+   tags:['erp','petit-espace','inclusion'],
+   thumb:'images/ishi-cafe-facade.png',
+   color:'#d4b898',stroke:'#8a6848',
+   images:['images/ishi-cafe-facade.png','images/cafe-ishi-axo.png','images/cafe-ishi-interieur.png','images/ishi-apres.webp','images/ishi-interieur.webp'],
+   mapX:680,mapY:280,
+   desc:"Ce projet imagine un lieu de rencontre inspiré des cairns, symboles d'équilibre et de suspension. À travers une atmosphère évoquant les rivières, l'espace invite à la convivialité, au partage et à la réflexion collective.",
+   i18n:{
+     en:{title:'Neighborhood grocery — Café ISHI',cat:'SCHOOL · 2026',desc:"This project imagines a meeting place inspired by cairns, symbols of balance and suspension. Through an atmosphere evoking rivers, the space invites conviviality, sharing and collective reflection."},
+     es:{title:'Tienda de barrio — Café ISHI',cat:'ESCUELA · 2026',desc:"Este proyecto imagina un lugar de encuentro inspirado en los cairns, símbolos de equilibrio y suspensión. A través de una atmósfera que evoca los ríos, el espacio invita a la convivencia, al compartir y a la reflexión colectiva."},
+   },
+   board:buildIshiBoard},
+  {id:'p10',title:'Espace de jeu — Le Pré Des Sourires',cat:'ÉCOLE · 2025',
+   tags:['ux','inclusion'],
+   thumb:'images/pre-des-sourires-herbe.png',
+   color:'#e8e0d8',stroke:'#6a5a3a',
+   images:['images/pre-des-sourires-intention-1.png','images/pre-des-sourires-intention-2.png','images/pre-des-sourires-intention-3.png','images/pre-des-sourires-herbe.png','images/pre-des-sourires-3d-jeux.webp'],mapX:900,mapY:340,
+   heroContain:true,noBoard:true,
+   desc:"Conception d'une aire de jeux pour les enfants hospitalisés sur la base d'un modèle répétable. Prise en compte des besoins spécifiques des utilisateurs. Réflexion sur la gestion du bien-être des enfants en hôpitaux.",
+   i18n:{
+     en:{title:'Play area — Le Pré Des Sourires',cat:'SCHOOL · 2025',desc:"Design of a play area for hospitalized children based on a repeatable model. Specific user needs were taken into account, alongside a broader reflection on children's wellbeing in hospitals."},
+     es:{title:'Espacio de juego — Le Pré Des Sourires',cat:'ESCUELA · 2025',desc:"Diseño de un área de juegos para niños hospitalizados basada en un modelo repetible. Se tuvieron en cuenta las necesidades específicas de los usuarios, junto con una reflexión sobre el bienestar de los niños en los hospitales."},
+   }},
+  {id:'p5',title:'Conception menuiserie - Escalier',cat:'DE LA CONCEPTION À LA RÉALISATION · 2024',
+   tags:['menuiserie','reemploi'],
+   thumb:'images/conception-menuiserie-escalier-entier-sombre.png',
+   color:'#e8e4d8',stroke:'#c47d2a',
+   images:['images/conception-menuiserie-escalier-vis1.jpg','images/conception-menuiserie-escalier-vis2.jpg','images/conception-menuiserie-escalier-vis3.jpg','images/conception-menuiserie-escalier-vis4.jpg','images/conception-menuiserie-escalier-vis5.jpg','images/conception-menuiserie-escalier-vis6.jpg','images/conception-menuiserie-escalier-vis7.jpg','images/conception-menuiserie-escalier-vis8.jpg'],mapX:1500,mapY:470,
+   desc:"De l'idée à la matière, ce projet compte parmi ceux qui me tiennent le plus à cœur. Entièrement réalisé à partir de bois de palettes récupérées, il m'a sensibilisé à l'importance de la faisabilité en menuiserie. La phase de conception peut parfois faire oublier la réalité de la fabrication : il est difficile d'anticiper le temps et la complexité qu'implique la concrétisation d'une intention de design.",
+   i18n:{
+     en:{title:'Woodworking design - Staircase',cat:'FROM DESIGN TO COMPLETION · 2024',desc:"From idea to material, this is one of the projects closest to my heart. Built entirely from reclaimed pallet wood, it taught me how important feasibility is in woodworking. The design phase can sometimes make you forget the reality of fabrication: it's hard to anticipate the time and complexity involved in turning a design intention into something real."},
+     es:{title:'Diseño de carpintería - Escalera',cat:'DEL DISEÑO A LA REALIZACIÓN · 2024',desc:"De la idea a la materia, este es uno de los proyectos que más me importan. Realizado enteramente con madera de palés recuperada, me hizo tomar conciencia de la importancia de la viabilidad en carpintería. La fase de diseño puede a veces hacer olvidar la realidad de la fabricación: es difícil anticipar el tiempo y la complejidad que implica concretar una intención de diseño."},
+   },
+   layout:'portrait-right',noBoard:true},
 ];
 
 /* Renvoie un champ de projet (title/cat/desc/prize) dans la langue active,
@@ -962,7 +1015,7 @@ const SKETCHES = [
 /* ══════ INTERNATIONALISATION ══════ */
 const I18N = {
   fr:{
-    nav_projects:'Projets',nav_map:'Carte',nav_reflex:'Réflexions',nav_about:'Mes compétences',nav_experiences:'Mes expériences',nav_contact:'Contact',exp_leg_pro:'Expériences professionnelles',exp_leg_asso:'Expériences associatives',
+    nav_projects:'Projets',nav_map:'Carte',nav_reflex:'Réflexions',nav_about:'Mes compétences',nav_experiences:'Mes expériences',nav_contact:'Mon profil',exp_leg_pro:'Expériences professionnelles',exp_leg_asso:'Expériences associatives',
     hero_eyebrow:'Architecture · Intérieur · Collectivités',
     hero_title:'Espaces pour<br><em>le collectif,</em><br>construits<br>pour durer.',
     hero_desc:"Je conçois des espaces qui visent à s'ancrer dans le territoire et à servir les collectivités, avec une attention portée aux usages réels et aux matériaux locaux.",
@@ -1009,10 +1062,13 @@ const I18N = {
     about_btn_maquette:'Maquette',about_phrase_maquette:'Compréhension volumétrique et sensible',
     about_btn_esprit:'Esprit critique',about_phrase_esprit:'Prise de recul sur les choix de conception',
     about_gallery_label:'CROQUIS & DESSINS',about_wip:'— page en construction',
-    contact_title:'Contact',contact_phone_label:'TÉLÉPHONE',
+    contact_title:'Mon profil',contact_phone_label:'TÉLÉPHONE',
+    profile_q1:'Moi ?',profile_a1:"Je me décris comme quelqu'un de curieux, motivé et attentif à son environnement. Je suis spontané et ouvert à la discussion. Mes actions sont guidées par la bienveillance et le respect d'autrui.",
+    profile_q2:'Et dans cinq ans ?',profile_a2:"À la fin de mon master en architecture d'intérieur, j'ai pour projet de rejoindre une école d'architecture pour axer mon parcours sur la conception d'espaces publics.",
+    profile_q3:'Vous voulez en savoir plus ?',profile_a3:"Je serais ravi d'échanger avec vous. N'hésitez pas à me contacter par téléphone ou par mail !",
   },
   en:{
-    nav_projects:'Projects',nav_map:'Map',nav_reflex:'Reflections',nav_about:'My skills',nav_experiences:'My experience',nav_contact:'Contact',exp_leg_pro:'Professional experiences',exp_leg_asso:'Associative experiences',
+    nav_projects:'Projects',nav_map:'Map',nav_reflex:'Reflections',nav_about:'My skills',nav_experiences:'My experience',nav_contact:'My profile',exp_leg_pro:'Professional experiences',exp_leg_asso:'Associative experiences',
     hero_eyebrow:'Architecture · Interior · Public spaces',
     hero_title:'Spaces for<br><em>the collective,</em><br>built<br>to last.',
     hero_desc:"I design spaces meant to root themselves in their territory and serve public communities, with close attention to real-world uses and local materials.",
@@ -1059,10 +1115,13 @@ const I18N = {
     about_btn_maquette:'Model-making',about_phrase_maquette:'Volumetric and sensory understanding',
     about_btn_esprit:'Critical thinking',about_phrase_esprit:'Stepping back to question design choices',
     about_gallery_label:'SKETCHES & DRAWINGS',about_wip:'— page under construction',
-    contact_title:'Contact',contact_phone_label:'PHONE',
+    contact_title:'My profile',contact_phone_label:'PHONE',
+    profile_q1:'Me ?',profile_a1:"I would describe myself as someone curious, motivated and attentive to my surroundings. I am spontaneous and open to discussion, and my actions are guided by kindness and respect for others.",
+    profile_q2:'And in five years ?',profile_a2:"At the end of my master's in interior architecture, I plan to transition into an architecture school to focus my career on the design of public spaces.",
+    profile_q3:'Want to know more ?',profile_a3:"I would be happy to discuss my profile with you. Feel free to reach out by phone or email!",
   },
   es:{
-    nav_projects:'Proyectos',nav_map:'Mapa',nav_reflex:'Reflexiones',nav_about:'Mis competencias',nav_experiences:'Mis experiencias',nav_contact:'Contacto',exp_leg_pro:'Experiencias profesionales',exp_leg_asso:'Experiencias asociativas',
+    nav_projects:'Proyectos',nav_map:'Mapa',nav_reflex:'Reflexiones',nav_about:'Mis competencias',nav_experiences:'Mis experiencias',nav_contact:'Mi perfil',exp_leg_pro:'Experiencias profesionales',exp_leg_asso:'Experiencias asociativas',
     hero_eyebrow:'Arquitectura · Interiorismo · Colectividades',
     hero_title:'Espacios para<br><em>lo colectivo,</em><br>construidos<br>para durar.',
     hero_desc:"Diseño espacios que buscan arraigarse en el territorio y servir a las colectividades, prestando especial atención a los usos reales y a los materiales locales.",
@@ -1109,7 +1168,10 @@ const I18N = {
     about_btn_maquette:'Maqueta',about_phrase_maquette:'Comprensión volumétrica y sensible',
     about_btn_esprit:'Espíritu crítico',about_phrase_esprit:'Distancia reflexiva sobre las decisiones de diseño',
     about_gallery_label:'BOCETOS Y DIBUJOS',about_wip:'— página en construcción',
-    contact_title:'Contacto',contact_phone_label:'TELÉFONO',
+    contact_title:'Mi perfil',contact_phone_label:'TELÉFONO',
+    profile_q1:'¿Yo ?',profile_a1:"Me describo como alguien curioso, motivado y atento a su entorno. Soy espontáneo y abierto al diálogo, y mis acciones están guiadas por la benevolencia y el respeto hacia los demás.",
+    profile_q2:'¿Y dentro de cinco años ?',profile_a2:"Al terminar mi máster en arquitectura de interiores, tengo el proyecto de incorporarme a una escuela de arquitectura para orientar mi trayectoria hacia el diseño de espacios públicos.",
+    profile_q3:'¿Quiere saber más ?',profile_a3:"Estaré encantado de hablar con usted sobre mi perfil. No dude en ponerse en contacto conmigo por teléfono o correo electrónico.",
   },
 };
 function t(key){return (I18N[currentLang]&&I18N[currentLang][key]!==undefined)?I18N[currentLang][key]:I18N.fr[key];}
@@ -1179,7 +1241,7 @@ function renderView(view,param){
   if(view==='project'&&param) renderProjectView(param);
   if(view==='about') requestAnimationFrame(()=>{setAgPadding();updateCenteredFrame();});
   if(view==='map')   requestAnimationFrame(centerMapView);
-  if(view==='experiences') requestAnimationFrame(renderTimeline);
+  if(view==='experiences') requestAnimationFrame(initTimeline);
 }
 function navigate(view,param){history.pushState(null,'','#'+encodeState(view,param));renderView(view,param);}
 function goBack(){if(history.length>1)history.back();else navigate('home');}
@@ -1275,8 +1337,9 @@ function slideCarousel(btn,total,dir){
 /* ══════ GRILLES ══════ */
 function renderGrid(tid,projects){
   document.getElementById(tid).innerHTML=projects.map(p=>`
-    <div class="pcard">
+    <div class="pcard" style="position:relative">
       ${buildCarousel(p)}
+      ${p.hoverLabel?`<div class="pcard-hover-label"><span>${p.hoverLabel}</span></div>`:''}
       <div class="pcbody" onclick="navigate('project','${p.id}')">
         <p class="pccat">${pf(p,'cat')}</p>
         <p class="pctitle">${pf(p,'title').replace(/ — /g,'<br>')}</p>
@@ -1342,6 +1405,7 @@ function initProjHero(proj){
     prevBtn.style.display = nextBtn.style.display = 'none';
   } else {
     window._heroImgs=imgs;
+    window._heroWhiteImgs=proj.lightboxWhite||[];
     const _zoomAttr = proj.noHeroZoom ? '' : ` style="cursor:zoom-in" onclick="openLightbox(this.src,window._heroImgs)"`;
     slidesEl.innerHTML = imgs.map((src,i) =>
       `<div class="proj-hero-slide"><img src="${src}" alt="${pf(proj,'title')} ${i+1}" loading="${i===0?'eager':'lazy'}"${_zoomAttr}></div>`
@@ -1389,7 +1453,16 @@ function renderProjectView(id){
   /* Layout portrait-right : images verticales à droite, texte à gauche */
   const viewEl=document.getElementById('view-project');
   viewEl.classList.toggle('proj-layout-portrait', proj.layout==='portrait-right');
+  viewEl.classList.toggle('proj-title-below', !!proj.titleBelow);
+  if(proj.titleBelow){
+    document.getElementById('projPortraitBodyCat').textContent=pf(proj,'cat');
+    document.getElementById('projPortraitBodyTitle').textContent=pf(proj,'title').replace(/ — /g,' ; ');
+    document.getElementById('projPortraitBodyTags').innerHTML=makeTagBadges(proj.tags);
+  }
   if(proj.layout==='portrait-right'){
+    document.getElementById('projPortraitBodyCat').textContent=pf(proj,'cat');
+    document.getElementById('projPortraitBodyTitle').textContent=pf(proj,'title').replace(/ — /g,' ; ');
+    document.getElementById('projPortraitBodyTags').innerHTML=makeTagBadges(proj.tags);
     const imgs=proj.images||[];
     const wrap=document.getElementById('projPortraitWrap');
     wrap.innerHTML=imgs.map((src,i)=>
@@ -1465,7 +1538,7 @@ function renderProjectView(id){
   const cols=imgCount===2&&heroN===3?'repeat(3,1fr)':imgCount===1?'1fr 1fr':'1fr';
   belowEl.style.setProperty('--below-cols',cols);
   // Hauteur identique au hero pour les projets avec heroGrid
-  const heroH=`clamp(300px,52vh,680px)`;
+  const heroH=`clamp(520px,90vh,1200px)`;
   [bImg1,bImg2].forEach(el=>{ if(el.style.display!=='none') el.style.height=heroH; });
 
   /* Note de statut (ex : projet en cours) */
@@ -2251,7 +2324,7 @@ function centerAgFrame(idx){
 /* ══════ FRESQUE CHRONOLOGIQUE ══════ */
 const EXP_PX   = 64;   // px par mois
 const AXIS_Y   = 170;  // px depuis le haut du canvas jusqu'à l'axe
-const BAR_H    = 34;   // hauteur d'une barre
+const BAR_H    = 4;    // hauteur d'une barre (fine ligne)
 const BAR_GAP  = 10;   // espace entre axe et première lane
 const LANE_GAP = 6;    // espace entre deux lanes empilées
 const PAD_L    = 60;   // marge gauche avant le début de la frise
@@ -2364,8 +2437,9 @@ function renderTimeline(){
         html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${BAR_GAP}px;background:${color}40;pointer-events:none;"></div>`;
       }
 
-      html+=`<div class="exp-bar" data-exp-idx="${idx}" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color}22;border:1px solid ${color}80;" onclick="showExpDetail(${idx})">
-        <span class="exp-bar-label" style="color:${color};">${e.label}</span>
+      const labelOffset=isPro?'-15px':`${BAR_H+4}px`;
+      html+=`<div class="exp-bar" data-exp-idx="${idx}" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color};border:none;" onclick="showExpDetail(${idx})">
+        <span class="exp-bar-label" style="color:${color};top:${labelOffset};">${e.label}</span>
       </div>`;
 
       html+=`<div class="exp-date" style="left:${x0}px;top:${dateY}px;transform:translateX(-50%);pointer-events:none;">${expFmt(e.start)}</div>`;
@@ -2441,37 +2515,55 @@ function closeExpDetail(){
   setTimeout(()=>{ panel.style.display='none'; panel.dataset.open=''; },420);
 }
 
+let _timelineInited=false;
 function initTimeline(){
   renderTimeline();
-  // Drag-to-scroll
+  if(_timelineInited) return;
+  _timelineInited=true;
   const wrap=document.getElementById('expWrap');
   if(!wrap) return;
-  let down=false,startX=0,scrollStart=0;
-  wrap.addEventListener('pointerdown',e=>{down=true;startX=e.clientX;scrollStart=wrap.scrollLeft;wrap.setPointerCapture(e.pointerId);});
-  wrap.addEventListener('pointermove',e=>{if(!down)return;wrap.scrollLeft=scrollStart-(e.clientX-startX);});
-  wrap.addEventListener('pointerup',()=>{down=false;});
+  let down=false,dragging=false,startX=0,scrollStart=0;
+  wrap.addEventListener('pointerdown',e=>{down=true;dragging=false;startX=e.clientX;scrollStart=wrap.scrollLeft;});
+  wrap.addEventListener('pointermove',e=>{
+    if(!down) return;
+    const dx=e.clientX-startX;
+    if(!dragging && Math.abs(dx)<5) return;
+    if(!dragging){dragging=true;wrap.setPointerCapture(e.pointerId);}
+    wrap.scrollLeft=scrollStart-dx;
+  });
+  wrap.addEventListener('pointerup',()=>{down=false;dragging=false;});
+  wrap.addEventListener('pointercancel',()=>{down=false;dragging=false;});
 }
 
 function initAboutSlides(){
-  document.querySelectorAll('#view-about .aslide').forEach(slide=>{
-    const track=slide.querySelector('.aslide-track');
-    const handle=slide.querySelector('.aslide-handle');
+  function openSlide(slide){
     const phrase=slide.querySelector('.aslide-phrase');
-    const THRESH=50;
-    function openFull(){
-      slide.classList.add('open');
-      phrase.style.transition='clip-path .42s cubic-bezier(.4,0,.2,1)';
-      phrase.style.clipPath='inset(0 0% 0 0)';
-      setTimeout(()=>{ phrase.style.transition=''; },440);
-    }
-    function closeAll(){
-      slide.classList.remove('open');
-      phrase.style.transition='clip-path .35s cubic-bezier(.4,0,.2,1)';
-      phrase.style.clipPath='inset(0 100% 0 0)';
-      setTimeout(()=>{ phrase.style.transition=''; },370);
-    }
-    handle.addEventListener('click',()=>{
-      slide.classList.contains('open') ? closeAll() : openFull();
+    slide.classList.add('open');
+    phrase.style.transition='clip-path .42s cubic-bezier(.4,0,.2,1)';
+    phrase.style.clipPath='inset(0 0% 0 0)';
+    setTimeout(()=>{ phrase.style.transition=''; },440);
+  }
+  function closeSlide(slide){
+    const phrase=slide.querySelector('.aslide-phrase');
+    slide.classList.remove('open');
+    phrase.style.transition='clip-path .35s cubic-bezier(.4,0,.2,1)';
+    phrase.style.clipPath='inset(0 100% 0 0)';
+    setTimeout(()=>{ phrase.style.transition=''; },370);
+  }
+  document.querySelectorAll('#view-about .aslide').forEach(slide=>{
+    slide.querySelector('.aslide-handle').addEventListener('click',()=>{
+      slide.classList.contains('open') ? closeSlide(slide) : openSlide(slide);
+    });
+  });
+  // Clic sur le titre de catégorie → ouvre/ferme tous les sous-titres du groupe
+  document.querySelectorAll('#view-about .about-slides-section').forEach(section=>{
+    const title=section.querySelector('.aslide-title');
+    if(!title) return;
+    title.style.cursor='pointer';
+    title.addEventListener('click',()=>{
+      const slides=[...section.querySelectorAll('.aslide')];
+      const allOpen=slides.every(s=>s.classList.contains('open'));
+      slides.forEach(s=>allOpen ? closeSlide(s) : openSlide(s));
     });
   });
 }
@@ -2703,11 +2795,14 @@ function openLightbox(src,imgs){
   document.addEventListener('keydown',lightboxKey);
 }
 function _lbShow(){
-  document.getElementById('lightboxImg').src=_lbImgs[_lbIdx];
+  const src=_lbImgs[_lbIdx];
+  document.getElementById('lightboxImg').src=src;
   const n=_lbImgs.length;
   document.getElementById('lbPrev').classList.toggle('hidden',n<=1);
   document.getElementById('lbNext').classList.toggle('hidden',n<=1);
   document.getElementById('lbCounter').textContent=n>1?(_lbIdx+1)+' / '+n:'';
+  const white=(window._heroWhiteImgs||[]).includes(src);
+  document.getElementById('lightbox').classList.toggle('lb-white',white);
 }
 function lbGo(dir){
   _lbIdx=(_lbIdx+dir+_lbImgs.length)%_lbImgs.length;
