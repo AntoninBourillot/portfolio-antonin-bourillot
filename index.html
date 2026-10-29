@@ -153,8 +153,8 @@ img{display:block;max-width:100%;}
   height:clamp(520px,90vh,1200px);
   border-bottom:var(--r);
 }
-.proj-hero-slides{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1);}
-.proj-hero-slide{min-width:100%;height:100%;flex-shrink:0;}
+.proj-hero-slides{display:flex;width:100%;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1);}
+.proj-hero-slide{flex:0 0 100%;height:100%;}
 .proj-hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;cursor:zoom-in;}
 /* Lightbox */
 .lightbox{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease,background .2s ease;}
@@ -211,7 +211,7 @@ img{display:block;max-width:100%;}
 .proj-layout-portrait{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto;}
 .proj-layout-portrait #projBelowHero{grid-column:1;grid-row:1;border-bottom:var(--r);}
 .proj-layout-portrait #projPortraitSlider{grid-column:2;grid-row:1;}
-.proj-layout-portrait #projImagesRow,.proj-layout-portrait #projLabeledRow,.proj-layout-portrait #projCenteredImg{display:none!important;}
+.proj-layout-portrait #projImagesRow,.proj-layout-portrait #projMixedRow,.proj-layout-portrait #projLabeledRow,.proj-layout-portrait #projCenteredImg{display:none!important;}
 .proj-layout-portrait .proj-board-section{grid-column:1/-1;display:none;}
 .proj-layout-portrait footer{grid-column:1/-1;}
 .proj-portrait-slider{display:none;border-left:var(--r);padding:var(--py) var(--px);flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--paper2);}
@@ -268,6 +268,9 @@ img{display:block;max-width:100%;}
 .proj-linkedin-sticker .pls-icon{font-size:13px;line-height:1;}
 .proj-linkedin-sticker .pls-text{font-size:6.5px;letter-spacing:.06em;line-height:1.2;}
 
+/* Bande description au-dessus du hero */
+.proj-desc-bar{padding:clamp(16px,2.5vh,28px) var(--px);border-bottom:var(--r);background:var(--paper);font-family:'Lora',Georgia,serif;font-size:clamp(13px,1vw,15px);line-height:1.75;color:var(--ink2);max-width:860px;}
+
 /* PROJECT DETAIL — bandeau tags */
 .proj-header-bar{display:flex;align-items:center;gap:20px;padding:12px var(--px);border-bottom:var(--r);background:var(--paper);}
 .proj-header-bar .back-btn{flex-shrink:0;align-self:center;}
@@ -282,13 +285,18 @@ img{display:block;max-width:100%;}
 .proj-body-img img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;}
 #projBodyImg2 img{box-sizing:border-box;padding:5%;}
 .proj-images-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
-.proj-images-row .pir-cell{background:#fff;overflow:hidden;height:clamp(520px,90vh,1200px);}
-.proj-images-row .pir-cell img{width:100%;height:100%;object-fit:contain;display:block;box-sizing:border-box;padding:5%;}
+.proj-images-row .pir-cell{background:#fff;overflow:hidden;height:clamp(260px,38vh,520px);}
+.proj-images-row .pir-cell img{width:100%;height:100%;object-fit:cover;display:block;}
 .proj-centered-img{display:flex;justify-content:center;border-bottom:var(--r);background:#fff;padding:var(--py) 0;}
 .proj-centered-img img{width:38%;object-fit:contain;display:block;}
 .proj-labeled-row{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
 .proj-labeled-cell{background:var(--paper);display:flex;flex-direction:column;}
-.proj-labeled-cell img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+.proj-mixed-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--r);background:var(--paper3);gap:1px;}
+.proj-mixed-cell-img{overflow:hidden;aspect-ratio:4/3;}
+.proj-mixed-cell-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.proj-mixed-cell-text{background:var(--paper);aspect-ratio:4/3;display:flex;align-items:center;padding:clamp(24px,4vw,56px);}
+.proj-mixed-cell-text p{font-family:'Lora',Georgia,serif;font-size:clamp(13px,1vw,16px);line-height:1.75;color:var(--ink2);}
+.proj-labeled-cell img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;display:block;}
 .proj-labeled-cell .plc-label{text-align:center;padding:12px 8px;font-family:'DM Mono',monospace;font-size:clamp(8px,.6vw,10px);letter-spacing:.1em;color:var(--ink2);text-transform:uppercase;}
 .proj-cat{font-family:'DM Mono',monospace;font-size:clamp(9px,.65vw,11px);letter-spacing:.14em;color:var(--ink3);margin-bottom:10px;}
 .proj-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(28px,3.2vw,52px);line-height:1.08;margin-bottom:18px;}
@@ -597,6 +605,8 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
       </div>
     </div>
   </div>
+  <!-- Description au-dessus du hero (optionnel) -->
+  <div class="proj-desc-bar" id="projDescBar" style="display:none"></div>
   <!-- HERO CARROUSEL -->
   <div class="proj-hero" id="projHero">
     <div class="proj-hero-slides" id="projHeroSlides"></div>
@@ -630,6 +640,8 @@ footer{padding:clamp(14px,2.2vh,28px) var(--px);display:flex;align-items:center;
   </div>
   <!-- Ligne d'images supplémentaire -->
   <div class="proj-images-row" id="projImagesRow" style="display:none"></div>
+  <!-- Ligne mixte image/texte/image -->
+  <div class="proj-mixed-row" id="projMixedRow" style="display:none"></div>
   <!-- Ligne d'images étiquetées -->
   <div class="proj-labeled-row" id="projLabeledRow" style="display:none"></div>
   <!-- Visuel centré pleine largeur -->
@@ -830,11 +842,14 @@ const EXPERIENCES = [
   {type:'pro', point:true, label:'Baccalauréat<br>Mention très bien', start:{y:2023,m:6},
    desc:'', photos:[]},
   {type:'pro', point:true, label:'Stage ouvrier en entreprise de rénovation générale du bâtiment', start:{y:2024,m:6},
-   desc:'', photos:[]},
+   desc:'Expérience d\'un mois avec un artisan basé à Nancy. Ce stage était important et marquant dans mon parcours car il m\'a fait comprendre la nécessité de prendre en compte le point de vue des personnes qui mettent en place ce qui a été dessiné. J\'ai notamment remarqué qu\'un manque de communication entre le cabinet d\'architecture et les corps d\'états entraîne inévitablement des retards.',
+   photos:[]},
   {type:'pro', point:true, label:'1ère place — Concours d\'école pour Clean My Calanques', start:{y:2025,m:2},
-   desc:'', photos:[]},
+   desc:'Concours d\'école en équipe sur 48h, le concours rassemblait environ 40 équipes. Notre projet a été choisi comme projet "gagnant" de ce concours d\'idée. Le jury a mis en avant l\'utilisation de matériaux éco-responsables, l\'attention portée aux utilisateurs ainsi que la faisabilité du projet.',
+   photos:[]},
   {type:'pro', point:true, label:'Stage en assistance en architecture d\'intérieur — Deust Associés, Lyon', start:{y:2025,m:5}, end:{y:2025,m:6},
-   desc:'', photos:[]},
+   desc:'Durant ce stage de deux mois, j\'ai pu participer à différents projets commerciaux et résidentiels. J\'ai eu l\'occasion d\'assister à différentes réunions de chantier et réunions clients.',
+   photos:[]},
   {type:'pro', point:true, label:'Stage en cabinet d\'architecture — Architecture4Future, Vienne', start:{y:2026,m:5}, end:{y:2026,m:8},
    desc:'De mai à août 2026, j\'ai eu la chance de réaliser un stage dans le cabinet Architecture4Future. J\'ai eu l\'occasion d\'assister à différents rendez-vous client, séances de conception, suivi de chantier. J\'ai ainsi pu développer ma connaissance sur la gestion de projets en marchés publics en France. Il était également très intéressant de voir la différence dans la gestion des projets entre un cabinet d\'architecture d\'intérieur et un cabinet d\'architecture.',
    photos:[]},
@@ -855,12 +870,13 @@ const PROJECTS = [
    tags:['developpement-durable','collectivites','ux'],
    thumb:'images/yapadage-vue-a1.png',
    color:'#ddeede',stroke:'#3b5c32',
-   images:['images/yapadage-vue-a1.png','images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
+   images:['images/yapadage-vue-a1.png'],
    cardImages:['images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
-   lightboxWhite:['images/yapadage-atelier.png','images/yapadage-fenetre.png','images/yapadage-plan-rdc.png','images/yapadage-plan-etage.png','images/yapadage-coupe.png'],
+   bodyMixedRow:[{src:'images/yapadage-atelier.png'},{text:'Le local ; un ancien corps de ferme à l\'abandon depuis plusieurs années représente le genre de bâtiment qui raconte une histoire et qu\'il est important de rénover au lieu de le laisser tomber en ruine.'},{src:'images/yapadage-fenetre.png'}],
+   bodyLabeledRow:[{src:'images/yapadage-plan-rdc.png',label:'Plan RDC'},{src:'images/yapadage-plan-etage.png',label:'Plan étage'},{src:'images/yapadage-coupe.png',label:'Coupe'}],
    quote:'"Constater l\'isolation des générations entre elles m\'a fait prendre conscience de l\'importance de concevoir des lieux de reconnexion"',
    mapX:500,mapY:400,
-   noBoard:true,titleBelow:true,
+   noBoard:true,descAboveHero:true,
    desc:"Conception d'un centre intégrant espaces enfants, adultes et séniors dans un même bâtiment. La circulation est pensée pour favoriser les rencontres spontanées entre générations.",
    i18n:{
      en:{title:'Intergenerational center — YAPADAGE',cat:'SCHOOL · 2026 · DESIGN',desc:"Design of a center bringing together spaces for children, adults and seniors within the same building. Circulation is designed to encourage spontaneous encounters between generations."},
@@ -1485,7 +1501,16 @@ function renderProjectView(id){
 
   document.getElementById('projCat').textContent=pf(proj,'cat');
   document.getElementById('projTitleBar').textContent=pf(proj,'title').replace(/ — /g,' ; ');
-  document.getElementById('projDesc').textContent=pf(proj,'desc');
+  const descBar=document.getElementById('projDescBar');
+  if(proj.descAboveHero){
+    descBar.textContent=pf(proj,'desc');
+    descBar.style.display='';
+    document.getElementById('projDesc').style.display='none';
+  } else {
+    descBar.style.display='none';
+    document.getElementById('projDesc').style.display='';
+    document.getElementById('projDesc').textContent=pf(proj,'desc');
+  }
   document.getElementById('projTags').innerHTML=makeTagBadges(proj.tags);
   let metaExtra='';
   const prize=pf(proj,'prize');
@@ -1518,6 +1543,17 @@ function renderProjectView(id){
     pirEl.style.display='';
     pirEl.style.gridTemplateColumns=`repeat(${proj.bodyImagesRow.length},1fr)`;
   } else { pirEl.style.display='none'; }
+
+  /* Ligne mixte image/texte/image (bodyMixedRow) */
+  const pmrEl=document.getElementById('projMixedRow');
+  if(proj.bodyMixedRow&&proj.bodyMixedRow.length){
+    pmrEl.innerHTML=proj.bodyMixedRow.map(cell=>
+      cell.text
+        ? `<div class="proj-mixed-cell-text"><p>${cell.text}</p></div>`
+        : `<div class="proj-mixed-cell-img"><img src="${cell.src}" alt="${pf(proj,'title')}" loading="lazy"></div>`
+    ).join('');
+    pmrEl.style.display='';
+  } else { pmrEl.style.display='none'; }
 
   /* Images latérales sous le hero (bodyImage / bodyImage2) */
   const belowEl=document.getElementById('projBelowHero');
@@ -2430,14 +2466,16 @@ function renderTimeline(){
       const w=Math.max(x1-x0, EXP_PX*0.5);
       const laneOff=e._lane*(BAR_H+LANE_GAP);
       const barTop=isPro ? AXIS_Y-BAR_GAP-BAR_H-laneOff : AXIS_Y+BAR_GAP+laneOff;
-      const dateY=isPro ? barTop-14 : barTop+BAR_H+4;
+      // Pro : label au-dessus (-26px), dates juste sous le label (-14px)
+      // Asso : label juste sous la barre (+8px), dates plus bas (+20px)
+      const labelOffset=isPro?'-26px':`${BAR_H+4}px`;
+      const dateY=isPro ? barTop-14 : barTop+BAR_H+16;
 
       if(e._lane===0){
         const connTop=isPro ? barTop+BAR_H : AXIS_Y+1;
         html+=`<div class="exp-connector" style="left:${x0+w/2}px;top:${connTop}px;height:${BAR_GAP}px;background:${color}40;pointer-events:none;"></div>`;
       }
 
-      const labelOffset=isPro?'-15px':`${BAR_H+4}px`;
       html+=`<div class="exp-bar" data-exp-idx="${idx}" style="left:${x0}px;top:${barTop}px;width:${w}px;background:${color};border:none;" onclick="showExpDetail(${idx})">
         <span class="exp-bar-label" style="color:${color};top:${labelOffset};">${e.label}</span>
       </div>`;
